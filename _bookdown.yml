@@ -1,4 +1,5 @@
 book_filename: "Notas-CA-403"
+output_dir: "docs"
 delete_merged_file: true
 before_chapter_script: ["_common.R"]
 language:
