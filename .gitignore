@@ -3,3 +3,8 @@
 .RData
 .Ruserdata
 *._bookdown_files/*
+*.bcf
+*.log
+*.out
+*.aux
+
