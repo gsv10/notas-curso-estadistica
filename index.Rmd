@@ -4,6 +4,8 @@ author: "Maikol Solís"
 date: ""
 site: bookdown::bookdown_site
 documentclass: book
+fontsize: 12pt
+monofont: "Source Code Pro"
 bibliography: [bibliografia.bib]
 biblio-style: authoryear
 link-citations: yes

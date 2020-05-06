@@ -8,7 +8,8 @@ knitr::opts_chunk$set(
   tidy = TRUE,
   tidy.opts = list(width.cutoff = 50),
   error = TRUE, 
-  warning = FALSE
+  warning = FALSE, 
+  message = FALSE
 )
 
 library(tidyverse)
