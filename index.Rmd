@@ -1,0 +1,15 @@
+--- 
+title: "Notas de Clase CA-403"
+author: "Maikol Solís"
+date: ""
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: [bibliografia.bib]
+biblio-style: authoryear
+link-citations: yes
+description: ""
+---
+
+
+# Introducción
+
