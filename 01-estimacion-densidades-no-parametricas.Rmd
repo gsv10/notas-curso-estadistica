@@ -242,7 +242,7 @@ x0 <- 0
 # Real value of f(x0)
 f_x0 <- dnorm(x0)
 
-# || f’ ||_2^2 for a normal standard distribution
+# norm || f’ ||_2^2 for a normal standard distribution
 norm_f_prime <- 1 / (4 * sqrt(pi))
 
 #Sequence of bins
@@ -263,6 +263,7 @@ for (h in hvec) {
 breaks <- floor((min(x)) / h):ceiling((max(x)) / h)
 breaks <- breaks * h
 xhist <- hist(x, breaks = breaks, plot = FALSE)
+
 # Average of bins near x0
 bins_near_x0 <- xhist$breaks <= x0 + h & xhist$breaks >= x0 - h
 
