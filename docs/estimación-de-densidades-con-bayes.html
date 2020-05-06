@@ -267,24 +267,24 @@ adecuado es</p>
 discreta. En este caso, el investigador asigna una probabilidad a
 cierta cantidad de horas de sueño, según su experiencia. Así, por
 ejemplo:</p>
-<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb83-1" title="1">(p &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="fl">0.05</span>, <span class="fl">0.95</span>, <span class="dt">by =</span> <span class="fl">0.1</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb77-1" title="1">(p &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="fl">0.05</span>, <span class="fl">0.95</span>, <span class="dt">by =</span> <span class="fl">0.1</span>))</a></code></pre></div>
 <pre><code>##  [1] 0.05 0.15 0.25 0.35 0.45 0.55 0.65 0.75 0.85 0.95</code></pre>
-<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb85-1" title="1">(prior &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="fl">5.2</span>, <span class="dv">8</span>, <span class="fl">7.2</span>, <span class="fl">4.6</span>, <span class="fl">2.1</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="dv">0</span>, </a>
-<a class="sourceLine" id="cb85-2" title="2">    <span class="dv">0</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb79-1" title="1">(prior &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="fl">5.2</span>, <span class="dv">8</span>, <span class="fl">7.2</span>, <span class="fl">4.6</span>, <span class="fl">2.1</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="dv">0</span>, </a>
+<a class="sourceLine" id="cb79-2" title="2">    <span class="dv">0</span>))</a></code></pre></div>
 <pre><code>##  [1] 1.0 5.2 8.0 7.2 4.6 2.1 0.7 0.1 0.0 0.0</code></pre>
-<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb87-1" title="1">(prior &lt;-<span class="st"> </span>prior<span class="op">/</span><span class="kw">sum</span>(prior))</a></code></pre></div>
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb81-1" title="1">(prior &lt;-<span class="st"> </span>prior<span class="op">/</span><span class="kw">sum</span>(prior))</a></code></pre></div>
 <pre><code>##  [1] 0.034602076 0.179930796 0.276816609 0.249134948 0.159169550 0.072664360
 ##  [7] 0.024221453 0.003460208 0.000000000 0.000000000</code></pre>
-<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb89-1" title="1"><span class="kw">plot</span>(p, prior, <span class="dt">type =</span> <span class="st">&quot;h&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Probabilidad Previa&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb83-1" title="1"><span class="kw">plot</span>(p, prior, <span class="dt">type =</span> <span class="st">&quot;h&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Probabilidad Previa&quot;</span>)</a></code></pre></div>
 <p><img src="Notas-Curso-Estadistica_files/figure-html/unnamed-chunk-107-1.png" width="672" /></p>
 <p>El paquete <code>LearnBayes</code> tiene la función <code>pdisc</code> que estima la
 distribución posterior para una previa discreta binomial. Recuerde que
 el valor 11 representa la cantidad de estudiantes con más de 8 horas
 de sueño y 16 lo que no duermen esa cantidad.</p>
-<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb90-1" title="1"><span class="kw">library</span>(LearnBayes)</a>
-<a class="sourceLine" id="cb90-2" title="2">data &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">11</span>, <span class="dv">16</span>)</a>
-<a class="sourceLine" id="cb90-3" title="3">post &lt;-<span class="st"> </span><span class="kw">pdisc</span>(p, prior, data)</a>
-<a class="sourceLine" id="cb90-4" title="4"><span class="kw">round</span>(<span class="kw">cbind</span>(p, prior, post), <span class="dv">2</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb84-1" title="1"><span class="kw">library</span>(LearnBayes)</a>
+<a class="sourceLine" id="cb84-2" title="2">data &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">11</span>, <span class="dv">16</span>)</a>
+<a class="sourceLine" id="cb84-3" title="3">post &lt;-<span class="st"> </span><span class="kw">pdisc</span>(p, prior, data)</a>
+<a class="sourceLine" id="cb84-4" title="4"><span class="kw">round</span>(<span class="kw">cbind</span>(p, prior, post), <span class="dv">2</span>)</a></code></pre></div>
 <pre><code>##          p prior post
 ##  [1,] 0.05  0.03 0.00
 ##  [2,] 0.15  0.18 0.00
@@ -298,8 +298,8 @@ de sueño y 16 lo que no duermen esa cantidad.</p>
 ## [10,] 0.95  0.00 0.00</code></pre>
 <p>Y podemos ver la diferencia entre la previa (negro) y la posterior
 (roja),</p>
-<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb92-1" title="1"><span class="kw">plot</span>(p, post, <span class="dt">type =</span> <span class="st">&quot;h&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>)</a>
-<a class="sourceLine" id="cb92-2" title="2"><span class="kw">lines</span>(p <span class="op">+</span><span class="st"> </span><span class="fl">0.01</span>, prior, <span class="dt">type =</span> <span class="st">&quot;h&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb86-1" title="1"><span class="kw">plot</span>(p, post, <span class="dt">type =</span> <span class="st">&quot;h&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>)</a>
+<a class="sourceLine" id="cb86-2" title="2"><span class="kw">lines</span>(p <span class="op">+</span><span class="st"> </span><span class="fl">0.01</span>, prior, <span class="dt">type =</span> <span class="st">&quot;h&quot;</span>)</a></code></pre></div>
 <p><img src="Notas-Curso-Estadistica_files/figure-html/unnamed-chunk-109-1.png" width="672" /></p>
 <p>¿Qué se puede deducir de estos resultados?</p>
 </div>
@@ -309,14 +309,14 @@ de sueño y 16 lo que no duermen esa cantidad.</p>
 <p>Carguemos los datos <code>studdendata</code> del paquete <code>LearnBayes</code>. Esta base
 son preguntas que se le hicieron a un grupo de estudiantes de Bowling
 Green State University. Para mayor información use <code>?studentdata</code>.</p>
-<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb93-1" title="1"><span class="kw">data</span>(<span class="st">&quot;studentdata&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb87-1" title="1"><span class="kw">data</span>(<span class="st">&quot;studentdata&quot;</span>)</a></code></pre></div>
 <p>Como solo se tiene la hora de dormir y la hora de despertarse, se debe tomar la diferencia.</p>
-<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb94-1" title="1">horas_sueno &lt;-<span class="st"> </span>studentdata<span class="op">$</span>WakeUp <span class="op">-</span><span class="st"> </span>studentdata<span class="op">$</span>ToSleep</a>
-<a class="sourceLine" id="cb94-2" title="2">horas_sueno &lt;-<span class="st"> </span><span class="kw">na.omit</span>(horas_sueno)</a>
-<a class="sourceLine" id="cb94-3" title="3"><span class="kw">summary</span>(horas_sueno)</a></code></pre></div>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb88-1" title="1">horas_sueno &lt;-<span class="st"> </span>studentdata<span class="op">$</span>WakeUp <span class="op">-</span><span class="st"> </span>studentdata<span class="op">$</span>ToSleep</a>
+<a class="sourceLine" id="cb88-2" title="2">horas_sueno &lt;-<span class="st"> </span><span class="kw">na.omit</span>(horas_sueno)</a>
+<a class="sourceLine" id="cb88-3" title="3"><span class="kw">summary</span>(horas_sueno)</a></code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##   2.500   6.500   7.500   7.385   8.500  12.500</code></pre>
-<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb96-1" title="1"><span class="kw">hist</span>(horas_sueno, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb90-1" title="1"><span class="kw">hist</span>(horas_sueno, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>)</a></code></pre></div>
 <p><img src="Notas-Curso-Estadistica_files/figure-html/unnamed-chunk-111-1.png" width="672" /></p>
 <p>Ahora supongamos que se tiene quiere ajustar una previa continua a este modelo. Para esto usaremos una distribución Beta con parámetros <span class="math inline">\(\alpha\)</span> y <span class="math inline">\(\beta\)</span>, de la forma</p>
 <p><span class="math display">\[
@@ -329,39 +329,39 @@ parámetros. En particular, suponga que se cree que el <span class="math inline"
 observaciones la proporción será menor que 0.3 y el <span class="math inline">\(90\%\)</span> será menor
 que 0.5.</p>
 <p>Para esto ajustaremos los siguientes parámetros</p>
-<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb97-1" title="1">quantile2 &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">p =</span> <span class="fl">0.9</span>, <span class="dt">x =</span> <span class="fl">0.5</span>)</a>
-<a class="sourceLine" id="cb97-2" title="2">quantile1 &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">p =</span> <span class="fl">0.5</span>, <span class="dt">x =</span> <span class="fl">0.3</span>)</a>
-<a class="sourceLine" id="cb97-3" title="3">ab &lt;-<span class="st"> </span><span class="kw">beta.select</span>(quantile1, quantile2)</a>
-<a class="sourceLine" id="cb97-4" title="4"></a>
-<a class="sourceLine" id="cb97-5" title="5">a &lt;-<span class="st"> </span>ab[<span class="dv">1</span>]</a>
-<a class="sourceLine" id="cb97-6" title="6">b &lt;-<span class="st"> </span>ab[<span class="dv">2</span>]</a>
-<a class="sourceLine" id="cb97-7" title="7">s &lt;-<span class="st"> </span><span class="dv">11</span></a>
-<a class="sourceLine" id="cb97-8" title="8">f &lt;-<span class="st"> </span><span class="dv">16</span></a></code></pre></div>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb91-1" title="1">quantile2 &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">p =</span> <span class="fl">0.9</span>, <span class="dt">x =</span> <span class="fl">0.5</span>)</a>
+<a class="sourceLine" id="cb91-2" title="2">quantile1 &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">p =</span> <span class="fl">0.5</span>, <span class="dt">x =</span> <span class="fl">0.3</span>)</a>
+<a class="sourceLine" id="cb91-3" title="3">ab &lt;-<span class="st"> </span><span class="kw">beta.select</span>(quantile1, quantile2)</a>
+<a class="sourceLine" id="cb91-4" title="4"></a>
+<a class="sourceLine" id="cb91-5" title="5">a &lt;-<span class="st"> </span>ab[<span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb91-6" title="6">b &lt;-<span class="st"> </span>ab[<span class="dv">2</span>]</a>
+<a class="sourceLine" id="cb91-7" title="7">s &lt;-<span class="st"> </span><span class="dv">11</span></a>
+<a class="sourceLine" id="cb91-8" title="8">f &lt;-<span class="st"> </span><span class="dv">16</span></a></code></pre></div>
 <p>En este caso se obtendra la distribución posterior Beta con paramétros
 <span class="math inline">\(\alpha + s\)</span> y <span class="math inline">\(\beta + f\)</span>,</p>
-<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb98-1" title="1"><span class="kw">curve</span>(<span class="kw">dbeta</span>(x, a <span class="op">+</span><span class="st"> </span>s, b <span class="op">+</span><span class="st"> </span>f), <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">xlab =</span> <span class="st">&quot;p&quot;</span>, </a>
-<a class="sourceLine" id="cb98-2" title="2">    <span class="dt">ylab =</span> <span class="st">&quot;Densidad&quot;</span>, <span class="dt">lty =</span> <span class="dv">1</span>, <span class="dt">lwd =</span> <span class="dv">4</span>)</a>
-<a class="sourceLine" id="cb98-3" title="3"><span class="kw">curve</span>(<span class="kw">dbeta</span>(x, s <span class="op">+</span><span class="st"> </span><span class="dv">1</span>, f <span class="op">+</span><span class="st"> </span><span class="dv">1</span>), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">2</span>, </a>
-<a class="sourceLine" id="cb98-4" title="4">    <span class="dt">lwd =</span> <span class="dv">4</span>)</a>
-<a class="sourceLine" id="cb98-5" title="5"><span class="kw">curve</span>(<span class="kw">dbeta</span>(x, a, b), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">3</span>, <span class="dt">lwd =</span> <span class="dv">4</span>)</a>
-<a class="sourceLine" id="cb98-6" title="6"><span class="kw">legend</span>(<span class="fl">0.7</span>, <span class="dv">4</span>, <span class="kw">c</span>(<span class="st">&quot;Previa&quot;</span>, <span class="st">&quot;Verosimilitud&quot;</span>, <span class="st">&quot;Posterior&quot;</span>), </a>
-<a class="sourceLine" id="cb98-7" title="7">    <span class="dt">lty =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>), <span class="dt">lwd =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">3</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb92-1" title="1"><span class="kw">curve</span>(<span class="kw">dbeta</span>(x, a <span class="op">+</span><span class="st"> </span>s, b <span class="op">+</span><span class="st"> </span>f), <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">xlab =</span> <span class="st">&quot;p&quot;</span>, </a>
+<a class="sourceLine" id="cb92-2" title="2">    <span class="dt">ylab =</span> <span class="st">&quot;Densidad&quot;</span>, <span class="dt">lty =</span> <span class="dv">1</span>, <span class="dt">lwd =</span> <span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb92-3" title="3"><span class="kw">curve</span>(<span class="kw">dbeta</span>(x, s <span class="op">+</span><span class="st"> </span><span class="dv">1</span>, f <span class="op">+</span><span class="st"> </span><span class="dv">1</span>), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">2</span>, </a>
+<a class="sourceLine" id="cb92-4" title="4">    <span class="dt">lwd =</span> <span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb92-5" title="5"><span class="kw">curve</span>(<span class="kw">dbeta</span>(x, a, b), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">3</span>, <span class="dt">lwd =</span> <span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb92-6" title="6"><span class="kw">legend</span>(<span class="fl">0.7</span>, <span class="dv">4</span>, <span class="kw">c</span>(<span class="st">&quot;Previa&quot;</span>, <span class="st">&quot;Verosimilitud&quot;</span>, <span class="st">&quot;Posterior&quot;</span>), </a>
+<a class="sourceLine" id="cb92-7" title="7">    <span class="dt">lty =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>), <span class="dt">lwd =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">3</span>))</a></code></pre></div>
 <p><img src="Notas-Curso-Estadistica_files/figure-html/unnamed-chunk-113-1.png" width="672" /></p>
 <p>En particular, si estamos interesados en <span class="math inline">\(\mathbb{P}(p&gt;=.5 | \text {  data })\)</span> se puede estimar con</p>
-<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb99-1" title="1"><span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">pbeta</span>(<span class="fl">0.5</span>, a <span class="op">+</span><span class="st"> </span>s, b <span class="op">+</span><span class="st"> </span>f)</a></code></pre></div>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb93-1" title="1"><span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">pbeta</span>(<span class="fl">0.5</span>, a <span class="op">+</span><span class="st"> </span>s, b <span class="op">+</span><span class="st"> </span>f)</a></code></pre></div>
 <pre><code>## [1] 0.0690226</code></pre>
 <p>y el intervalo de confianza correspondiente a esta distribución sería</p>
-<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb101-1" title="1"><span class="kw">qbeta</span>(<span class="kw">c</span>(<span class="fl">0.05</span>, <span class="fl">0.95</span>), a <span class="op">+</span><span class="st"> </span>s, b <span class="op">+</span><span class="st"> </span>f)</a></code></pre></div>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb95-1" title="1"><span class="kw">qbeta</span>(<span class="kw">c</span>(<span class="fl">0.05</span>, <span class="fl">0.95</span>), a <span class="op">+</span><span class="st"> </span>s, b <span class="op">+</span><span class="st"> </span>f)</a></code></pre></div>
 <pre><code>## [1] 0.2555267 0.5133608</code></pre>
 <p>Otra opción para estimar este intervalo es simular 1000 veces la
 distribución beta y observar su comportamiento en los cuantiles</p>
-<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb103-1" title="1">ps &lt;-<span class="st"> </span><span class="kw">rbeta</span>(<span class="dv">1000</span>, a <span class="op">+</span><span class="st"> </span>s, b <span class="op">+</span><span class="st"> </span>f)</a>
-<a class="sourceLine" id="cb103-2" title="2"><span class="kw">hist</span>(ps, <span class="dt">xlab =</span> <span class="st">&quot;p&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb97-1" title="1">ps &lt;-<span class="st"> </span><span class="kw">rbeta</span>(<span class="dv">1000</span>, a <span class="op">+</span><span class="st"> </span>s, b <span class="op">+</span><span class="st"> </span>f)</a>
+<a class="sourceLine" id="cb97-2" title="2"><span class="kw">hist</span>(ps, <span class="dt">xlab =</span> <span class="st">&quot;p&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>)</a></code></pre></div>
 <p><img src="Notas-Curso-Estadistica_files/figure-html/unnamed-chunk-116-1.png" width="672" /></p>
 <p>La probabilidad que este valor sea mayor que 0.5 es</p>
-<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb104-1" title="1"><span class="kw">sum</span>(ps <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.5</span>)<span class="op">/</span><span class="dv">1000</span></a></code></pre></div>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb98-1" title="1"><span class="kw">sum</span>(ps <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.5</span>)<span class="op">/</span><span class="dv">1000</span></a></code></pre></div>
 <pre><code>## [1] 0.065</code></pre>
-<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb106-1" title="1"><span class="kw">quantile</span>(ps, <span class="kw">c</span>(<span class="fl">0.05</span>, <span class="fl">0.95</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb100-1" title="1"><span class="kw">quantile</span>(ps, <span class="kw">c</span>(<span class="fl">0.05</span>, <span class="fl">0.95</span>))</a></code></pre></div>
 <pre><code>##        5%       95% 
 ## 0.2571102 0.5102856</code></pre>
 </div>
@@ -387,26 +387,26 @@ reemplazo de la distribución discreta.</li>
 sobre la grilla</p>
 <p>Suponga nuevamente que tenemos las mismas previas dadas al inicio del
 capítulo</p>
-<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb108-1" title="1">midpt &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="fl">0.05</span>, <span class="fl">0.95</span>, <span class="dt">by =</span> <span class="fl">0.1</span>)</a>
-<a class="sourceLine" id="cb108-2" title="2">prior &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="fl">5.2</span>, <span class="dv">8</span>, <span class="fl">7.2</span>, <span class="fl">4.6</span>, <span class="fl">2.1</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="dv">0</span>, <span class="dv">0</span>)</a>
-<a class="sourceLine" id="cb108-3" title="3">prior &lt;-<span class="st"> </span>prior<span class="op">/</span><span class="kw">sum</span>(prior)</a></code></pre></div>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb102-1" title="1">midpt &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="fl">0.05</span>, <span class="fl">0.95</span>, <span class="dt">by =</span> <span class="fl">0.1</span>)</a>
+<a class="sourceLine" id="cb102-2" title="2">prior &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="fl">5.2</span>, <span class="dv">8</span>, <span class="fl">7.2</span>, <span class="fl">4.6</span>, <span class="fl">2.1</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="dv">0</span>, <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb102-3" title="3">prior &lt;-<span class="st"> </span>prior<span class="op">/</span><span class="kw">sum</span>(prior)</a></code></pre></div>
 <p>Con la función <code>histprior</code> construye los valores de <span class="math inline">\(p\)</span> sobre una
 grilla.</p>
-<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb109-1" title="1"><span class="kw">curve</span>(<span class="kw">histprior</span>(x, midpt, prior), <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, </a>
-<a class="sourceLine" id="cb109-2" title="2">    <span class="dt">ylab =</span> <span class="st">&quot;Densidad previa&quot;</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.3</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb103-1" title="1"><span class="kw">curve</span>(<span class="kw">histprior</span>(x, midpt, prior), <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, </a>
+<a class="sourceLine" id="cb103-2" title="2">    <span class="dt">ylab =</span> <span class="st">&quot;Densidad previa&quot;</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.3</span>))</a></code></pre></div>
 <p><img src="Notas-Curso-Estadistica_files/figure-html/unnamed-chunk-120-1.png" width="672" /></p>
 <p>Luego recordando que nuestra posterior es <span class="math inline">\(beta(s+1,f+1)\)</span> tenemos que</p>
-<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb110-1" title="1"><span class="kw">curve</span>(<span class="kw">histprior</span>(x, midpt, prior) <span class="op">*</span><span class="st"> </span><span class="kw">dbeta</span>(x, s <span class="op">+</span><span class="st"> </span><span class="dv">1</span>, </a>
-<a class="sourceLine" id="cb110-2" title="2">    f <span class="op">+</span><span class="st"> </span><span class="dv">1</span>), <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">ylab =</span> <span class="st">&quot;Densidad posterior&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb104-1" title="1"><span class="kw">curve</span>(<span class="kw">histprior</span>(x, midpt, prior) <span class="op">*</span><span class="st"> </span><span class="kw">dbeta</span>(x, s <span class="op">+</span><span class="st"> </span><span class="dv">1</span>, </a>
+<a class="sourceLine" id="cb104-2" title="2">    f <span class="op">+</span><span class="st"> </span><span class="dv">1</span>), <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">ylab =</span> <span class="st">&quot;Densidad posterior&quot;</span>)</a></code></pre></div>
 <p><img src="Notas-Curso-Estadistica_files/figure-html/unnamed-chunk-121-1.png" width="672" /></p>
 <p>Para conseguir la distribución posterior, solo debemos de construirla para una secuencia ordenada de valores <span class="math inline">\(p\)</span></p>
-<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb111-1" title="1">p =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length =</span> <span class="dv">1000</span>)</a>
-<a class="sourceLine" id="cb111-2" title="2">post =<span class="st"> </span><span class="kw">histprior</span>(p, midpt, prior) <span class="op">*</span><span class="st"> </span><span class="kw">dbeta</span>(p, s <span class="op">+</span><span class="st"> </span><span class="dv">1</span>, </a>
-<a class="sourceLine" id="cb111-3" title="3">    f <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb111-4" title="4">post =<span class="st"> </span>post<span class="op">/</span><span class="kw">sum</span>(post)</a></code></pre></div>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb105-1" title="1">p =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length =</span> <span class="dv">1000</span>)</a>
+<a class="sourceLine" id="cb105-2" title="2">post =<span class="st"> </span><span class="kw">histprior</span>(p, midpt, prior) <span class="op">*</span><span class="st"> </span><span class="kw">dbeta</span>(p, s <span class="op">+</span><span class="st"> </span><span class="dv">1</span>, </a>
+<a class="sourceLine" id="cb105-3" title="3">    f <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb105-4" title="4">post =<span class="st"> </span>post<span class="op">/</span><span class="kw">sum</span>(post)</a></code></pre></div>
 <p>Finalmente basta con tomar el muestreo de la posterior</p>
-<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb112-1" title="1">ps &lt;-<span class="st"> </span><span class="kw">sample</span>(p, <span class="dt">replace =</span> <span class="ot">TRUE</span>, <span class="dt">prob =</span> post)</a>
-<a class="sourceLine" id="cb112-2" title="2"><span class="kw">hist</span>(ps, <span class="dt">xlab =</span> <span class="st">&quot;p&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb106-1" title="1">ps &lt;-<span class="st"> </span><span class="kw">sample</span>(p, <span class="dt">replace =</span> <span class="ot">TRUE</span>, <span class="dt">prob =</span> post)</a>
+<a class="sourceLine" id="cb106-2" title="2"><span class="kw">hist</span>(ps, <span class="dt">xlab =</span> <span class="st">&quot;p&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>)</a></code></pre></div>
 <p><img src="Notas-Curso-Estadistica_files/figure-html/unnamed-chunk-123-1.png" width="672" /></p>
 </div>
 <div id="monte-carlo-methods" class="section level2">
@@ -443,49 +443,49 @@ menor que $p_{moverse}$ entonces se mueve.
 Si tira un número mayor a $p_{moverse}$ se queda donde está. &lt;/TD&gt;</code></pre>
 </TR>
 </table>
-<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb114-1" title="1">P &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">7</span></a>
-<a class="sourceLine" id="cb114-2" title="2"></a>
-<a class="sourceLine" id="cb114-3" title="3">pos_actual &lt;-<span class="st"> </span><span class="kw">sample</span>(P, <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb114-4" title="4">pos_nueva &lt;-<span class="st"> </span>pos_actual</a>
-<a class="sourceLine" id="cb114-5" title="5"></a>
-<a class="sourceLine" id="cb114-6" title="6">n_pasos &lt;-<span class="st"> </span><span class="dv">50000</span></a>
-<a class="sourceLine" id="cb114-7" title="7">trayectoria &lt;-<span class="st"> </span><span class="kw">numeric</span>(n_pasos)</a>
-<a class="sourceLine" id="cb114-8" title="8"></a>
-<a class="sourceLine" id="cb114-9" title="9">trayectoria[<span class="dv">1</span>] &lt;-<span class="st"> </span>pos_actual</a>
-<a class="sourceLine" id="cb114-10" title="10"></a>
-<a class="sourceLine" id="cb114-11" title="11"><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span>n_pasos) {</a>
-<a class="sourceLine" id="cb114-12" title="12">    <span class="co"># Tira la moneda para decidir</span></a>
-<a class="sourceLine" id="cb114-13" title="13">    </a>
-<a class="sourceLine" id="cb114-14" title="14">    moneda &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="fl">0.5</span>)</a>
-<a class="sourceLine" id="cb114-15" title="15">    <span class="co"># moneda es 0 o 1</span></a>
-<a class="sourceLine" id="cb114-16" title="16">    pos_nueva &lt;-<span class="st"> </span>pos_actual</a>
-<a class="sourceLine" id="cb114-17" title="17">    <span class="cf">if</span> (moneda <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">&amp;</span><span class="st"> </span>(pos_actual <span class="op">+</span><span class="st"> </span><span class="dv">1</span>) <span class="op">&lt;=</span><span class="st"> </span><span class="dv">7</span>) {</a>
-<a class="sourceLine" id="cb114-18" title="18">        pos_nueva =<span class="st"> </span>pos_actual <span class="op">+</span><span class="st"> </span><span class="dv">1</span></a>
-<a class="sourceLine" id="cb114-19" title="19">    } <span class="cf">else</span> <span class="cf">if</span> (moneda <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>(pos_actual <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">&gt;=</span><span class="st"> </span><span class="dv">1</span>) {</a>
-<a class="sourceLine" id="cb114-20" title="20">        pos_nueva &lt;-<span class="st"> </span>pos_actual <span class="op">-</span><span class="st"> </span><span class="dv">1</span></a>
-<a class="sourceLine" id="cb114-21" title="21">    }</a>
-<a class="sourceLine" id="cb114-22" title="22">    </a>
-<a class="sourceLine" id="cb114-23" title="23">    p_moverse &lt;-<span class="st"> </span><span class="kw">min</span>(pos_nueva<span class="op">/</span>pos_actual, <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb114-24" title="24">    </a>
-<a class="sourceLine" id="cb114-25" title="25">    hay_movimiento &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p_moverse <span class="op">&lt;=</span><span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb114-26" title="26">    </a>
-<a class="sourceLine" id="cb114-27" title="27">    <span class="cf">if</span> (hay_movimiento) {</a>
-<a class="sourceLine" id="cb114-28" title="28">        pos_actual &lt;-<span class="st"> </span>pos_nueva</a>
-<a class="sourceLine" id="cb114-29" title="29">    }</a>
-<a class="sourceLine" id="cb114-30" title="30">    </a>
-<a class="sourceLine" id="cb114-31" title="31">    trayectoria[k] &lt;-<span class="st"> </span>pos_nueva</a>
-<a class="sourceLine" id="cb114-32" title="32">}</a></code></pre></div>
-<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb115-1" title="1">df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span>n_pasos, <span class="dt">P =</span> trayectoria)</a>
-<a class="sourceLine" id="cb115-2" title="2"></a>
-<a class="sourceLine" id="cb115-3" title="3"><span class="kw">ggplot</span>(df[<span class="dv">1</span><span class="op">:</span><span class="dv">200</span>, ]) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(x, P)) <span class="op">+</span><span class="st"> </span><span class="kw">coord_flip</span>() <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb115-4" title="4"><span class="st">    </span><span class="kw">theme_minimal</span>(<span class="dt">base_size =</span> <span class="dv">16</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb108-1" title="1">P &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">7</span></a>
+<a class="sourceLine" id="cb108-2" title="2"></a>
+<a class="sourceLine" id="cb108-3" title="3">pos_actual &lt;-<span class="st"> </span><span class="kw">sample</span>(P, <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb108-4" title="4">pos_nueva &lt;-<span class="st"> </span>pos_actual</a>
+<a class="sourceLine" id="cb108-5" title="5"></a>
+<a class="sourceLine" id="cb108-6" title="6">n_pasos &lt;-<span class="st"> </span><span class="dv">50000</span></a>
+<a class="sourceLine" id="cb108-7" title="7">trayectoria &lt;-<span class="st"> </span><span class="kw">numeric</span>(n_pasos)</a>
+<a class="sourceLine" id="cb108-8" title="8"></a>
+<a class="sourceLine" id="cb108-9" title="9">trayectoria[<span class="dv">1</span>] &lt;-<span class="st"> </span>pos_actual</a>
+<a class="sourceLine" id="cb108-10" title="10"></a>
+<a class="sourceLine" id="cb108-11" title="11"><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span>n_pasos) {</a>
+<a class="sourceLine" id="cb108-12" title="12">    <span class="co"># Tira la moneda para decidir</span></a>
+<a class="sourceLine" id="cb108-13" title="13">    </a>
+<a class="sourceLine" id="cb108-14" title="14">    moneda &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="fl">0.5</span>)</a>
+<a class="sourceLine" id="cb108-15" title="15">    <span class="co"># moneda es 0 o 1</span></a>
+<a class="sourceLine" id="cb108-16" title="16">    pos_nueva &lt;-<span class="st"> </span>pos_actual</a>
+<a class="sourceLine" id="cb108-17" title="17">    <span class="cf">if</span> (moneda <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">&amp;</span><span class="st"> </span>(pos_actual <span class="op">+</span><span class="st"> </span><span class="dv">1</span>) <span class="op">&lt;=</span><span class="st"> </span><span class="dv">7</span>) {</a>
+<a class="sourceLine" id="cb108-18" title="18">        pos_nueva =<span class="st"> </span>pos_actual <span class="op">+</span><span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb108-19" title="19">    } <span class="cf">else</span> <span class="cf">if</span> (moneda <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>(pos_actual <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">&gt;=</span><span class="st"> </span><span class="dv">1</span>) {</a>
+<a class="sourceLine" id="cb108-20" title="20">        pos_nueva &lt;-<span class="st"> </span>pos_actual <span class="op">-</span><span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb108-21" title="21">    }</a>
+<a class="sourceLine" id="cb108-22" title="22">    </a>
+<a class="sourceLine" id="cb108-23" title="23">    p_moverse &lt;-<span class="st"> </span><span class="kw">min</span>(pos_nueva<span class="op">/</span>pos_actual, <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb108-24" title="24">    </a>
+<a class="sourceLine" id="cb108-25" title="25">    hay_movimiento &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p_moverse <span class="op">&lt;=</span><span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb108-26" title="26">    </a>
+<a class="sourceLine" id="cb108-27" title="27">    <span class="cf">if</span> (hay_movimiento) {</a>
+<a class="sourceLine" id="cb108-28" title="28">        pos_actual &lt;-<span class="st"> </span>pos_nueva</a>
+<a class="sourceLine" id="cb108-29" title="29">    }</a>
+<a class="sourceLine" id="cb108-30" title="30">    </a>
+<a class="sourceLine" id="cb108-31" title="31">    trayectoria[k] &lt;-<span class="st"> </span>pos_nueva</a>
+<a class="sourceLine" id="cb108-32" title="32">}</a></code></pre></div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb109-1" title="1">df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span>n_pasos, <span class="dt">P =</span> trayectoria)</a>
+<a class="sourceLine" id="cb109-2" title="2"></a>
+<a class="sourceLine" id="cb109-3" title="3"><span class="kw">ggplot</span>(df[<span class="dv">1</span><span class="op">:</span><span class="dv">200</span>, ]) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(x, P)) <span class="op">+</span><span class="st"> </span><span class="kw">coord_flip</span>() <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb109-4" title="4"><span class="st">    </span><span class="kw">theme_minimal</span>(<span class="dt">base_size =</span> <span class="dv">16</span>)</a></code></pre></div>
 <p><img src="Notas-Curso-Estadistica_files/figure-html/unnamed-chunk-126-1.png" width="672" /></p>
-<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb116-1" title="1"><span class="kw">ggplot</span>(df) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(P), <span class="dt">stat =</span> <span class="st">&quot;count&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb116-2" title="2"><span class="st">    </span><span class="kw">theme_minimal</span>(<span class="dt">base_size =</span> <span class="dv">16</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb110-1" title="1"><span class="kw">ggplot</span>(df) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(P), <span class="dt">stat =</span> <span class="st">&quot;count&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb110-2" title="2"><span class="st">    </span><span class="kw">theme_minimal</span>(<span class="dt">base_size =</span> <span class="dv">16</span>)</a></code></pre></div>
 <p><img src="Notas-Curso-Estadistica_files/figure-html/unnamed-chunk-126-2.png" width="672" /></p>
-<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb117-1" title="1"><span class="kw">mean</span>(trayectoria)</a></code></pre></div>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb111-1" title="1"><span class="kw">mean</span>(trayectoria)</a></code></pre></div>
 <pre><code>## [1] 4.86236</code></pre>
-<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb119-1" title="1"><span class="kw">sd</span>(trayectoria)</a></code></pre></div>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb113-1" title="1"><span class="kw">sd</span>(trayectoria)</a></code></pre></div>
 <pre><code>## [1] 1.79851</code></pre>
 </div>
 <div id="el-algoritmo-de-metropolis-hasting" class="section level2">
@@ -573,74 +573,73 @@ con probabilidad <span class="math inline">\(p_{\text {moverse }} ;\)</span> en 
 que salte al siguiente destino. Tomemos <span class="math inline">\(\sigma=0.2\)</span> y supongamos
 que se ha visto que el viajero de <span class="math inline">\(N=20\)</span> y <span class="math inline">\(z=14\)</span> éxitos. Por
 cuestiones de practicidad se tomará <span class="math inline">\(\theta_0 = 0.1\)</span>.</p>
-<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb121-1" title="1"><span class="co"># Carga de datos observados</span></a>
-<a class="sourceLine" id="cb121-2" title="2">datos_observados &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">rep</span>(<span class="dv">0</span>, <span class="dv">6</span>), <span class="kw">rep</span>(<span class="dv">1</span>, <span class="dv">14</span>))</a>
-<a class="sourceLine" id="cb121-3" title="3"></a>
-<a class="sourceLine" id="cb121-4" title="4"><span class="co"># Función de verosimilitud Binomial</span></a>
-<a class="sourceLine" id="cb121-5" title="5">verosimilitud &lt;-<span class="st"> </span><span class="cf">function</span>(theta, data) {</a>
-<a class="sourceLine" id="cb121-6" title="6">    z &lt;-<span class="st"> </span><span class="kw">sum</span>(data)</a>
-<a class="sourceLine" id="cb121-7" title="7">    N &lt;-<span class="st"> </span><span class="kw">length</span>(data)</a>
-<a class="sourceLine" id="cb121-8" title="8">    pDatosDadoTheta &lt;-<span class="st"> </span>theta<span class="op">^</span>z <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>theta)<span class="op">^</span>(N <span class="op">-</span><span class="st"> </span>z)</a>
-<a class="sourceLine" id="cb121-9" title="9">    <span class="co"># Es para asegurarse que los datos caigan en [0,1].</span></a>
-<a class="sourceLine" id="cb121-10" title="10">    pDatosDadoTheta[theta <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>theta <span class="op">&lt;</span><span class="st"> </span><span class="dv">0</span>] &lt;-<span class="st"> </span><span class="dv">0</span></a>
-<a class="sourceLine" id="cb121-11" title="11">    <span class="kw">return</span>(pDatosDadoTheta)</a>
-<a class="sourceLine" id="cb121-12" title="12">}</a>
-<a class="sourceLine" id="cb121-13" title="13"></a>
-<a class="sourceLine" id="cb121-14" title="14"><span class="co"># densidad previa</span></a>
-<a class="sourceLine" id="cb121-15" title="15">previa &lt;-<span class="st"> </span><span class="cf">function</span>(theta) {</a>
-<a class="sourceLine" id="cb121-16" title="16">    pTheta &lt;-<span class="st"> </span><span class="kw">dbeta</span>(theta, <span class="dv">1</span>, <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb121-17" title="17">    <span class="co"># Es para asegurarse que los datos caigan en [0,1].</span></a>
-<a class="sourceLine" id="cb121-18" title="18">    pTheta[theta <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>theta <span class="op">&lt;</span><span class="st"> </span><span class="dv">0</span>] &lt;-<span class="st"> </span><span class="dv">0</span></a>
-<a class="sourceLine" id="cb121-19" title="19">    <span class="kw">return</span>(pTheta)</a>
-<a class="sourceLine" id="cb121-20" title="20">}</a>
-<a class="sourceLine" id="cb121-21" title="21"></a>
-<a class="sourceLine" id="cb121-22" title="22"><span class="co"># densidad posterior</span></a>
-<a class="sourceLine" id="cb121-23" title="23">posterior &lt;-<span class="st"> </span><span class="cf">function</span>(theta, data) {</a>
-<a class="sourceLine" id="cb121-24" title="24">    posterior &lt;-<span class="st"> </span><span class="kw">verosimilitud</span>(theta, data) <span class="op">*</span><span class="st"> </span><span class="kw">previa</span>(theta)</a>
-<a class="sourceLine" id="cb121-25" title="25">    <span class="kw">return</span>(posterior)</a>
-<a class="sourceLine" id="cb121-26" title="26">}</a>
-<a class="sourceLine" id="cb121-27" title="27"></a>
-<a class="sourceLine" id="cb121-28" title="28">n_pasos &lt;-<span class="st"> </span><span class="dv">50000</span></a>
-<a class="sourceLine" id="cb121-29" title="29"></a>
-<a class="sourceLine" id="cb121-30" title="30">trayectoria &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">0</span>, n_pasos)</a>
-<a class="sourceLine" id="cb121-31" title="31"></a>
-<a class="sourceLine" id="cb121-32" title="32"><span class="co"># Valor inicial</span></a>
-<a class="sourceLine" id="cb121-33" title="33">trayectoria[<span class="dv">1</span>] &lt;-<span class="st"> </span><span class="fl">0.01</span></a>
-<a class="sourceLine" id="cb121-34" title="34"></a>
-<a class="sourceLine" id="cb121-35" title="35">n_aceptados &lt;-<span class="st"> </span><span class="dv">0</span></a>
-<a class="sourceLine" id="cb121-36" title="36">n_rechazados &lt;-<span class="st"> </span><span class="dv">0</span></a>
-<a class="sourceLine" id="cb121-37" title="37"></a>
-<a class="sourceLine" id="cb121-38" title="38"></a>
-<a class="sourceLine" id="cb121-39" title="39">sigma &lt;-<span class="st"> </span><span class="fl">0.2</span></a>
-<a class="sourceLine" id="cb121-40" title="40"></a>
-<a class="sourceLine" id="cb121-41" title="41"><span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span>(n_pasos <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)) {</a>
-<a class="sourceLine" id="cb121-42" title="42">    pos_actual &lt;-<span class="st"> </span>trayectoria[t]</a>
-<a class="sourceLine" id="cb121-43" title="43">    </a>
-<a class="sourceLine" id="cb121-44" title="44">    salto_propuesto &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1</span>, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> sigma)</a>
-<a class="sourceLine" id="cb121-45" title="45">    </a>
-<a class="sourceLine" id="cb121-46" title="46">    proba_aceptacion &lt;-<span class="st"> </span><span class="kw">min</span>(<span class="dv">1</span>, <span class="kw">posterior</span>(pos_actual <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb121-47" title="47"><span class="st">        </span>salto_propuesto, datos_observados)<span class="op">/</span><span class="kw">posterior</span>(pos_actual, </a>
-<a class="sourceLine" id="cb121-48" title="48">        datos_observados))</a>
-<a class="sourceLine" id="cb121-49" title="49">    </a>
-<a class="sourceLine" id="cb121-50" title="50">    <span class="co"># Aceptamos el salto?</span></a>
-<a class="sourceLine" id="cb121-51" title="51">    <span class="cf">if</span> (<span class="kw">runif</span>(<span class="dv">1</span>) <span class="op">&lt;</span><span class="st"> </span>proba_aceptacion) {</a>
-<a class="sourceLine" id="cb121-52" title="52">        <span class="co"># Aceptados</span></a>
-<a class="sourceLine" id="cb121-53" title="53">        trayectoria[t <span class="op">+</span><span class="st"> </span><span class="dv">1</span>] &lt;-<span class="st"> </span>pos_actual <span class="op">+</span><span class="st"> </span>salto_propuesto</a>
-<a class="sourceLine" id="cb121-54" title="54">        n_aceptados &lt;-<span class="st"> </span>n_aceptados <span class="op">+</span><span class="st"> </span><span class="dv">1</span></a>
-<a class="sourceLine" id="cb121-55" title="55">    } <span class="cf">else</span> {</a>
-<a class="sourceLine" id="cb121-56" title="56">        <span class="co"># Rechazos</span></a>
-<a class="sourceLine" id="cb121-57" title="57">        trayectoria[t <span class="op">+</span><span class="st"> </span><span class="dv">1</span>] &lt;-<span class="st"> </span>pos_actual</a>
-<a class="sourceLine" id="cb121-58" title="58">        n_rechazados &lt;-<span class="st"> </span>n_rechazados <span class="op">+</span><span class="st"> </span><span class="dv">1</span></a>
-<a class="sourceLine" id="cb121-59" title="59">    }</a>
-<a class="sourceLine" id="cb121-60" title="60">}</a></code></pre></div>
-<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb122-1" title="1">df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span>n_pasos, <span class="dt">P =</span> trayectoria)</a>
-<a class="sourceLine" id="cb122-2" title="2"></a>
-<a class="sourceLine" id="cb122-3" title="3"><span class="kw">ggplot</span>(df[<span class="dv">1</span><span class="op">:</span><span class="dv">500</span>, ]) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(x, P), <span class="dt">size =</span> <span class="fl">0.5</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb122-4" title="4"><span class="st">    </span><span class="kw">coord_flip</span>() <span class="op">+</span><span class="st"> </span><span class="kw">theme_minimal</span>(<span class="dt">base_size =</span> <span class="dv">16</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb115-1" title="1"><span class="co"># Carga de datos observados</span></a>
+<a class="sourceLine" id="cb115-2" title="2">datos_observados &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">rep</span>(<span class="dv">0</span>, <span class="dv">6</span>), <span class="kw">rep</span>(<span class="dv">1</span>, <span class="dv">14</span>))</a>
+<a class="sourceLine" id="cb115-3" title="3"></a>
+<a class="sourceLine" id="cb115-4" title="4"><span class="co"># Función de verosimilitud Binomial</span></a>
+<a class="sourceLine" id="cb115-5" title="5">verosimilitud &lt;-<span class="st"> </span><span class="cf">function</span>(theta, data) {</a>
+<a class="sourceLine" id="cb115-6" title="6">    z &lt;-<span class="st"> </span><span class="kw">sum</span>(data)</a>
+<a class="sourceLine" id="cb115-7" title="7">    N &lt;-<span class="st"> </span><span class="kw">length</span>(data)</a>
+<a class="sourceLine" id="cb115-8" title="8">    pDatosDadoTheta &lt;-<span class="st"> </span>theta<span class="op">^</span>z <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>theta)<span class="op">^</span>(N <span class="op">-</span><span class="st"> </span>z)</a>
+<a class="sourceLine" id="cb115-9" title="9">    <span class="co"># Es para asegurarse que los datos caigan en [0,1].</span></a>
+<a class="sourceLine" id="cb115-10" title="10">    pDatosDadoTheta[theta <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>theta <span class="op">&lt;</span><span class="st"> </span><span class="dv">0</span>] &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb115-11" title="11">    <span class="kw">return</span>(pDatosDadoTheta)</a>
+<a class="sourceLine" id="cb115-12" title="12">}</a>
+<a class="sourceLine" id="cb115-13" title="13"></a>
+<a class="sourceLine" id="cb115-14" title="14"><span class="co"># densidad previa</span></a>
+<a class="sourceLine" id="cb115-15" title="15">previa &lt;-<span class="st"> </span><span class="cf">function</span>(theta) {</a>
+<a class="sourceLine" id="cb115-16" title="16">    pTheta &lt;-<span class="st"> </span><span class="kw">dbeta</span>(theta, <span class="dv">1</span>, <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb115-17" title="17">    <span class="co"># Es para asegurarse que los datos caigan en [0,1].</span></a>
+<a class="sourceLine" id="cb115-18" title="18">    pTheta[theta <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>theta <span class="op">&lt;</span><span class="st"> </span><span class="dv">0</span>] &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb115-19" title="19">    <span class="kw">return</span>(pTheta)</a>
+<a class="sourceLine" id="cb115-20" title="20">}</a>
+<a class="sourceLine" id="cb115-21" title="21"></a>
+<a class="sourceLine" id="cb115-22" title="22"><span class="co"># densidad posterior</span></a>
+<a class="sourceLine" id="cb115-23" title="23">posterior &lt;-<span class="st"> </span><span class="cf">function</span>(theta, data) {</a>
+<a class="sourceLine" id="cb115-24" title="24">    posterior &lt;-<span class="st"> </span><span class="kw">verosimilitud</span>(theta, data) <span class="op">*</span><span class="st"> </span><span class="kw">previa</span>(theta)</a>
+<a class="sourceLine" id="cb115-25" title="25">    <span class="kw">return</span>(posterior)</a>
+<a class="sourceLine" id="cb115-26" title="26">}</a>
+<a class="sourceLine" id="cb115-27" title="27"></a>
+<a class="sourceLine" id="cb115-28" title="28">n_pasos &lt;-<span class="st"> </span><span class="dv">50000</span></a>
+<a class="sourceLine" id="cb115-29" title="29"></a>
+<a class="sourceLine" id="cb115-30" title="30">trayectoria &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">0</span>, n_pasos)</a>
+<a class="sourceLine" id="cb115-31" title="31"></a>
+<a class="sourceLine" id="cb115-32" title="32"><span class="co"># Valor inicial</span></a>
+<a class="sourceLine" id="cb115-33" title="33">trayectoria[<span class="dv">1</span>] &lt;-<span class="st"> </span><span class="fl">0.01</span></a>
+<a class="sourceLine" id="cb115-34" title="34"></a>
+<a class="sourceLine" id="cb115-35" title="35">n_aceptados &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb115-36" title="36">n_rechazados &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb115-37" title="37"></a>
+<a class="sourceLine" id="cb115-38" title="38"></a>
+<a class="sourceLine" id="cb115-39" title="39">sigma &lt;-<span class="st"> </span><span class="fl">0.2</span></a>
+<a class="sourceLine" id="cb115-40" title="40"></a>
+<a class="sourceLine" id="cb115-41" title="41"><span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span>(n_pasos <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)) {</a>
+<a class="sourceLine" id="cb115-42" title="42">    pos_actual &lt;-<span class="st"> </span>trayectoria[t]</a>
+<a class="sourceLine" id="cb115-43" title="43">    </a>
+<a class="sourceLine" id="cb115-44" title="44">    salto_propuesto &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1</span>, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> sigma)</a>
+<a class="sourceLine" id="cb115-45" title="45">    </a>
+<a class="sourceLine" id="cb115-46" title="46">    proba_aceptacion &lt;-<span class="st"> </span><span class="kw">min</span>(<span class="dv">1</span>, <span class="kw">posterior</span>(pos_actual <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb115-47" title="47"><span class="st">        </span>salto_propuesto, datos_observados)<span class="op">/</span><span class="kw">posterior</span>(pos_actual, </a>
+<a class="sourceLine" id="cb115-48" title="48">        datos_observados))</a>
+<a class="sourceLine" id="cb115-49" title="49">    </a>
+<a class="sourceLine" id="cb115-50" title="50">    <span class="co"># Aceptamos el salto?</span></a>
+<a class="sourceLine" id="cb115-51" title="51">    <span class="cf">if</span> (<span class="kw">runif</span>(<span class="dv">1</span>) <span class="op">&lt;</span><span class="st"> </span>proba_aceptacion) {</a>
+<a class="sourceLine" id="cb115-52" title="52">        <span class="co"># Aceptados</span></a>
+<a class="sourceLine" id="cb115-53" title="53">        trayectoria[t <span class="op">+</span><span class="st"> </span><span class="dv">1</span>] &lt;-<span class="st"> </span>pos_actual <span class="op">+</span><span class="st"> </span>salto_propuesto</a>
+<a class="sourceLine" id="cb115-54" title="54">        n_aceptados &lt;-<span class="st"> </span>n_aceptados <span class="op">+</span><span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb115-55" title="55">    } <span class="cf">else</span> {</a>
+<a class="sourceLine" id="cb115-56" title="56">        <span class="co"># Rechazos</span></a>
+<a class="sourceLine" id="cb115-57" title="57">        trayectoria[t <span class="op">+</span><span class="st"> </span><span class="dv">1</span>] &lt;-<span class="st"> </span>pos_actual</a>
+<a class="sourceLine" id="cb115-58" title="58">        n_rechazados &lt;-<span class="st"> </span>n_rechazados <span class="op">+</span><span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb115-59" title="59">    }</a>
+<a class="sourceLine" id="cb115-60" title="60">}</a></code></pre></div>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb116-1" title="1">df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span>n_pasos, <span class="dt">P =</span> trayectoria)</a>
+<a class="sourceLine" id="cb116-2" title="2"></a>
+<a class="sourceLine" id="cb116-3" title="3"><span class="kw">ggplot</span>(df[<span class="dv">1</span><span class="op">:</span><span class="dv">500</span>, ]) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(x, P), <span class="dt">size =</span> <span class="fl">0.5</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb116-4" title="4"><span class="st">    </span><span class="kw">coord_flip</span>() <span class="op">+</span><span class="st"> </span><span class="kw">theme_minimal</span>(<span class="dt">base_size =</span> <span class="dv">16</span>)</a></code></pre></div>
 <p><img src="Notas-Curso-Estadistica_files/figure-html/unnamed-chunk-129-1.png" width="672" /></p>
-<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb123-1" title="1"><span class="kw">ggplot</span>(df) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(P, <span class="dt">y =</span> ..density..), </a>
-<a class="sourceLine" id="cb123-2" title="2">    <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">theme_minimal</span>(<span class="dt">base_size =</span> <span class="dv">16</span>)</a></code></pre></div>
-<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb117-1" title="1"><span class="kw">ggplot</span>(df) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(P, <span class="dt">y =</span> ..density..), </a>
+<a class="sourceLine" id="cb117-2" title="2">    <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">theme_minimal</span>(<span class="dt">base_size =</span> <span class="dv">16</span>)</a></code></pre></div>
 <p><img src="Notas-Curso-Estadistica_files/figure-html/unnamed-chunk-129-2.png" width="672" /></p>
 
 <div id="refs" class="references">

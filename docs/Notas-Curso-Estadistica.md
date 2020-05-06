@@ -4,6 +4,8 @@ author: "Maikol Solís"
 date: ""
 site: bookdown::bookdown_site
 documentclass: book
+fontsize: 12pt
+monofont: "Source Code Pro"
 bibliography: [bibliografia.bib]
 biblio-style: authoryear
 link-citations: yes
@@ -35,11 +37,6 @@ B_j = [x_0 +(j - 1)h,x_0 + jh) \quad j\in \mathbb{Z}
 
 - Cuente cuántas observaciones caen en cada segmento. \(n_j\).
 
-
-```
-## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-```
-
 ![](Notas-Curso-Estadistica_files/figure-latex/observaciones-histograma-1.pdf)<!-- --> 
 - Cuente la frecuencia por el tamaño de muestra \(n\) y el ancho de banda \(h\).
 \begin{equation*}
@@ -47,11 +44,6 @@ f_j = \frac{n_j}{nh}
 \end{equation*}
 
 - Dibuje el histograma.
-
-
-```
-## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-```
 
 ![](Notas-Curso-Estadistica_files/figure-latex/ejemplo-inicial-histograma-1.pdf)<!-- --> 
 
@@ -1411,9 +1403,8 @@ Es claro que en este contexto, se tiene que
 \end{equation}
 
 \BeginKnitrBlock{exercise}<div class="exercise"><span class="exercise" id="exr:unnamed-chunk-67"><strong>(\#exr:unnamed-chunk-67) </strong></span>Una forma fácil de construir los \(T_{(-i)}\) es primero replicando
-la matriz de datos múltiple veces usando el producto de kronecker
+la matriz de datos múltiple veces usando el producto de kronecker</div>\EndKnitrBlock{exercise}
 
-</div>\EndKnitrBlock{exercise}
 
 ```r
 n <- length(x)
@@ -1518,7 +1509,7 @@ x\\
 \hline
 \end{tabular}
 
-````
+
 
 Definamos el sesgo _jackife_ como
 
@@ -1534,8 +1525,8 @@ donde
 \end{equation*}
 
 
-\BeginKnitrBlock{exercise}<div class="exercise"><span class="exercise" id="exr:unnamed-chunk-71"><strong>(\#exr:unnamed-chunk-71) </strong></span>En nuestro caso tendríamos lo siguiente:
-</div>\EndKnitrBlock{exercise}
+\BeginKnitrBlock{exercise}<div class="exercise"><span class="exercise" id="exr:unnamed-chunk-71"><strong>(\#exr:unnamed-chunk-71) </strong></span>En nuestro caso tendríamos lo siguiente:</div>\EndKnitrBlock{exercise}
+
 
 ```r
 (bjack <- (n - 1) * (mean(T_i) - Tn))
@@ -1547,7 +1538,7 @@ donde
 
 Es decir, que los \texttt{T\_i} generan estimadores de \texttt{T\_n}
 que contienen el mismo sesgo.
-```
+
 
 Observe que \(b_{jack}\) tiene la siguiente propiedad
 
@@ -1599,8 +1590,8 @@ estimar \(T_{n}\).</div>\EndKnitrBlock{remark}
 ¿Qué conclusión se obtiene de este cálculo?</div>\EndKnitrBlock{exercise}
 
 
-\BeginKnitrBlock{exercise}<div class="exercise"><span class="exercise" id="exr:unnamed-chunk-76"><strong>(\#exr:unnamed-chunk-76) </strong></span>Los pseudo-valores se estiman de forma directa como,
-</div>\EndKnitrBlock{exercise}
+\BeginKnitrBlock{exercise}<div class="exercise"><span class="exercise" id="exr:unnamed-chunk-76"><strong>(\#exr:unnamed-chunk-76) </strong></span>Los pseudo-valores se estiman de forma directa como,</div>\EndKnitrBlock{exercise}
+
 
 ```r
 pseudo <- n * Tn - (n - 1) * T_i
@@ -1624,7 +1615,7 @@ plot(x = x, y = pseudo)
 
 ![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-78-1.pdf)<!-- --> 
 
-```
+
 
 Con estos pseudo-valores, es posible estimar la media y la varianza de
 \(T_{n}\) con sus respectivos estimadores:
@@ -1657,8 +1648,7 @@ investigación, \(\theta \). Por lo tanto, tenemos que
 \]</div>\EndKnitrBlock{remark}
 
 
-\BeginKnitrBlock{exercise}<div class="exercise"><span class="exercise" id="exr:unnamed-chunk-80"><strong>(\#exr:unnamed-chunk-80) </strong></span>
-</div>\EndKnitrBlock{exercise}
+\BeginKnitrBlock{exercise}<div class="exercise"><span class="exercise" id="exr:unnamed-chunk-80"><strong>(\#exr:unnamed-chunk-80) </strong></span></div>\EndKnitrBlock{exercise}
 
 ```r
 (Tjack <- mean(pseudo))
@@ -1710,7 +1700,7 @@ c(Tjack - z * sdjack/sqrt(n), Tjack + z * sdjack/sqrt(n))
 
 
 
-```
+
 
 
 \newpage
@@ -1840,24 +1830,25 @@ Tboot_b[1:10]
 ## [1] 428.066
 ```
   
+
+```r
+(Vboot <- var(Tboot_b))
+```
+
+```
+## [1] 5504.701
+```
   
-  ```r
-  (Vboot <- var(Tboot_b))
-  ```
-  
-  ```
-  ## [1] 5504.701
-  ```
-  
-  
-  ```r
-  (sdboot <- sqrt(Vboot))
-  ```
-  
-  ```
-  ## [1] 74.19367
-  ```
-  ```
+
+```r
+(sdboot <- sqrt(Vboot))
+```
+
+```
+## [1] 74.19367
+```
+
+```
 
 ### Intervalos de confianza
 
@@ -1882,6 +1873,7 @@ c(Tn - z * sdboot, Tn + z * sdboot)
 ```
 ## [1] 283.8315 574.6653
 ```
+
 ```
 
 \subsubsection{Intervalo pivotal}
@@ -1946,6 +1938,7 @@ It follows that an approximate \(1-\alpha\) confidence interval is \(C_{n}=(\wid
 \[
   C_{n}=\left(2 \widehat{\theta}_{n}-\widehat{\theta}_{((1-\alpha / 2) B)}^{*}, 2 \widehat{\theta}_{n}-\widehat{\theta}_{((\alpha / 2) B)}^{*}\right)
   \]</div>\EndKnitrBlock{remark}
+
 \BeginKnitrBlock{exercise}<div class="exercise"><span class="exercise" id="exr:unnamed-chunk-99"><strong>(\#exr:unnamed-chunk-99) </strong></span>El intervalo anterior para un nivel de 95\% se estima de la siguiente forma</div>\EndKnitrBlock{exercise}
 
 ```r
@@ -1957,6 +1950,7 @@ c(2 * Tn - quantile(Tboot_b, 1 - 0.05/2), 2 * Tn -
 ##    97.5%     2.5% 
 ## 267.1250 552.9294
 ```
+
 ```
 
 ### Intervalo pivotal studentizado
@@ -2029,6 +2023,7 @@ c(Tn - quantile(z_star, 1 - 0.05/2) * sdboot, Tn -
 ##    97.5%     2.5% 
 ## 309.8684 521.6372
 ```
+
 ```
 
 
@@ -2039,7 +2034,7 @@ Resumiendo todos lo métodos de cálculo de intervalos obtenemos
 
 
 ```r
-knitr::kable(data.frame(Método = c("Jacknife", "Bootstrap Normal", 
+knitr::kable(data.frame(Metodo = c("Jacknife", "Bootstrap Normal", 
     "Bootstrap Pivotal", "Bootstrap Pivotal Estudentizado"), 
     Inferior = c(Tjack - z * sdjack/sqrt(n), Tn - z * 
         sdboot, 2 * Tn - quantile(Tboot_b, 1 - 0.05/2), 
@@ -2052,7 +2047,7 @@ knitr::kable(data.frame(Método = c("Jacknife", "Bootstrap Normal",
 
 \begin{tabular}{l|r|r}
 \hline
-Método & Inferior & Superior\\
+Metodo & Inferior & Superior\\
 \hline
 Jacknife & 285.1679 & 573.3289\\
 \hline
@@ -2728,10 +2723,6 @@ ggplot(df[1:500, ]) + geom_line(aes(x, P), size = 0.5) +
 ```r
 ggplot(df) + geom_histogram(aes(P, y = ..density..), 
     color = "white") + theme_minimal(base_size = 16)
-```
-
-```
-## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
 ![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-129-2.pdf)<!-- --> 

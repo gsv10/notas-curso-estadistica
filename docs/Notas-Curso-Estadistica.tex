@@ -2,6 +2,7 @@
 \PassOptionsToPackage{hyphens}{url}
 %
 \documentclass[
+  12pt,
 ]{book}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
@@ -14,6 +15,7 @@
   \usepackage{unicode-math}
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+  \setmonofont[]{Source Code Pro}
 \fi
 % use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
@@ -232,10 +234,6 @@ Suponga que \(X_1,X_2, \dots ,X_n\) proviene de una distribución desconocida.
   Cuente cuántas observaciones caen en cada segmento. \(n_j\).
 \end{itemize}
 
-\begin{verbatim}
-## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-\end{verbatim}
-
 \includegraphics{Notas-Curso-Estadistica_files/figure-latex/observaciones-histograma-1.pdf}
 - Cuente la frecuencia por el tamaño de muestra \(n\) y el ancho de banda \(h\).
 \begin{equation*}
@@ -247,10 +245,6 @@ f_j = \frac{n_j}{nh}
 \item
   Dibuje el histograma.
 \end{itemize}
-
-\begin{verbatim}
-## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-\end{verbatim}
 
 \includegraphics{Notas-Curso-Estadistica_files/figure-latex/ejemplo-inicial-histograma-1.pdf}
 
@@ -1803,8 +1797,6 @@ x\\
 \hline
 \end{tabular}
 
-````
-
 Definamos el sesgo \emph{jackife} como
 
 \begin{equation*}
@@ -1832,7 +1824,6 @@ donde
 
 Es decir, que los \texttt{T\_i} generan estimadores de \texttt{T\_n}
 que contienen el mismo sesgo.
-```
 
 Observe que \(b_{jack}\) tiene la siguiente propiedad
 
@@ -1914,8 +1905,6 @@ reales,
 \end{Shaded}
 
 \includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-78-1.pdf}
-
-```
 
 Con estos pseudo-valores, es posible estimar la media y la varianza de
 \(T_{n}\) con sus respectivos estimadores:
@@ -2000,8 +1989,6 @@ investigación, \(\theta\). Por lo tanto, tenemos que
 \begin{verbatim}
 ## [1] 285.1679 573.3289
 \end{verbatim}
-
-```
 
 \newpage
 
@@ -2364,7 +2351,7 @@ Resumiendo todos lo métodos de cálculo de intervalos obtenemos
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{knitr}\OperatorTok{::}\KeywordTok{kable}\NormalTok{(}\KeywordTok{data.frame}\NormalTok{(Mé}\DataTypeTok{todo =} \KeywordTok{c}\NormalTok{(}\StringTok{"Jacknife"}\NormalTok{, }\StringTok{"Bootstrap Normal"}\NormalTok{, }
+\NormalTok{knitr}\OperatorTok{::}\KeywordTok{kable}\NormalTok{(}\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{Metodo =} \KeywordTok{c}\NormalTok{(}\StringTok{"Jacknife"}\NormalTok{, }\StringTok{"Bootstrap Normal"}\NormalTok{, }
     \StringTok{"Bootstrap Pivotal"}\NormalTok{, }\StringTok{"Bootstrap Pivotal Estudentizado"}\NormalTok{), }
     \DataTypeTok{Inferior =} \KeywordTok{c}\NormalTok{(Tjack }\OperatorTok{-}\StringTok{ }\NormalTok{z }\OperatorTok{*}\StringTok{ }\NormalTok{sdjack}\OperatorTok{/}\KeywordTok{sqrt}\NormalTok{(n), Tn }\OperatorTok{-}\StringTok{ }\NormalTok{z }\OperatorTok{*}\StringTok{ }
 \StringTok{        }\NormalTok{sdboot, }\DecValTok{2} \OperatorTok{*}\StringTok{ }\NormalTok{Tn }\OperatorTok{-}\StringTok{ }\KeywordTok{quantile}\NormalTok{(Tboot_b, }\DecValTok{1} \OperatorTok{-}\StringTok{ }\FloatTok{0.05}\OperatorTok{/}\DecValTok{2}\NormalTok{), }
@@ -2377,7 +2364,7 @@ Resumiendo todos lo métodos de cálculo de intervalos obtenemos
 
 \begin{tabular}{l|r|r}
 \hline
-Método & Inferior & Superior\\
+Metodo & Inferior & Superior\\
 \hline
 Jacknife & 285.1679 & 573.3289\\
 \hline
@@ -3119,10 +3106,6 @@ cuestiones de practicidad se tomará \(\theta_0 = 0.1\).
     \DataTypeTok{color =} \StringTok{"white"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{theme_minimal}\NormalTok{(}\DataTypeTok{base_size =} \DecValTok{16}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
-
-\begin{verbatim}
-## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-\end{verbatim}
 
 \includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-129-2.pdf}
 

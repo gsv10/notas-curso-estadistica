@@ -127,7 +127,7 @@ Es claro que en este contexto, se tiene que
 ```{exercise}
 Una forma fácil de construir los \(T_{(-i)}\) es primero replicando
 la matriz de datos múltiple veces usando el producto de kronecker
-
+```
 
 ```{r, jackdf}
 n <- length(x)
@@ -165,7 +165,7 @@ T_i <- apply(jackdf, 2, var, na.rm=TRUE)
 knitr::kable(T_i[1:10])
 ```
 
-````
+
 
 Definamos el sesgo _jackife_ como
 
@@ -183,6 +183,7 @@ donde
 
 ```{exercise}
 En nuestro caso tendríamos lo siguiente:
+```
 
 ```{r, }
 (bjack <- (n-1)*(mean(T_i) - Tn))
@@ -190,7 +191,7 @@ En nuestro caso tendríamos lo siguiente:
 
 Es decir, que los \texttt{T\_i} generan estimadores de \texttt{T\_n}
 que contienen el mismo sesgo.
-```
+
 
 Observe que \(b_{jack}\) tiene la siguiente propiedad
 
@@ -250,6 +251,7 @@ Usado un cálculo similar para el \(b_{jack}\) pruebe que
 
 ```{exercise}
 Los pseudo-valores se estiman de forma directa como,
+```
 
 ```{r, }
 pseudo <- n * Tn - (n - 1) * T_i
@@ -265,7 +267,7 @@ reales,
 plot(x = x, y = pseudo)
 ```
 
-```
+
 
 Con estos pseudo-valores, es posible estimar la media y la varianza de
 \(T_{n}\) con sus respectivos estimadores:
@@ -302,7 +304,7 @@ investigación, \(\theta \). Por lo tanto, tenemos que
 
 ```{exercise}
 
-
+```
 ```{r, }
 (Tjack <- mean(pseudo))
 ```
@@ -330,7 +332,7 @@ Tjack + z * sdjack / sqrt(n))
 
 
 
-```
+
 
 
 \newpage
@@ -449,14 +451,15 @@ Tboot_b[1:10]
   (Tboot <- mean(Tboot_b))
 ```
   
-  ```{r, }
+```{r, }
   (Vboot <- var(Tboot_b))
 ```
   
-  ```{r, }
+```{r, }
   (sdboot <- sqrt(Vboot))
 ```
-  ```
+
+```
 
 ### Intervalos de confianza
 
@@ -480,6 +483,7 @@ El cálculo de este intervalo es
 c(Tn - z * sdboot,
 Tn + z * sdboot)
 ```
+
 ```
 
 \subsubsection{Intervalo pivotal}
@@ -550,12 +554,14 @@ El intervalo de confianza pivotal de tamaño \(1-\alpha\) es
   C_{n}=\left(2 \widehat{\theta}_{n}-\widehat{\theta}_{((1-\alpha / 2) B)}^{*}, 2 \widehat{\theta}_{n}-\widehat{\theta}_{((\alpha / 2) B)}^{*}\right)
   \]
 ```
+
 ```{exercise}
 El intervalo anterior para un nivel de 95\% se estima de la siguiente forma
 ```{r, }
 c(2 * Tn - quantile(Tboot_b, 1 - 0.05 / 2) ,
 2 * Tn - quantile(Tboot_b, 0.05 / 2))
 ```
+
 ```
 
 ### Intervalo pivotal studentizado
@@ -622,6 +628,8 @@ hist(z_star)
 c(Tn - quantile(z_star, 1 - 0.05 / 2) *   sdboot,
 Tn - quantile(z_star, 0.05 / 2) *   sdboot)
 ```
+
+
 ```
 
 
@@ -633,7 +641,7 @@ Resumiendo todos lo métodos de cálculo de intervalos obtenemos
 ```{r, }
 
 knitr::kable(data.frame(
-`Método` = c(
+`Metodo` = c(
 "Jacknife",
 "Bootstrap Normal",
 "Bootstrap Pivotal",
