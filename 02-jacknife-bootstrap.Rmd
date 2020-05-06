@@ -1,0 +1,672 @@
+# Jacknife y Bootstrap
+
+Suponga que se quiere estimar un intervalo de confianza para la media
+\(\mu\) desconocida de un conjunto de datos \(X_{1},\ldots, X_{n}\)
+que tiene distribución  \(\mathcal{N}\left(\mu ,\sigma^{2}\right)\).
+
+Primero se  conoce que
+
+\begin{equation*}
+\sqrt{n}\left( \hat{\mu} - \mu \right)
+\xrightarrow{\mathcal{L}} \mathcal{N}\left(0,\sigma^{2}\right),
+\end{equation*}
+
+y esto nos permite escribir el intervalo de confianza como
+
+\begin{equation*}
+\left[ \hat{\mu} - \hat{\sigma}z_{1-\frac{\alpha}{2}} ,
+\hat{\mu} + \hat{\sigma}z_{1-\frac{\alpha}{2}}\right]
+\end{equation*}
+
+donde \(z_{1-\frac{\alpha}{2}}\) es el cuantil \(1-\frac{\alpha}{2}\)
+de una normal estándar.
+
+La expresión anterior es posible ya que el supuesto es que la
+distribución de \(\hat{\theta}\) es normal.
+
+```{remark}
+¿Qué pasaría si este supuesto es falso o al menos no conocemos la
+distribución de \(\hat{\theta}\)?
+  
+¿Cómo podemos encontrar ese intervalo de confianza?
+```
+
+```{remark}
+Para una muestra fija, el estimador anterior  \(\hat{\mu}\)
+solamente un valor.  No se conoce la distribución de \(\hat{\mu}\). Lo
+único que se puede estimar son valores puntuales como la media,
+varianza, mediana, etc, pero no sabemos nada de su distribución.
+```
+
+## Caso concreto
+
+Suponga que tenemos la siguiente tabla de datos, que representa una
+muestra de tiempos y distancias de viajes en Atlanta.
+
+Cargamos la base de la siguiente forma:
+
+```{r, CommuteAtlanta}
+CommuteAtlanta <- read.csv2("data/CommuteAtlanta.csv")
+```
+
+
+```{r, echo=FALSE}
+knitr::kable(head(CommuteAtlanta))
+```
+
+
+Para este ejemplo tomaremos la variable \texttt{Time} que la
+llamaremos \texttt{x} para ser más breves. En este caso note que
+
+```{r, assign-Time-to-x}
+x <- CommuteAtlanta$Time
+```
+
+La media es `r mean(x)`  y su varianza `r var(x)`. Para efectos de lo que sigue, asignaremos la varianza a la variable \(T_n\)
+
+```{r, varTime}
+Tn <- var(x)
+```
+
+A partir de estos dos valores, ¿Cuál sería un intervalo de confianza
+para la media?
+
+Note que esta pregunta es difícil ya que no tenemos ningún tipo de
+información adicional.
+
+Las dos técnicas que veremos a continuación nos permitirán extraer
+\emph{información adicional} de la muestra.
+
+```{remark}
+Para efectos de este capítulo, llamaremos \(T_{n}=T\left(
+  X_{1},\ldots,X_{n}\right)\) al estadístico formado por la muestra de
+los \(X_{i}\)'s.
+```
+
+\newpage
+
+## Jacknife
+
+Esta técnica fue propuesta por \cite{Quenouille1949} y consiste en la
+siguiente observación.
+
+Se puede probar que muchos de los estimadores tiene la propiedad que
+
+\begin{equation}
+\operatorname{Sesgo}\left(T_{n}\right)=\frac{a}{n}+\frac{b}{n^{2}}+O\left(\frac{1}{n^{3}}\right)
+\end{equation}
+
+para algún $a$ and $b$.
+
+Por ejemplo $\sigma^{2}=\mathrm{Var}\left(X_{i}\right)$ y sea
+$\widehat{\sigma}_{n}^{2}=n^{-1} \sum_{i=1}^{n}\left(X_{i}-\right.$
+$\bar{X})^{2}$. Entonces,
+
+\begin{equation*}
+\mathbb{E}\left(\widehat{\sigma}_{n}^{2}\right)=
+\frac{n-1}{n}\sigma^{2}
+\end{equation*}
+
+por lo tanto
+
+\begin{equation*}
+\mathrm{Sesgo} = -\frac{\sigma^{2}}{n}
+\end{equation*}
+
+Por lo tanto en este caso $a=-\sigma^{2}$ y $b=0$.
+
+Defina \(T_{(-i)}\) como el estimador \(T_{n}\) pero eliminando el
+\(i\)-ésimo término.
+
+Es claro que en este contexto, se tiene que
+
+\begin{equation}
+\operatorname{Sesgo}\left(T_{(-i)}\right)=\frac{a}{n-1}+\frac{b}{(n-1)^{2}}+O\left(\frac{1}{(n-1)^{3}}\right)
+\end{equation}
+
+```{exercise}
+Una forma fácil de construir los \(T_{(-i)}\) es primero replicando
+la matriz de datos múltiple veces usando el producto de kronecker
+
+
+```{r, jackdf}
+n <- length(x)
+jackdf <- kronecker(matrix(1, 1, n), x)
+```
+
+
+```{r, echo=FALSE}
+knitr::kable(jackdf[1:10, 1:10])
+```
+
+
+
+Y luego se elimina la diagonal
+
+```{r, jackdfNA}
+diag(jackdf) <- NA
+```
+
+
+```{r, echo=FALSE}
+knitr::kable(jackdf[1:10, 1:10])
+```
+
+
+Cada columna contiene toda la muestra excepto el \(i\)-ésimo
+elemento. Solo basta estimar la media de cada columna:
+
+```{r, jack-T-i}
+T_i <- apply(jackdf, 2, var, na.rm=TRUE)
+```
+
+
+```{r, echo=FALSE}
+knitr::kable(T_i[1:10])
+```
+
+````
+
+Definamos el sesgo \emph{jackife} como
+
+
+
+\begin{equation*}
+b_{jack} = (n-1) (\overline{T}_{n} - T_{n})
+\end{equation*}
+
+donde
+\begin{equation*}
+\overline{T}_{n} = \frac{1}{n} \sum_{i=1}^{n} T_{(-i)}
+\end{equation*}
+
+
+```{exercise}
+En nuestro caso tendríamos lo siguiente:
+
+```{r, }
+(bjack <- (n-1)*(mean(T_i) - Tn))
+```
+
+Es decir, que los \texttt{T\_i} generan estimadores de \texttt{T\_n}
+que contienen el mismo sesgo.
+```
+
+Observe que \(b_{jack}\) tiene la siguiente propiedad
+
+
+\begin{align*}
+\mathbb{E}\left(b_{\text {jack}}\right)
+&= (n-1)\left(\mathbb{E}\left[\overline{T}_{n}\right] -
+\mathbb{E}\left[T_{n}\right]\right) \\
+&= (n-1)\left(\mathbb{E}\left[\overline{T}_{n}\right] - \theta +
+\theta - \mathbb{E}\left[T_{n}\right]\right) \\
+& =(n-1)\left(\mathrm{Sesgo} \left(\overline{T}_{n}\right)
+-\mathrm{Sesgo}\left(T_{n}\right)\right) \\
+& =(n-1)\left[\left(\frac{1}{n-1}
+-\frac{1}{n}\right)
+a+\left(\frac{1}{(n-1)^{2}}
+-\frac{1}{n^{2}}\right) b+O\left(\frac{1}{n^{3}}\right)\right] \\
+& =\frac{a}{n}
++\frac{(2 n-1) b}{n^{2}(n-1)}
++O\left(\frac{1}{n^{2}}\right) \\
+& =\operatorname{Sesgo}\left(T_{n}\right)
++O\left(\frac{1}{n^{2}}\right)\\
+\end{align*}
+
+```{remark}
+Es decir, en general, el estimador \(b_{\text{jack}}\)  aproxima
+correctamente \(\mathrm{Sesgo}\left( T_{n} \right)\) hasta con un
+error del \(n^{-2}\).
+```
+
+
+Podemos usar los \emph{T\_i} para generar muestras adicionales para
+estimar el parámetro \(\theta\).
+
+En este caso  defina el siguiente estimador:
+
+\[
+\widetilde{T}_{i}=n T_{n}-(n-1) T_{(-i)}.
+\]
+
+```{remark}
+A \(\widetilde{T}_{i}\) se le llaman \textbf{pseudo-valores} y
+representa el aporte o peso que tiene la variable \(X_{i}\) para
+estimar \(T_{n}\).
+```
+
+```{exercise}
+Usado un cálculo similar para el \(b_{jack}\) pruebe que
+
+\[
+\operatorname{Sesgo}\left(T_{\text {jack}
+}\right)=-\frac{b}{n(n-1)}+O\left(\frac{1}{n^{2}}\right)=O\left(\frac{1}{n^{2}}\right).
+\]
+
+¿Qué conclusión se obtiene de este cálculo?
+```
+
+
+```{exercise}
+Los pseudo-valores se estiman de forma directa como,
+
+```{r, }
+pseudo <- n * Tn - (n - 1) * T_i
+
+pseudo[1:10]
+```
+
+
+Lo importante acá es notar la similitud que tiene con los datos
+reales,
+
+```{r, }
+plot(x = x, y = pseudo)
+```
+
+```
+
+Con estos pseudo-valores, es posible estimar la media y la varianza de
+\(T_{n}\) con sus respectivos estimadores:
+
+\[
+T_{\text {jack }}=\frac{1}{n} \sum_{i=1}^{n} \widetilde{T}_{i}
+\]
+
+donde
+
+\[
+v_{jack}=\frac{\sum_{i=1}^{n}\left(\widetilde{T}_{i}-\frac{1}{n}
+\sum_{i=1}^{n} \widetilde{T}_{i}\right)^{2}}{n(n-1)}.
+\]
+
+
+
+```{remark}
+
+Sin embargo, se puede demostrar fácilmente que se pueden usar
+pseudovalores para construir una prueba normal de hipótesis. Dado que
+cada pseudovalor es independiente e idénticamente distribuido (iid),
+se deduce que su promedio se ajusta a una distribución normal a medida
+que el tamaño de la muestra aumenta. El promedio de los pseudovalores
+es solo \(T_ {jack}\) y el valor esperado de ese promedio, debido a la
+construcción a la imparcialidad del estimador, es el parámetro bajo
+investigación, \(\theta \). Por lo tanto, tenemos que
+\[
+  \frac{\sqrt{n}\left(T_{jack}-\theta\right)}{\sqrt{v_{jack}}}
+  \rightarrow N(0,1).
+\]
+```
+
+
+```{exercise}
+
+
+```{r, }
+(Tjack <- mean(pseudo))
+```
+
+
+```{r, }
+(Vjack <- var(pseudo, na.rm = TRUE))
+```
+
+
+```{r, }
+(sdjack <- sqrt(Vjack))
+```
+
+
+```{r, }
+(z <- qnorm(1 - 0.05 / 2))
+```
+
+
+```{r, }
+c(Tjack - z * sdjack / sqrt(n),
+Tjack + z * sdjack / sqrt(n))
+```
+
+
+
+```
+
+
+\newpage
+
+
+## Bootstrap
+
+
+Este método es un poco más sencillo de implementar que Jacknife y es
+igualmente de eficaz propuesto por \cite{Efron1979}.
+
+Primero recordemos que estamos estimando una estadístico a partir de
+una muestra de modo que \(T_{n}=g\left( X_{1},\ldots,X_{n} \right)\)
+donde \(g\) es cualquier función (media, varianza, quantiles, etc).
+
+
+Supongamos que conocemos la distribución real de los \(X\)'s, llamada \(F(x)\). Si uno
+quisiera estimar la varianza de \(X\) basta con hacer
+
+\begin{equation*}
+\mathrm{Var}_{F}\left(T_{n}\right)
+= \frac{\sigma^{2}}{n}=\frac{\int x^{2}  dF(x)-\left(\int x
+dF(x)\right)^{2}}{n}
+\end{equation*}
+
+
+
+donde \(\sigma^{2} = \mathrm{Var}\left(X\right)\) y el subindice \(F\) es solo para indicar la dependencia con la distribución real.
+
+Ahora dado que no tenemos la distribución  real \(F(x)\), una opción es encontrar un estimador de esta llamado \(\hat{F}_n\).
+
+La técnica de boostrap se basa en extraer muchas muestras iid de la distribución \(\hat{F}_n\) de modo que se pueda conocer su varianza.
+
+En simple pasos la técnica es
+
+1.  Seleccione \(X_{1}^{*}, \ldots, X_{n}^{*} \sim \widehat{F}_{n}\)
+2.  Estime \(T_{n}^{*}=g\left(X_{1}^{*}, \ldots, X_{n}^{*}\right)\)
+3.  Repita los Pasos 1 y 2, \(B\) veces para obtener \(T_{n, 1}^{*}, \ldots, T_{n, B}^{*}\)
+4.  Estime
+\[
+v_{\mathrm{boot}}=\frac{1}{B} \sum_{b=1}^{B}\left(T_{n, b}^{*}-\frac{1}{B} \sum_{r=1}^{B} T_{n, r}^{*}\right)^{2}
+\]
+
+
+Por la ley de los grandes números tenemos que
+
+\begin{equation}
+v_{\mathrm{boot}} \stackrel{\mathrm{a.s.}}{\longrightarrow} \mathbb{V}_{\widehat{F}_{n}}\left(T_{n}\right), \text {\quad si } B \rightarrow \infty.
+\end{equation}
+
+además llamaremos,
+
+\begin{equation*}
+\widehat{\mathrm{se}}_{\mathrm{boot}}=\sqrt{v_{\mathrm{boot}}}
+\end{equation*}
+
+En pocas palabras lo que tenemos es que
+
+
+\begin{align*}
+\text  {Mundo Real: }
+& F
+& \Longrightarrow  X_{1}, \ldots, X_{n}
+& \Longrightarrow
+& T_{n} = g\left(X_{1}, \ldots, X_{n}\right) \\
+\text {Mundo Bootstrap: }
+& \widehat{F}_{n}
+& \Longrightarrow  X_{1}^{*}, \ldots, X_{n}^{*}
+& \Longrightarrow
+& T_{n}^{*}=g\left(X_{1}^{*}, \ldots, X_{n}^{*}\right)
+\end{align*}
+
+En términos de convergencia lo que se tiene es que
+\[
+\mathrm{Var}_{F}\left(T_{n}\right) \overbrace{\approx}^{O(1 / \sqrt{n})} \mathrm{Var}_{\widehat{F}_{n}}\left(T_{n}\right) \overbrace{\approx}^{O(1 / \sqrt{B})} v_{b o o t}
+\]
+
+```{remark}
+¿Cómo extraemos una muestra de \(\hat{F}_n\)?
+  ```
+  
+  
+Recuerden que \(\hat{F}_{n}\) asigna la probabilidad de \(\frac{1}{n}\) a cada valor usado para construirla.
+  
+Por lo tanto, todos los puntos originales \(X_{1},\ldots,X_{n}\) tienen probabilidad \(\frac{1}{n}\) de ser escogidos, que resulta ser equivalente a un muestreo con remplazo \(n\)-veces.
+  
+Así que basta cambiar el punto 1. del algoritmo mencionando anteriormente con
+  
+
+1. Seleccione una muestra con remplazo  \(X_{1}^{*}, \ldots, X_{n}^{*}\) de  \(X_{1},\ldots,X_{n}\).
+
+  
+```{exercise}
+En este ejemplo podemos tomar \(B=1000\) y construir esa cantidad de veces nuestro estimador.
+
+```{r, }
+  B <- 1000
+Tboot_b <- NULL
+
+for(b in 1:B) {
+  xb <- sample(x, size = n, replace = TRUE)
+  Tboot_b[b] <- var(xb)
+}
+
+
+Tboot_b[1:10]
+```
+  
+  ```{r, }
+  plot(Tboot_b)
+```
+  
+  Por supuesto podemos encontrar los estadísticos usuales para esta nueva muestra
+
+```{r, }
+  (Tboot <- mean(Tboot_b))
+```
+  
+  ```{r, }
+  (Vboot <- var(Tboot_b))
+```
+  
+  ```{r, }
+  (sdboot <- sqrt(Vboot))
+```
+  ```
+
+### Intervalos de confianza
+
+
+
+\subsubsection{Intervalo Normal}
+
+Este es el más sencillo y se escribe como
+
+\begin{equation}
+T_{n} \pm z_{\alpha / 2} \widehat{\mathrm{Se}}_{\mathrm{boot}}
+\end{equation}
+
+```{remark}
+Este intervalo solo funciona si la distribución de \(T_{n}\) es normal.
+```
+
+```{exercise}
+El cálculo de este intervalo es
+```{r, }
+c(Tn - z * sdboot,
+Tn + z * sdboot)
+```
+```
+
+\subsubsection{Intervalo pivotal}
+
+Sea  \(\theta=T(F)\) y  \(\widehat{\theta}_{n}=T\left(\widehat{F}_{n}\right)\) y defina la cantidad pivotal  \(R_{n}=\widehat{\theta}_{n}-\theta .\)
+
+Sea  \(H(r)\) la función de distribución del pivote:
+\[
+H(r)=\mathbb{P}_{F}\left(R_{n} \leq r\right).
+\]
+
+Además considere  \(C_{n}^{\star}=(a, b)\)  donde
+\[
+a=\widehat{\theta}_{n}-H^{-1}\left(1-\frac{\alpha}{2}\right) \quad \text { y } \quad b=\widehat{\theta}_{n}-H^{-1}\left(\frac{\alpha}{2}\right).
+\]
+
+Se sigue que
+\begin{align*}
+\mathbb{P}(a \leq \theta \leq b)
+&=\mathbb{P}\left(\widehat{\theta}_{n}-b \leq R_{n} \leq \widehat{\theta}_{n}-a\right) \\
+&=H\left(\widehat{\theta}_{n}-a\right)-H\left(\widehat{\theta}_{n}-b\right) \\
+&=H\left(H^{-1}\left(1-\frac{\alpha}{2}\right)\right)-H\left(H^{-1}\left(\frac{\alpha}{2}\right)\right) \\
+&=1-\frac{\alpha}{2}-\frac{\alpha}{2}=1-\alpha
+\end{align*}
+```{remark}
+\(C_{n}^{\star}=(a, b)\)  es un intervalo de confianza al \(1-\alpha\) de confianza.
+
+El problema es que este intervalo depende de \(H\) desconocido.
+
+```
+
+
+Para resolver este problema, se puede construir una versión \emph{bootstrap} de \(H\) usando lo que sabemos hasta ahora.
+
+\[
+\widehat{H}(r)=\frac{1}{B} \sum_{b=1}^{B} I\left(R_{n, b}^{*} \leq r\right)
+\]
+donde \(R_{n, b}^{*}=\widehat{\theta}_{n, b}^{*}-\widehat{\theta}_{n}\).
+
+Sea  \(r_{\beta}^{*}\) el cuantil muestral de tamaño  \(\beta\) de  \(\left(R_{n, 1}^{*}, \ldots, R_{n, B}^{*}\right)\) y sea \(\theta_{\beta}^{*}\) el cuantil muestral de tamaño  \(\beta\) de \(\left(\theta_{n, 1}^{*}, \ldots, \theta_{n, B}^{*}\right)\).
+```{remark}
+Según la notación anterior note que
+\begin{equation*}
+r_{\beta}^{*}= \theta_{\beta}^{*}-\widehat{\theta}_{n}
+\end{equation*}
+```
+
+
+
+Con estas observaciones
+It follows that an approximate \(1-\alpha\) confidence interval is \(C_{n}=(\widehat{a}, \widehat{b})\) where
+
+\begin{align*}
+\widehat{a}
+&= \widehat{\theta}_{n}-\widehat{H}^{-1}\left(1-\frac{\alpha}{2}\right)
+&= \widehat{\theta}_{n}-r_{1-\alpha / 2}^{*}
+&= \widehat{\theta}_{n}-\theta_{1-\alpha / 2}^{*} + \widehat{\theta}_{n}
+&=2 \widehat{\theta}_{n}-\theta_{1-\alpha / 2}^{*} \\
+\widehat{b} &=\widehat{\theta}_{n}-\widehat{H}^{-1}\left(\frac{\alpha}{2}\right)
+&=\widehat{\theta}_{n}-r_{\alpha / 2}^{*}
+&= \widehat{\theta}_{n}-\theta_{\alpha / 2}^{*} + \widehat{\theta}_{n}
+&=2 \widehat{\theta}_{n}-\theta_{\alpha / 2}^{*}
+\end{align*}
+
+```{remark}
+El intervalo de confianza pivotal de tamaño \(1-\alpha\) es
+\[
+  C_{n}=\left(2 \widehat{\theta}_{n}-\widehat{\theta}_{((1-\alpha / 2) B)}^{*}, 2 \widehat{\theta}_{n}-\widehat{\theta}_{((\alpha / 2) B)}^{*}\right)
+  \]
+```
+```{exercise}
+El intervalo anterior para un nivel de 95\% se estima de la siguiente forma
+```{r, }
+c(2 * Tn - quantile(Tboot_b, 1 - 0.05 / 2) ,
+2 * Tn - quantile(Tboot_b, 0.05 / 2))
+```
+```
+
+### Intervalo pivotal studentizado
+
+Una mejora del intervalo anterior sería normalizar los estimadores previamente
+
+\[
+Z_{n}=\frac{T_{n}-\theta}{\widehat{\mathrm{se}}_{\mathrm{boot}}}.
+\]
+Como \(\theta\) es desconocido, entonces la versión a estimar es
+\[
+Z_{n, b}^{*}=\frac{T_{n, b}^{*}-T_{n}}{\widehat{\mathrm{se}}_{b}^{*}}
+\]
+donde  \(\widehat{\mathrm{se}}_{b}^{*}\) es un estimador del error estándar de  \(T_{n, b}^{*}\) no de \(T_{n}\).
+
+```{remark}
+Esto requerira estimar la varianza de \(T_{n,b}^*\) para cada \(b\).
+```
+
+Con esto se puede obtener  cantidades \(Z_{n, 1}^{*}, \ldots, Z_{n, B}^{*}\) que debería ser próximos a \(Z_{n}\).
+
+Sea \(z_{\alpha}^{*}\) del \(\alpha\) cuantiĺ de \(Z_{n, 1}^{*}, \ldots, Z_{n, B}^{*},\) entonces  \(\mathbb{P}\left(Z_{n} \leq z_{\alpha}^{*}\right) \approx \alpha\).
+
+Define el intervalo
+\begin{equation*}
+C_{n}=\left(T_{n}-z_{1-\alpha / 2}^{*} \widehat{\mathrm{se}}_{\mathrm{boot}}, T_{n}-z_{\alpha / 2}^{*} \widehat{\mathrm{se}}_{\mathrm{boot}}\right)
+\end{equation*}
+
+Justificado por el siguiente cálculo:
+
+
+\begin{align*}
+\mathbb{P}\left(\theta \in C_{n}\right) &=\mathbb{P}\left(T_{n}-z_{1-\alpha / 2}^{*} \widehat{\mathrm{Se}}_{\mathrm{boot}} \leq \theta \leq T_{n}-z_{\alpha / 2}^{*} \widehat{\mathrm{Se}}_{\mathrm{boot}}\right) \\
+&=\mathbb{P}\left(z_{\alpha / 2}^{*} \leq \frac{T_{n}-\theta}{\mathrm{se}_{\mathrm{boot}}} \leq z_{1-\alpha / 2}^{*}\right) \\
+&=\mathbb{P}\left(z_{\alpha / 2}^{*} \leq Z_{n} \leq z_{1-\alpha / 2}^{*}\right) \\
+& \approx 1-\alpha
+\end{align*}
+
+```{exercise}
+
+Note que para este caso tenemos que hacer bootstrap para cada estimador bootstrap calculado.
+```{r,cache=TRUE}
+B <- 1000
+Tboot_b <- NULL
+Tboot_bm <- NULL
+sdboot_b <- NULL
+
+for (b in 1:B) {
+xb <- sample(x, size = n, replace = TRUE)
+Tboot_b[b] <- var(xb)
+for (m in 1:B) {
+xbm <- sample(xb, size = n, replace = TRUE)
+Tboot_bm[b] <- var(xbm)
+}
+sdboot_b <- sd(Tboot_bm)
+}
+
+z_star <- (Tboot_b - Tn) / sdboot_b
+
+hist(z_star)
+```
+
+```{r, }
+c(Tn - quantile(z_star, 1 - 0.05 / 2) *   sdboot,
+Tn - quantile(z_star, 0.05 / 2) *   sdboot)
+```
+```
+
+
+### Resumiendo
+
+
+Resumiendo todos lo métodos de cálculo de intervalos obtenemos
+
+```{r, }
+
+knitr::kable(data.frame(
+`Método` = c(
+"Jacknife",
+"Bootstrap Normal",
+"Bootstrap Pivotal",
+"Bootstrap Pivotal Estudentizado"
+),
+Inferior = c(
+Tjack - z * sdjack / sqrt(n),
+Tn - z * sdboot,
+2 * Tn - quantile(Tboot_b, 1 - 0.05 / 2),
+Tn - quantile(z_star, 1 - 0.05 / 2) *   sdboot
+), 
+Superior = c(
+Tjack + z * sdjack / sqrt(n),
+Tn + z * sdboot,
+2 * Tn - quantile(Tboot_b, 0.05 / 2),
+Tn - quantile(z_star, 0.05 / 2) *   sdboot
+)
+))
+```
+
+## Ejercicios
+
+
+1. Repita los ejercicios anteriores para calcular intervalos de confianza para la distancia promedio y la varianza del desplazamiento de las personas. Use los métodos de Jacknife y Bootstrap (con todos sus intervalos de confianza).
+  
+Dada que la distancia es una medida que puede ser influenciada por distancias muy cortas o muy largas, se puede calcular el logaritmo de esta variable para eliminar la escala de la distancias.
+  
+2. Verifique que esta última variable se podría estimar paramétricamente con una distribución normal.
+  
+Repita los cálculos anteriores tomando como cuantiles los de una normal con media 0 y varianza 1.
+
+3. Compare los intervalos calculados y comente los resultados.
+
+
+
+  
