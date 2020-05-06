@@ -2,7 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
-*._bookdown_files/*
+*_bookdown_files/*
 *.bcf
 *.log
 *.out
