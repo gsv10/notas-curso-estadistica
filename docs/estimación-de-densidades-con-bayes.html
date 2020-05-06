@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Capítulo 4 Estimación de densidades con Bayes | Notas de Clase CA-403</title>
+  <meta name="description" content="Capítulo 4 Estimación de densidades con Bayes | Notas de Clase CA-403" />
+  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Capítulo 4 Estimación de densidades con Bayes | Notas de Clase CA-403" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Capítulo 4 Estimación de densidades con Bayes | Notas de Clase CA-403" />
+  
+  
+  
+
+<meta name="author" content="Maikol Solís" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="jacknife-y-bootstrap.html"/>
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Curso de Estadística</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introducción</a></li>
+<li class="chapter" data-level="2" data-path="estimación-de-densidades.html"><a href="estimación-de-densidades.html"><i class="fa fa-check"></i><b>2</b> Estimación de densidades</a><ul>
+<li class="chapter" data-level="2.1" data-path="estimación-de-densidades.html"><a href="estimación-de-densidades.html#histograma"><i class="fa fa-check"></i><b>2.1</b> Histograma</a><ul>
+<li class="chapter" data-level="2.1.1" data-path="estimación-de-densidades.html"><a href="estimación-de-densidades.html#construcción-estadística"><i class="fa fa-check"></i><b>2.1.1</b> Construcción Estadística</a></li>
+<li class="chapter" data-level="2.1.2" data-path="estimación-de-densidades.html"><a href="estimación-de-densidades.html#construcción-probabilistica"><i class="fa fa-check"></i><b>2.1.2</b> Construcción probabilistica</a></li>
+<li class="chapter" data-level="2.1.3" data-path="estimación-de-densidades.html"><a href="estimación-de-densidades.html#propiedades-estadísticas"><i class="fa fa-check"></i><b>2.1.3</b> Propiedades estadísticas</a></li>
+<li class="chapter" data-level="2.1.4" data-path="estimación-de-densidades.html"><a href="estimación-de-densidades.html#sesgo"><i class="fa fa-check"></i><b>2.1.4</b> Sesgo</a></li>
+<li class="chapter" data-level="2.1.5" data-path="estimación-de-densidades.html"><a href="estimación-de-densidades.html#varianza"><i class="fa fa-check"></i><b>2.1.5</b> Varianza</a></li>
+<li class="chapter" data-level="2.1.6" data-path="estimación-de-densidades.html"><a href="estimación-de-densidades.html#error-cuadrático-medio"><i class="fa fa-check"></i><b>2.1.6</b> Error cuadrático medio</a></li>
+<li class="chapter" data-level="2.1.7" data-path="estimación-de-densidades.html"><a href="estimación-de-densidades.html#error-cuadrático-medio-integrado"><i class="fa fa-check"></i><b>2.1.7</b> Error cuadrático medio integrado</a></li>
+<li class="chapter" data-level="2.1.8" data-path="estimación-de-densidades.html"><a href="estimación-de-densidades.html#ancho-de-banda-óptimo-para-el-histograma"><i class="fa fa-check"></i><b>2.1.8</b> Ancho de banda óptimo para el histograma</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="estimación-de-densidades.html"><a href="estimación-de-densidades.html#estimación-no-paramétrica-de-densidad"><i class="fa fa-check"></i><b>2.2</b> Estimación No-paramétrica de densidad</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="estimación-de-densidades.html"><a href="estimación-de-densidades.html#primera-construcción"><i class="fa fa-check"></i><b>2.2.1</b> Primera construcción</a></li>
+<li class="chapter" data-level="2.2.2" data-path="estimación-de-densidades.html"><a href="estimación-de-densidades.html#otra-construcción"><i class="fa fa-check"></i><b>2.2.2</b> Otra construcción</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="estimación-de-densidades.html"><a href="estimación-de-densidades.html#propiedades-estadísticas-1"><i class="fa fa-check"></i><b>2.3</b> Propiedades Estadísticas</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="estimación-de-densidades.html"><a href="estimación-de-densidades.html#varianza-1"><i class="fa fa-check"></i><b>2.3.1</b> Varianza</a></li>
+<li class="chapter" data-level="2.3.2" data-path="estimación-de-densidades.html"><a href="estimación-de-densidades.html#sesgo-1"><i class="fa fa-check"></i><b>2.3.2</b> Sesgo</a></li>
+<li class="chapter" data-level="2.3.3" data-path="estimación-de-densidades.html"><a href="estimación-de-densidades.html#error-cuadrático-medio-y-error-cuadrático-medio-integrado"><i class="fa fa-check"></i><b>2.3.3</b> Error cuadrático medio y Error cuadrático medio integrado</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="estimación-de-densidades.html"><a href="estimación-de-densidades.html#escogiendo-el-ancho-de-banda"><i class="fa fa-check"></i><b>2.4</b> Escogiendo el ancho de banda</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="estimación-de-densidades.html"><a href="estimación-de-densidades.html#referencia-normal"><i class="fa fa-check"></i><b>2.4.1</b> Referencia normal</a></li>
+<li class="chapter" data-level="2.4.2" data-path="estimación-de-densidades.html"><a href="estimación-de-densidades.html#validación-cruzada"><i class="fa fa-check"></i><b>2.4.2</b> Validación Cruzada</a></li>
+<li class="chapter" data-level="2.4.3" data-path="estimación-de-densidades.html"><a href="estimación-de-densidades.html#intervalos-de-confianza-para-estimadores-de-densidad-no-paramétricos"><i class="fa fa-check"></i><b>2.4.3</b> Intervalos de confianza para estimadores de densidad no paramétricos</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="estimación-de-densidades.html"><a href="estimación-de-densidades.html#laboratorio"><i class="fa fa-check"></i><b>2.5</b> Laboratorio</a><ul>
+<li class="chapter" data-level="2.5.1" data-path="estimación-de-densidades.html"><a href="estimación-de-densidades.html#efecto-de-distintos-kernels-en-la-estimación"><i class="fa fa-check"></i><b>2.5.1</b> Efecto de distintos Kernels en la estimación</a></li>
+<li class="chapter" data-level="2.5.2" data-path="estimación-de-densidades.html"><a href="estimación-de-densidades.html#efecto-del-ancho-de-banda-en-la-estimación"><i class="fa fa-check"></i><b>2.5.2</b> Efecto del ancho de banda en la estimación</a></li>
+<li class="chapter" data-level="2.5.3" data-path="estimación-de-densidades.html"><a href="estimación-de-densidades.html#ancho-de-banda-óptimo"><i class="fa fa-check"></i><b>2.5.3</b> Ancho de banda óptimo</a></li>
+<li class="chapter" data-level="2.5.4" data-path="estimación-de-densidades.html"><a href="estimación-de-densidades.html#validación-cruzada-1"><i class="fa fa-check"></i><b>2.5.4</b> Validación cruzada</a></li>
+<li class="chapter" data-level="2.5.5" data-path="estimación-de-densidades.html"><a href="estimación-de-densidades.html#temas-adicionales"><i class="fa fa-check"></i><b>2.5.5</b> Temas adicionales</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="jacknife-y-bootstrap.html"><a href="jacknife-y-bootstrap.html"><i class="fa fa-check"></i><b>3</b> Jacknife y Bootstrap</a><ul>
+<li class="chapter" data-level="3.1" data-path="jacknife-y-bootstrap.html"><a href="jacknife-y-bootstrap.html#caso-concreto"><i class="fa fa-check"></i><b>3.1</b> Caso concreto</a></li>
+<li class="chapter" data-level="3.2" data-path="jacknife-y-bootstrap.html"><a href="jacknife-y-bootstrap.html#jacknife"><i class="fa fa-check"></i><b>3.2</b> Jacknife</a></li>
+<li class="chapter" data-level="3.3" data-path="jacknife-y-bootstrap.html"><a href="jacknife-y-bootstrap.html#bootstrap"><i class="fa fa-check"></i><b>3.3</b> Bootstrap</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="jacknife-y-bootstrap.html"><a href="jacknife-y-bootstrap.html#intervalos-de-confianza"><i class="fa fa-check"></i><b>3.3.1</b> Intervalos de confianza</a></li>
+<li class="chapter" data-level="3.3.2" data-path="jacknife-y-bootstrap.html"><a href="jacknife-y-bootstrap.html#intervalo-pivotal-studentizado"><i class="fa fa-check"></i><b>3.3.2</b> Intervalo pivotal studentizado</a></li>
+<li class="chapter" data-level="3.3.3" data-path="jacknife-y-bootstrap.html"><a href="jacknife-y-bootstrap.html#resumiendo"><i class="fa fa-check"></i><b>3.3.3</b> Resumiendo</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="jacknife-y-bootstrap.html"><a href="jacknife-y-bootstrap.html#ejercicios"><i class="fa fa-check"></i><b>3.4</b> Ejercicios</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="estimación-de-densidades-con-bayes.html"><a href="estimación-de-densidades-con-bayes.html"><i class="fa fa-check"></i><b>4</b> Estimación de densidades con Bayes</a><ul>
+<li class="chapter" data-level="4.1" data-path="estimación-de-densidades-con-bayes.html"><a href="estimación-de-densidades-con-bayes.html#introducción-a-la-estimación-bayesiana"><i class="fa fa-check"></i><b>4.1</b> Introducción a la estimación Bayesiana</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="estimación-de-densidades-con-bayes.html"><a href="estimación-de-densidades-con-bayes.html#preliminares"><i class="fa fa-check"></i><b>4.1.1</b> Preliminares</a></li>
+<li class="chapter" data-level="4.1.2" data-path="estimación-de-densidades-con-bayes.html"><a href="estimación-de-densidades-con-bayes.html#ejemplo-sencillo"><i class="fa fa-check"></i><b>4.1.2</b> Ejemplo sencillo</a></li>
+<li class="chapter" data-level="4.1.3" data-path="estimación-de-densidades-con-bayes.html"><a href="estimación-de-densidades-con-bayes.html#datos-reales"><i class="fa fa-check"></i><b>4.1.3</b> Datos reales</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="estimación-de-densidades-con-bayes.html"><a href="estimación-de-densidades-con-bayes.html#previa-de-histograma"><i class="fa fa-check"></i><b>4.2</b> Previa de histograma</a></li>
+<li class="chapter" data-level="4.3" data-path="estimación-de-densidades-con-bayes.html"><a href="estimación-de-densidades-con-bayes.html#monte-carlo-methods"><i class="fa fa-check"></i><b>4.3</b> Monte Carlo methods</a></li>
+<li class="chapter" data-level="4.4" data-path="estimación-de-densidades-con-bayes.html"><a href="estimación-de-densidades-con-bayes.html#ejemplo-del-viajero"><i class="fa fa-check"></i><b>4.4</b> Ejemplo del viajero</a></li>
+<li class="chapter" data-level="4.5" data-path="estimación-de-densidades-con-bayes.html"><a href="estimación-de-densidades-con-bayes.html#el-algoritmo-de-metropolis-hasting"><i class="fa fa-check"></i><b>4.5</b> El algoritmo de Metropolis-Hasting</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Notas de Clase CA-403</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="estimación-de-densidades-con-bayes" class="section level1">
+<h1><span class="header-section-number">Capítulo 4</span> Estimación de densidades con Bayes</h1>
+<div id="introducción-a-la-estimación-bayesiana" class="section level2">
+<h2><span class="header-section-number">4.1</span> Introducción a la estimación Bayesiana</h2>
+<div id="preliminares" class="section level3">
+<h3><span class="header-section-number">4.1.1</span> Preliminares</h3>
+<p>Recordemos que tenemos <span class="math inline">\(f(\theta)\)</span> la previa, <span class="math inline">\(L(\theta)\)</span> la
+verosimilitud de los datos y <span class="math inline">\(f(\theta|\text { data })\)</span> la posterior
+ajustada a los datos.</p>
+<p><span class="math display">\[\begin{equation*}
+    f(\theta | \text { data }) \propto f(\theta) L(\theta)
+\end{equation*}\]</span></p>
+<p>Además para el caso de la binomial tenemos que</p>
+<p><span class="math display">\[\begin{equation*}
+    f(y | \theta)=\theta^{\gamma}(1-\theta)^{(1-\gamma)}
+\end{equation*}\]</span></p>
+<p>y la distribución beta se escribe de la forma</p>
+<p><span class="math display">\[\begin{align*}
+    f(\theta | a, b) &amp; =\operatorname{beta}(\theta | a, b)         \\
+                     &amp; =\theta^{(a-1)}(1-\theta)^{(b-1)} / B(a, b)
+\end{align*}\]</span></p>
+<p>donde</p>
+<p><span class="math display">\[\begin{equation*}
+    B(a, b)=\int_{0}^{1}  \theta^{(a-1)}(1-\theta)^{(b-1)}\mathrm{d} \theta.
+\end{equation*}\]</span></p>
+<p>Los valores de <span class="math inline">\(a\)</span> y <span class="math inline">\(b\)</span> controlan la forma de esta distribución</p>
+<div class="figure">
+<img src="manual_figures/betas.png" alt="Tomado de Kruschke (2014)" />
+<p class="caption">Tomado de <span class="citation">Kruschke (<a href="#ref-Kruschke2014">2014</a>)</span></p>
+</div>
+<p>Una forma alternative es <span class="math inline">\(\mu=a /(a+b)\)</span> es la media, <span class="math inline">\(\kappa=a+b\)</span>
+es la concentración y <span class="math inline">\(\omega=(a-1) /(a+b-2)\)</span> es la moda de la
+distribución Beta, entonces se cumple que</p>
+<p><span class="math display">\[\begin{align*}
+          &amp; a=\mu \kappa \quad \text { y } \quad b=(1-\mu) \kappa                                         \\
+          &amp; a=\omega(\kappa-2)+1 \quad \text { y } \quad b=(1-\omega)(\kappa-2)+1 \text { para } \kappa&gt;2
+\end{align*}\]</span></p>
+<p>Es decir, es posible estimar <span class="math inline">\(a\)</span> y <span class="math inline">\(b\)</span> de <span class="math inline">\(\kappa\)</span>, <span class="math inline">\(\mu\)</span> y <span class="math inline">\(\omega\)</span></p>
+<p>De acuerdo la combinación de estas dos distribuciones forma una familia conjugada de modo que</p>
+<p><span class="math display">\[\begin{align*}
+        f(\theta | z, N)
+          &amp; = f(z, N | \theta) f(\theta) / f(z, N)
+        \quad                                              \\
+          &amp; = \theta^{z}(1-\theta)^{(N-z)} \frac{\theta^{(a-1)}(1-\theta)^{(b-1)}}{B(a, b)} / p(z, N) \\
+          &amp; = \theta^{z}(1-\theta)^{(N-z)} \theta^{(a-1)}(1-\theta)^{(b-1)} /[B(a, b) p(z, N)]        \\
+          &amp; = \theta^{((z+a)-1)}(1-\theta)^{((N-z+b)-1)} /[B(a, b) p(z, N)]                           \\
+          &amp; = \theta^{((z+a)-1)}(1-\theta)^{((N-z+b)-1)} / B(z+a, N-z+b)
+\end{align*}\]</span></p>
+</div>
+<div id="ejemplo-sencillo" class="section level3">
+<h3><span class="header-section-number">4.1.2</span> Ejemplo sencillo</h3>
+<p>Suponga que se hace una encuesta a 27 estudiantes y se encuentra que
+11 dicen que duermen más de 8 horas diarias y el resto no. Nuestro
+objetivo es encontrar inferencias sobre la proporción <span class="math inline">\(p\)</span> de
+estudiantes que duermen al menos 8 horas diarias. El modelo más
+adecuado es</p>
+<p><span class="math display">\[
+        f(x \vert p) \propto p^s (1-p)^f
+\]</span></p>
+<p>donde <span class="math inline">\(s\)</span> es la cantidad de estudiantes que duermen más de 8 horas y
+<span class="math inline">\(f\)</span> los que duermen menos de 8 horas.</p>
+<p>Una primera aproximación para la previa es usar una distribución
+discreta. En este caso, el investigador asigna una probabilidad a
+cierta cantidad de horas de sueño, según su experiencia. Así, por
+ejemplo:</p>
+<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb83-1" title="1">(p &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="fl">0.05</span>, <span class="fl">0.95</span>, <span class="dt">by =</span> <span class="fl">0.1</span>))</a></code></pre></div>
+<pre><code>##  [1] 0.05 0.15 0.25 0.35 0.45 0.55 0.65 0.75 0.85 0.95</code></pre>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb85-1" title="1">(prior &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="fl">5.2</span>, <span class="dv">8</span>, <span class="fl">7.2</span>, <span class="fl">4.6</span>, <span class="fl">2.1</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="dv">0</span>, </a>
+<a class="sourceLine" id="cb85-2" title="2">    <span class="dv">0</span>))</a></code></pre></div>
+<pre><code>##  [1] 1.0 5.2 8.0 7.2 4.6 2.1 0.7 0.1 0.0 0.0</code></pre>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb87-1" title="1">(prior &lt;-<span class="st"> </span>prior<span class="op">/</span><span class="kw">sum</span>(prior))</a></code></pre></div>
+<pre><code>##  [1] 0.034602076 0.179930796 0.276816609 0.249134948 0.159169550 0.072664360
+##  [7] 0.024221453 0.003460208 0.000000000 0.000000000</code></pre>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb89-1" title="1"><span class="kw">plot</span>(p, prior, <span class="dt">type =</span> <span class="st">&quot;h&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Probabilidad Previa&quot;</span>)</a></code></pre></div>
+<p><img src="Notas-Curso-Estadistica_files/figure-html/unnamed-chunk-107-1.png" width="672" /></p>
+<p>El paquete <code>LearnBayes</code> tiene la función <code>pdisc</code> que estima la
+distribución posterior para una previa discreta binomial. Recuerde que
+el valor 11 representa la cantidad de estudiantes con más de 8 horas
+de sueño y 16 lo que no duermen esa cantidad.</p>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb90-1" title="1"><span class="kw">library</span>(LearnBayes)</a>
+<a class="sourceLine" id="cb90-2" title="2">data &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">11</span>, <span class="dv">16</span>)</a>
+<a class="sourceLine" id="cb90-3" title="3">post &lt;-<span class="st"> </span><span class="kw">pdisc</span>(p, prior, data)</a>
+<a class="sourceLine" id="cb90-4" title="4"><span class="kw">round</span>(<span class="kw">cbind</span>(p, prior, post), <span class="dv">2</span>)</a></code></pre></div>
+<pre><code>##          p prior post
+##  [1,] 0.05  0.03 0.00
+##  [2,] 0.15  0.18 0.00
+##  [3,] 0.25  0.28 0.13
+##  [4,] 0.35  0.25 0.48
+##  [5,] 0.45  0.16 0.33
+##  [6,] 0.55  0.07 0.06
+##  [7,] 0.65  0.02 0.00
+##  [8,] 0.75  0.00 0.00
+##  [9,] 0.85  0.00 0.00
+## [10,] 0.95  0.00 0.00</code></pre>
+<p>Y podemos ver la diferencia entre la previa (negro) y la posterior
+(roja),</p>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb92-1" title="1"><span class="kw">plot</span>(p, post, <span class="dt">type =</span> <span class="st">&quot;h&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>)</a>
+<a class="sourceLine" id="cb92-2" title="2"><span class="kw">lines</span>(p <span class="op">+</span><span class="st"> </span><span class="fl">0.01</span>, prior, <span class="dt">type =</span> <span class="st">&quot;h&quot;</span>)</a></code></pre></div>
+<p><img src="Notas-Curso-Estadistica_files/figure-html/unnamed-chunk-109-1.png" width="672" /></p>
+<p>¿Qué se puede deducir de estos resultados?</p>
+</div>
+<div id="datos-reales" class="section level3">
+<h3><span class="header-section-number">4.1.3</span> Datos reales</h3>
+<p>Continuemos el ejercicio pero esta vez usando datos reales.</p>
+<p>Carguemos los datos <code>studdendata</code> del paquete <code>LearnBayes</code>. Esta base
+son preguntas que se le hicieron a un grupo de estudiantes de Bowling
+Green State University. Para mayor información use <code>?studentdata</code>.</p>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb93-1" title="1"><span class="kw">data</span>(<span class="st">&quot;studentdata&quot;</span>)</a></code></pre></div>
+<p>Como solo se tiene la hora de dormir y la hora de despertarse, se debe tomar la diferencia.</p>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb94-1" title="1">horas_sueno &lt;-<span class="st"> </span>studentdata<span class="op">$</span>WakeUp <span class="op">-</span><span class="st"> </span>studentdata<span class="op">$</span>ToSleep</a>
+<a class="sourceLine" id="cb94-2" title="2">horas_sueno &lt;-<span class="st"> </span><span class="kw">na.omit</span>(horas_sueno)</a>
+<a class="sourceLine" id="cb94-3" title="3"><span class="kw">summary</span>(horas_sueno)</a></code></pre></div>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   2.500   6.500   7.500   7.385   8.500  12.500</code></pre>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb96-1" title="1"><span class="kw">hist</span>(horas_sueno, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>)</a></code></pre></div>
+<p><img src="Notas-Curso-Estadistica_files/figure-html/unnamed-chunk-111-1.png" width="672" /></p>
+<p>Ahora supongamos que se tiene quiere ajustar una previa continua a este modelo. Para esto usaremos una distribución Beta con parámetros <span class="math inline">\(\alpha\)</span> y <span class="math inline">\(\beta\)</span>, de la forma</p>
+<p><span class="math display">\[
+    f(p\vert \alpha, \beta) \propto p^{1-\alpha} (1-p)^{1-\beta}.
+\]</span></p>
+<p>El ajuste de los parámetros de la Beta depende mucho de la información
+previa que se tenga del modelo. Una forma fácil de estimarlo es a
+través de cuantiles con los cuales se puede reescribir estos
+parámetros. En particular, suponga que se cree que el <span class="math inline">\(50\%\)</span> de las
+observaciones la proporción será menor que 0.3 y el <span class="math inline">\(90\%\)</span> será menor
+que 0.5.</p>
+<p>Para esto ajustaremos los siguientes parámetros</p>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb97-1" title="1">quantile2 &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">p =</span> <span class="fl">0.9</span>, <span class="dt">x =</span> <span class="fl">0.5</span>)</a>
+<a class="sourceLine" id="cb97-2" title="2">quantile1 &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">p =</span> <span class="fl">0.5</span>, <span class="dt">x =</span> <span class="fl">0.3</span>)</a>
+<a class="sourceLine" id="cb97-3" title="3">ab &lt;-<span class="st"> </span><span class="kw">beta.select</span>(quantile1, quantile2)</a>
+<a class="sourceLine" id="cb97-4" title="4"></a>
+<a class="sourceLine" id="cb97-5" title="5">a &lt;-<span class="st"> </span>ab[<span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb97-6" title="6">b &lt;-<span class="st"> </span>ab[<span class="dv">2</span>]</a>
+<a class="sourceLine" id="cb97-7" title="7">s &lt;-<span class="st"> </span><span class="dv">11</span></a>
+<a class="sourceLine" id="cb97-8" title="8">f &lt;-<span class="st"> </span><span class="dv">16</span></a></code></pre></div>
+<p>En este caso se obtendra la distribución posterior Beta con paramétros
+<span class="math inline">\(\alpha + s\)</span> y <span class="math inline">\(\beta + f\)</span>,</p>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb98-1" title="1"><span class="kw">curve</span>(<span class="kw">dbeta</span>(x, a <span class="op">+</span><span class="st"> </span>s, b <span class="op">+</span><span class="st"> </span>f), <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">xlab =</span> <span class="st">&quot;p&quot;</span>, </a>
+<a class="sourceLine" id="cb98-2" title="2">    <span class="dt">ylab =</span> <span class="st">&quot;Densidad&quot;</span>, <span class="dt">lty =</span> <span class="dv">1</span>, <span class="dt">lwd =</span> <span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb98-3" title="3"><span class="kw">curve</span>(<span class="kw">dbeta</span>(x, s <span class="op">+</span><span class="st"> </span><span class="dv">1</span>, f <span class="op">+</span><span class="st"> </span><span class="dv">1</span>), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">2</span>, </a>
+<a class="sourceLine" id="cb98-4" title="4">    <span class="dt">lwd =</span> <span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb98-5" title="5"><span class="kw">curve</span>(<span class="kw">dbeta</span>(x, a, b), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lty =</span> <span class="dv">3</span>, <span class="dt">lwd =</span> <span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb98-6" title="6"><span class="kw">legend</span>(<span class="fl">0.7</span>, <span class="dv">4</span>, <span class="kw">c</span>(<span class="st">&quot;Previa&quot;</span>, <span class="st">&quot;Verosimilitud&quot;</span>, <span class="st">&quot;Posterior&quot;</span>), </a>
+<a class="sourceLine" id="cb98-7" title="7">    <span class="dt">lty =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>), <span class="dt">lwd =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">3</span>))</a></code></pre></div>
+<p><img src="Notas-Curso-Estadistica_files/figure-html/unnamed-chunk-113-1.png" width="672" /></p>
+<p>En particular, si estamos interesados en <span class="math inline">\(\mathbb{P}(p&gt;=.5 | \text {  data })\)</span> se puede estimar con</p>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb99-1" title="1"><span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">pbeta</span>(<span class="fl">0.5</span>, a <span class="op">+</span><span class="st"> </span>s, b <span class="op">+</span><span class="st"> </span>f)</a></code></pre></div>
+<pre><code>## [1] 0.0690226</code></pre>
+<p>y el intervalo de confianza correspondiente a esta distribución sería</p>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb101-1" title="1"><span class="kw">qbeta</span>(<span class="kw">c</span>(<span class="fl">0.05</span>, <span class="fl">0.95</span>), a <span class="op">+</span><span class="st"> </span>s, b <span class="op">+</span><span class="st"> </span>f)</a></code></pre></div>
+<pre><code>## [1] 0.2555267 0.5133608</code></pre>
+<p>Otra opción para estimar este intervalo es simular 1000 veces la
+distribución beta y observar su comportamiento en los cuantiles</p>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb103-1" title="1">ps &lt;-<span class="st"> </span><span class="kw">rbeta</span>(<span class="dv">1000</span>, a <span class="op">+</span><span class="st"> </span>s, b <span class="op">+</span><span class="st"> </span>f)</a>
+<a class="sourceLine" id="cb103-2" title="2"><span class="kw">hist</span>(ps, <span class="dt">xlab =</span> <span class="st">&quot;p&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>)</a></code></pre></div>
+<p><img src="Notas-Curso-Estadistica_files/figure-html/unnamed-chunk-116-1.png" width="672" /></p>
+<p>La probabilidad que este valor sea mayor que 0.5 es</p>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb104-1" title="1"><span class="kw">sum</span>(ps <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.5</span>)<span class="op">/</span><span class="dv">1000</span></a></code></pre></div>
+<pre><code>## [1] 0.065</code></pre>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb106-1" title="1"><span class="kw">quantile</span>(ps, <span class="kw">c</span>(<span class="fl">0.05</span>, <span class="fl">0.95</span>))</a></code></pre></div>
+<pre><code>##        5%       95% 
+## 0.2571102 0.5102856</code></pre>
+</div>
+</div>
+<div id="previa-de-histograma" class="section level2">
+<h2><span class="header-section-number">4.2</span> Previa de histograma</h2>
+<p>El caso anterior funciona perfecto dada la combinación Binomial-Beta.</p>
+<p>¿Qué pasaría si nuestra previa no está basada beta, sino que
+quisiéramos extraerla directamente de los datos?</p>
+<p>El método que usaremos será el siguiente:</p>
+<ul>
+<li>Elija una cuadrícula de valores de <span class="math inline">\(p\)</span> sobre un intervalo que cubra
+la densidad posterior.</li>
+<li>Calcule el producto de la probabilidad <span class="math inline">\(L (p)\)</span> y el <span class="math inline">\(f (p)\)</span> sobre
+esa grilla.</li>
+<li>Normalice dividiendo cada producto por la suma de los productos. En
+esto paso, estamos aproximando la densidad posterior por una
+probabilidad discreta Distribución en la grilla.</li>
+<li>Usando el comando <code>sample</code> de <code>R</code>, tome una muestra aleatoria con
+reemplazo de la distribución discreta.</li>
+</ul>
+<p>El resultado nos debe arrojar una muestra de la distribución posterior
+sobre la grilla</p>
+<p>Suponga nuevamente que tenemos las mismas previas dadas al inicio del
+capítulo</p>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb108-1" title="1">midpt &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="fl">0.05</span>, <span class="fl">0.95</span>, <span class="dt">by =</span> <span class="fl">0.1</span>)</a>
+<a class="sourceLine" id="cb108-2" title="2">prior &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="fl">5.2</span>, <span class="dv">8</span>, <span class="fl">7.2</span>, <span class="fl">4.6</span>, <span class="fl">2.1</span>, <span class="fl">0.7</span>, <span class="fl">0.1</span>, <span class="dv">0</span>, <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb108-3" title="3">prior &lt;-<span class="st"> </span>prior<span class="op">/</span><span class="kw">sum</span>(prior)</a></code></pre></div>
+<p>Con la función <code>histprior</code> construye los valores de <span class="math inline">\(p\)</span> sobre una
+grilla.</p>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb109-1" title="1"><span class="kw">curve</span>(<span class="kw">histprior</span>(x, midpt, prior), <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, </a>
+<a class="sourceLine" id="cb109-2" title="2">    <span class="dt">ylab =</span> <span class="st">&quot;Densidad previa&quot;</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.3</span>))</a></code></pre></div>
+<p><img src="Notas-Curso-Estadistica_files/figure-html/unnamed-chunk-120-1.png" width="672" /></p>
+<p>Luego recordando que nuestra posterior es <span class="math inline">\(beta(s+1,f+1)\)</span> tenemos que</p>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb110-1" title="1"><span class="kw">curve</span>(<span class="kw">histprior</span>(x, midpt, prior) <span class="op">*</span><span class="st"> </span><span class="kw">dbeta</span>(x, s <span class="op">+</span><span class="st"> </span><span class="dv">1</span>, </a>
+<a class="sourceLine" id="cb110-2" title="2">    f <span class="op">+</span><span class="st"> </span><span class="dv">1</span>), <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">ylab =</span> <span class="st">&quot;Densidad posterior&quot;</span>)</a></code></pre></div>
+<p><img src="Notas-Curso-Estadistica_files/figure-html/unnamed-chunk-121-1.png" width="672" /></p>
+<p>Para conseguir la distribución posterior, solo debemos de construirla para una secuencia ordenada de valores <span class="math inline">\(p\)</span></p>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb111-1" title="1">p =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length =</span> <span class="dv">1000</span>)</a>
+<a class="sourceLine" id="cb111-2" title="2">post =<span class="st"> </span><span class="kw">histprior</span>(p, midpt, prior) <span class="op">*</span><span class="st"> </span><span class="kw">dbeta</span>(p, s <span class="op">+</span><span class="st"> </span><span class="dv">1</span>, </a>
+<a class="sourceLine" id="cb111-3" title="3">    f <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb111-4" title="4">post =<span class="st"> </span>post<span class="op">/</span><span class="kw">sum</span>(post)</a></code></pre></div>
+<p>Finalmente basta con tomar el muestreo de la posterior</p>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb112-1" title="1">ps &lt;-<span class="st"> </span><span class="kw">sample</span>(p, <span class="dt">replace =</span> <span class="ot">TRUE</span>, <span class="dt">prob =</span> post)</a>
+<a class="sourceLine" id="cb112-2" title="2"><span class="kw">hist</span>(ps, <span class="dt">xlab =</span> <span class="st">&quot;p&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>)</a></code></pre></div>
+<p><img src="Notas-Curso-Estadistica_files/figure-html/unnamed-chunk-123-1.png" width="672" /></p>
+</div>
+<div id="monte-carlo-methods" class="section level2">
+<h2><span class="header-section-number">4.3</span> Monte Carlo methods</h2>
+<p>El tratamiento clásico de la estimación de parámetros bayesiana nos dice que si tenemos una densidad previa y la ``combinamos’’ con la verosimilitud de los datos, estos nos dará una densidad con más información. Se podría repetir el proceso varias veces para tratar de ajustar mejor la densidad posterior.</p>
+<p>Sin embargo, se podría usar potencia de los métodos Monte Carlo para que esta búsqueda sea muy efectiva para encontrar los parámetros adecuados.</p>
+</div>
+<div id="ejemplo-del-viajero" class="section level2">
+<h2><span class="header-section-number">4.4</span> Ejemplo del viajero</h2>
+<p>Suponga que tenemos un viajero que quiere estar en 7 lugares distintos (suponga que están en línea recta) y la probabilidad de pasar a un lugar a otro se decide tirando una moneda no sesgada (50% a la derecha y 50% a la izquierda).</p>
+<p>Este caso sería una simple caminata aleatoria sin ningún interés en particular.</p>
+<p>Suponga además, que el viajero quiere estar más tiempo donde haya una mayor cantidad de personas <span class="math inline">\(P\)</span> pero siguiendo ese patrón aleatorio. Entonces la forma de describir su decisión de moverse sería:</p>
+<table>
+<TR>
+<TD style = "text-align:center", COLSPAN="2">Tira la moneda y decide
+    si va a la izquierda o la derecha</TD>
+</TR>
+<TR>
+<TD style="text-align:center" COLSPAN="2">
+Tiene dos opciones
+</TD>
+</TR>
+<TR>
+<TD>
+Si el lugar nuevo tiene <strong>MÁS</strong> personas que el actual salta a ese
+lugar
+</TD>
+<TD>
+<p>Si el lugar nuevo tiene <strong>MENOS</strong> personas entonces calcula la
+probabilidad de moverse como <span class="math inline">\(p_{moverse} = P_{nuevo}/P_{actual}\)</span>.</p>
+<pre><code>Entonces el viajero tira un número aleatorio del 0 al 1 y si este
+menor que $p_{moverse}$ entonces se mueve.
+
+Si tira un número mayor a $p_{moverse}$ se queda donde está. &lt;/TD&gt;</code></pre>
+</TR>
+</table>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb114-1" title="1">P &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">7</span></a>
+<a class="sourceLine" id="cb114-2" title="2"></a>
+<a class="sourceLine" id="cb114-3" title="3">pos_actual &lt;-<span class="st"> </span><span class="kw">sample</span>(P, <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb114-4" title="4">pos_nueva &lt;-<span class="st"> </span>pos_actual</a>
+<a class="sourceLine" id="cb114-5" title="5"></a>
+<a class="sourceLine" id="cb114-6" title="6">n_pasos &lt;-<span class="st"> </span><span class="dv">50000</span></a>
+<a class="sourceLine" id="cb114-7" title="7">trayectoria &lt;-<span class="st"> </span><span class="kw">numeric</span>(n_pasos)</a>
+<a class="sourceLine" id="cb114-8" title="8"></a>
+<a class="sourceLine" id="cb114-9" title="9">trayectoria[<span class="dv">1</span>] &lt;-<span class="st"> </span>pos_actual</a>
+<a class="sourceLine" id="cb114-10" title="10"></a>
+<a class="sourceLine" id="cb114-11" title="11"><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span>n_pasos) {</a>
+<a class="sourceLine" id="cb114-12" title="12">    <span class="co"># Tira la moneda para decidir</span></a>
+<a class="sourceLine" id="cb114-13" title="13">    </a>
+<a class="sourceLine" id="cb114-14" title="14">    moneda &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="fl">0.5</span>)</a>
+<a class="sourceLine" id="cb114-15" title="15">    <span class="co"># moneda es 0 o 1</span></a>
+<a class="sourceLine" id="cb114-16" title="16">    pos_nueva &lt;-<span class="st"> </span>pos_actual</a>
+<a class="sourceLine" id="cb114-17" title="17">    <span class="cf">if</span> (moneda <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">&amp;</span><span class="st"> </span>(pos_actual <span class="op">+</span><span class="st"> </span><span class="dv">1</span>) <span class="op">&lt;=</span><span class="st"> </span><span class="dv">7</span>) {</a>
+<a class="sourceLine" id="cb114-18" title="18">        pos_nueva =<span class="st"> </span>pos_actual <span class="op">+</span><span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb114-19" title="19">    } <span class="cf">else</span> <span class="cf">if</span> (moneda <span class="op">==</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>(pos_actual <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">&gt;=</span><span class="st"> </span><span class="dv">1</span>) {</a>
+<a class="sourceLine" id="cb114-20" title="20">        pos_nueva &lt;-<span class="st"> </span>pos_actual <span class="op">-</span><span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb114-21" title="21">    }</a>
+<a class="sourceLine" id="cb114-22" title="22">    </a>
+<a class="sourceLine" id="cb114-23" title="23">    p_moverse &lt;-<span class="st"> </span><span class="kw">min</span>(pos_nueva<span class="op">/</span>pos_actual, <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb114-24" title="24">    </a>
+<a class="sourceLine" id="cb114-25" title="25">    hay_movimiento &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p_moverse <span class="op">&lt;=</span><span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb114-26" title="26">    </a>
+<a class="sourceLine" id="cb114-27" title="27">    <span class="cf">if</span> (hay_movimiento) {</a>
+<a class="sourceLine" id="cb114-28" title="28">        pos_actual &lt;-<span class="st"> </span>pos_nueva</a>
+<a class="sourceLine" id="cb114-29" title="29">    }</a>
+<a class="sourceLine" id="cb114-30" title="30">    </a>
+<a class="sourceLine" id="cb114-31" title="31">    trayectoria[k] &lt;-<span class="st"> </span>pos_nueva</a>
+<a class="sourceLine" id="cb114-32" title="32">}</a></code></pre></div>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb115-1" title="1">df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span>n_pasos, <span class="dt">P =</span> trayectoria)</a>
+<a class="sourceLine" id="cb115-2" title="2"></a>
+<a class="sourceLine" id="cb115-3" title="3"><span class="kw">ggplot</span>(df[<span class="dv">1</span><span class="op">:</span><span class="dv">200</span>, ]) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(x, P)) <span class="op">+</span><span class="st"> </span><span class="kw">coord_flip</span>() <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb115-4" title="4"><span class="st">    </span><span class="kw">theme_minimal</span>(<span class="dt">base_size =</span> <span class="dv">16</span>)</a></code></pre></div>
+<p><img src="Notas-Curso-Estadistica_files/figure-html/unnamed-chunk-126-1.png" width="672" /></p>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb116-1" title="1"><span class="kw">ggplot</span>(df) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(P), <span class="dt">stat =</span> <span class="st">&quot;count&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb116-2" title="2"><span class="st">    </span><span class="kw">theme_minimal</span>(<span class="dt">base_size =</span> <span class="dv">16</span>)</a></code></pre></div>
+<p><img src="Notas-Curso-Estadistica_files/figure-html/unnamed-chunk-126-2.png" width="672" /></p>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb117-1" title="1"><span class="kw">mean</span>(trayectoria)</a></code></pre></div>
+<pre><code>## [1] 4.86236</code></pre>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb119-1" title="1"><span class="kw">sd</span>(trayectoria)</a></code></pre></div>
+<pre><code>## [1] 1.79851</code></pre>
+</div>
+<div id="el-algoritmo-de-metropolis-hasting" class="section level2">
+<h2><span class="header-section-number">4.5</span> El algoritmo de Metropolis-Hasting</h2>
+<p>El ejemplo anterior era bastante sencillo pero demuestra que se puede
+encontrar el mejor estimador posible simplemente ejecutando una y otra
+vez maximizando la estadía en los lugares más poblados.</p>
+<p>En este ejemplo la función a maximizar es la cantidad de personas
+<span class="math inline">\(P(\theta)=\theta\)</span>, pero en general nuestro objetivo será maximizar
+la distribución posterior <span class="math inline">\(f(\theta| \text{ datos })\)</span>.</p>
+<p>En palabras simples el algoritmo de Metropoli Hasting es</p>
+<ol style="list-style-type: decimal">
+<li>Simule un valor <span class="math inline">\(\theta^{*}\)</span> de una densidad de propuesta
+<span class="math inline">\(p\left(\theta^{*} | \theta^{t-1}\right)\)</span></li>
+<li>Estime la razón
+<span class="math display">\[
+ R=\frac{f\left(\theta^{*}\right) p\left(\theta^{t-1} |
+     \theta^{*}\right)}{f\left(\theta^{t-1}\right) p\left(\theta^{*} |
+     \theta^{t-1}\right)}
+\]</span></li>
+<li>Estima la probabilidad de aceptación <span class="math inline">\(p_{\text {moverse }}=\min \{R, 1\}\)</span>.</li>
+<li>Tome <span class="math inline">\(\theta^{t}\)</span> tal que <span class="math inline">\(\theta^{t}=\theta^{*}\)</span>
+con probabilidad <span class="math inline">\(p_{\text {moverse }}\)</span>; en otro caso <span class="math inline">\(\theta^{t}=\)</span> <span class="math inline">\(\theta^{t-1}\)</span></li>
+</ol>
+<p>El algoritmo de Metropolis-Hastings se puede construir de muchas
+formas, dependiendo de la densidad de proposición</p>
+<p>Si esta es independiente de las elecciones anteriores entonces,
+<span class="math display">\[
+    p\left(\theta^{*} | \theta^{t-1}\right)=p\left(\theta^{*}\right)
+\]</span></p>
+<p>Otras formas es escoger
+<span class="math display">\[
+    p\left(\theta^{*} |
+    \theta^{t-1}\right)=h\left(\theta^{*}-\theta^{t-1}\right)
+\]</span>
+donde <span class="math inline">\(h\)</span> es simetrica alrededor del origen. En este tipo de
+cadenas, la razón <span class="math inline">\(R\)</span> tiene la forma
+<span class="math display">\[
+    R=\frac{f\left(\theta^{*}\right)}{f\left(\theta^{t-1}\right)}
+\]</span></p>
+<p>Una última opción es tomar
+<span class="math display">\[
+    \theta^{*}=\theta^{t-1}+ Z
+\]</span></p>
+<p>donde <span class="math inline">\(Z\)</span> es una normal centrada con cierta estructura de varianza.</p>
+<p>Retomemos el ejemplo del viajero. Supongamos que ahora existen una
+cantidad infinita de lugares a los que puede ir y que la población de
+cada isla es proporcional a la densidad posterior. Además, el viajero
+podría saltar a cualquier isla que quisiera y su probabilidad de
+salto cae de forma continua en el intervalo <span class="math inline">\([0,1]\)</span>.</p>
+<p>Para hacer este ejemplo concreto, el viajero no conoce cuál es su
+probabilidad de salto <span class="math inline">\(\theta\)</span> pero sabe que ha tirado la
+moneda <span class="math inline">\(N\)</span> veces y observado <span class="math inline">\(z\)</span> exitos. Por lo tanto tendremos
+una verosimilitud de <span class="math inline">\(f(z, N | \theta)=\theta^{z}(1-\theta)^{(N-z)}\)</span>.</p>
+<p>La previa será dada por <span class="math inline">\(f(\theta)=\operatorname{beta}(\theta | a, b)\)</span>.</p>
+<p>Los saltos serán gobernados por una normal centrada con media
+<span class="math inline">\(\sigma\)</span> de modo que <span class="math inline">\(\Delta \theta \sim \mathcal{N}\left(0,\sigma^{2}\right)\)</span>.</p>
+<p>Entonces el algoritmo de Metropolis Hasting se puede reformular como</p>
+<ol style="list-style-type: decimal">
+<li>Simule un valor de salto<span class="math inline">\(\Delta \theta \sim \mathcal{N}\left(0,\sigma^{2}\right)\)</span> y denote <span class="math inline">\(\theta^{t} = \theta^{t} + \Delta\theta\)</span>.</li>
+<li><p>Probabilidad de aceptación $ p_{}$
+<span class="math display">\[\begin{align*}
+ p_{\text {moverse }}
+   &amp; =\min \left(1, \frac{P\left(\theta_{\ast}\right)}{P\left(\theta_{t-1}\right)}\right) \\
+               &amp; =\min \left(1, \frac{p\left(D |
+     \theta_{\ast}\right) p\left(\theta_{\ast}\right)}{p\left(D | \theta_{t-1}\right)
+     p\left(\theta_{t-1}\right)}\right) \\
+   &amp; =\min \left(1, \frac{\operatorname{Bernoulli}\left(z, N |
+     \theta_{\ast}\right)
+     \operatorname{beta}\left(\theta_{\ast} | a,
+     b\right)}{\operatorname{Bernoulli}\left(z, N |
+     \theta_{t-1}\right)
+     \operatorname{beta}\left(\theta_{t-1} | a, b\right)}\right) \\
+   &amp; =\min \left(1,
+ \frac{\theta_{\ast}^{z}\left(1-\theta_{\ast}\right)^{(N-z)}
+         \theta_{\ast} \left(1-\theta_{\ast}\right)^{(b-1)}
+         / B(a,b)}{\theta_{t-1}^{z}\left(1-\theta_{t-1}\right)^{(N-z)}
+         \theta_{t-1}^{(a-1)}\left(1-\theta_{t-1}\right)^{(b-1)}
+         / B(a, b)}\right)
+\end{align*}\]</span></p></li>
+<li><p>Tome <span class="math inline">\(\theta_{t}\)</span> tal que <span class="math inline">\(\theta_{t}=\theta_{*}\)</span>
+con probabilidad <span class="math inline">\(p_{\text {moverse }} ;\)</span> en otro caso <span class="math inline">\(\theta_{t}=\)</span> <span class="math inline">\(\theta_{t-1}\)</span></p></li>
+</ol>
+<p>En el ejemplo del viajero queremos ver la probabilidad <span class="math inline">\(\theta\)</span> de
+que salte al siguiente destino. Tomemos <span class="math inline">\(\sigma=0.2\)</span> y supongamos
+que se ha visto que el viajero de <span class="math inline">\(N=20\)</span> y <span class="math inline">\(z=14\)</span> éxitos. Por
+cuestiones de practicidad se tomará <span class="math inline">\(\theta_0 = 0.1\)</span>.</p>
+<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb121-1" title="1"><span class="co"># Carga de datos observados</span></a>
+<a class="sourceLine" id="cb121-2" title="2">datos_observados &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">rep</span>(<span class="dv">0</span>, <span class="dv">6</span>), <span class="kw">rep</span>(<span class="dv">1</span>, <span class="dv">14</span>))</a>
+<a class="sourceLine" id="cb121-3" title="3"></a>
+<a class="sourceLine" id="cb121-4" title="4"><span class="co"># Función de verosimilitud Binomial</span></a>
+<a class="sourceLine" id="cb121-5" title="5">verosimilitud &lt;-<span class="st"> </span><span class="cf">function</span>(theta, data) {</a>
+<a class="sourceLine" id="cb121-6" title="6">    z &lt;-<span class="st"> </span><span class="kw">sum</span>(data)</a>
+<a class="sourceLine" id="cb121-7" title="7">    N &lt;-<span class="st"> </span><span class="kw">length</span>(data)</a>
+<a class="sourceLine" id="cb121-8" title="8">    pDatosDadoTheta &lt;-<span class="st"> </span>theta<span class="op">^</span>z <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>theta)<span class="op">^</span>(N <span class="op">-</span><span class="st"> </span>z)</a>
+<a class="sourceLine" id="cb121-9" title="9">    <span class="co"># Es para asegurarse que los datos caigan en [0,1].</span></a>
+<a class="sourceLine" id="cb121-10" title="10">    pDatosDadoTheta[theta <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>theta <span class="op">&lt;</span><span class="st"> </span><span class="dv">0</span>] &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb121-11" title="11">    <span class="kw">return</span>(pDatosDadoTheta)</a>
+<a class="sourceLine" id="cb121-12" title="12">}</a>
+<a class="sourceLine" id="cb121-13" title="13"></a>
+<a class="sourceLine" id="cb121-14" title="14"><span class="co"># densidad previa</span></a>
+<a class="sourceLine" id="cb121-15" title="15">previa &lt;-<span class="st"> </span><span class="cf">function</span>(theta) {</a>
+<a class="sourceLine" id="cb121-16" title="16">    pTheta &lt;-<span class="st"> </span><span class="kw">dbeta</span>(theta, <span class="dv">1</span>, <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb121-17" title="17">    <span class="co"># Es para asegurarse que los datos caigan en [0,1].</span></a>
+<a class="sourceLine" id="cb121-18" title="18">    pTheta[theta <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>theta <span class="op">&lt;</span><span class="st"> </span><span class="dv">0</span>] &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb121-19" title="19">    <span class="kw">return</span>(pTheta)</a>
+<a class="sourceLine" id="cb121-20" title="20">}</a>
+<a class="sourceLine" id="cb121-21" title="21"></a>
+<a class="sourceLine" id="cb121-22" title="22"><span class="co"># densidad posterior</span></a>
+<a class="sourceLine" id="cb121-23" title="23">posterior &lt;-<span class="st"> </span><span class="cf">function</span>(theta, data) {</a>
+<a class="sourceLine" id="cb121-24" title="24">    posterior &lt;-<span class="st"> </span><span class="kw">verosimilitud</span>(theta, data) <span class="op">*</span><span class="st"> </span><span class="kw">previa</span>(theta)</a>
+<a class="sourceLine" id="cb121-25" title="25">    <span class="kw">return</span>(posterior)</a>
+<a class="sourceLine" id="cb121-26" title="26">}</a>
+<a class="sourceLine" id="cb121-27" title="27"></a>
+<a class="sourceLine" id="cb121-28" title="28">n_pasos &lt;-<span class="st"> </span><span class="dv">50000</span></a>
+<a class="sourceLine" id="cb121-29" title="29"></a>
+<a class="sourceLine" id="cb121-30" title="30">trayectoria &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">0</span>, n_pasos)</a>
+<a class="sourceLine" id="cb121-31" title="31"></a>
+<a class="sourceLine" id="cb121-32" title="32"><span class="co"># Valor inicial</span></a>
+<a class="sourceLine" id="cb121-33" title="33">trayectoria[<span class="dv">1</span>] &lt;-<span class="st"> </span><span class="fl">0.01</span></a>
+<a class="sourceLine" id="cb121-34" title="34"></a>
+<a class="sourceLine" id="cb121-35" title="35">n_aceptados &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb121-36" title="36">n_rechazados &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb121-37" title="37"></a>
+<a class="sourceLine" id="cb121-38" title="38"></a>
+<a class="sourceLine" id="cb121-39" title="39">sigma &lt;-<span class="st"> </span><span class="fl">0.2</span></a>
+<a class="sourceLine" id="cb121-40" title="40"></a>
+<a class="sourceLine" id="cb121-41" title="41"><span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span>(n_pasos <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)) {</a>
+<a class="sourceLine" id="cb121-42" title="42">    pos_actual &lt;-<span class="st"> </span>trayectoria[t]</a>
+<a class="sourceLine" id="cb121-43" title="43">    </a>
+<a class="sourceLine" id="cb121-44" title="44">    salto_propuesto &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1</span>, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> sigma)</a>
+<a class="sourceLine" id="cb121-45" title="45">    </a>
+<a class="sourceLine" id="cb121-46" title="46">    proba_aceptacion &lt;-<span class="st"> </span><span class="kw">min</span>(<span class="dv">1</span>, <span class="kw">posterior</span>(pos_actual <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb121-47" title="47"><span class="st">        </span>salto_propuesto, datos_observados)<span class="op">/</span><span class="kw">posterior</span>(pos_actual, </a>
+<a class="sourceLine" id="cb121-48" title="48">        datos_observados))</a>
+<a class="sourceLine" id="cb121-49" title="49">    </a>
+<a class="sourceLine" id="cb121-50" title="50">    <span class="co"># Aceptamos el salto?</span></a>
+<a class="sourceLine" id="cb121-51" title="51">    <span class="cf">if</span> (<span class="kw">runif</span>(<span class="dv">1</span>) <span class="op">&lt;</span><span class="st"> </span>proba_aceptacion) {</a>
+<a class="sourceLine" id="cb121-52" title="52">        <span class="co"># Aceptados</span></a>
+<a class="sourceLine" id="cb121-53" title="53">        trayectoria[t <span class="op">+</span><span class="st"> </span><span class="dv">1</span>] &lt;-<span class="st"> </span>pos_actual <span class="op">+</span><span class="st"> </span>salto_propuesto</a>
+<a class="sourceLine" id="cb121-54" title="54">        n_aceptados &lt;-<span class="st"> </span>n_aceptados <span class="op">+</span><span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb121-55" title="55">    } <span class="cf">else</span> {</a>
+<a class="sourceLine" id="cb121-56" title="56">        <span class="co"># Rechazos</span></a>
+<a class="sourceLine" id="cb121-57" title="57">        trayectoria[t <span class="op">+</span><span class="st"> </span><span class="dv">1</span>] &lt;-<span class="st"> </span>pos_actual</a>
+<a class="sourceLine" id="cb121-58" title="58">        n_rechazados &lt;-<span class="st"> </span>n_rechazados <span class="op">+</span><span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb121-59" title="59">    }</a>
+<a class="sourceLine" id="cb121-60" title="60">}</a></code></pre></div>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb122-1" title="1">df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span>n_pasos, <span class="dt">P =</span> trayectoria)</a>
+<a class="sourceLine" id="cb122-2" title="2"></a>
+<a class="sourceLine" id="cb122-3" title="3"><span class="kw">ggplot</span>(df[<span class="dv">1</span><span class="op">:</span><span class="dv">500</span>, ]) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(x, P), <span class="dt">size =</span> <span class="fl">0.5</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb122-4" title="4"><span class="st">    </span><span class="kw">coord_flip</span>() <span class="op">+</span><span class="st"> </span><span class="kw">theme_minimal</span>(<span class="dt">base_size =</span> <span class="dv">16</span>)</a></code></pre></div>
+<p><img src="Notas-Curso-Estadistica_files/figure-html/unnamed-chunk-129-1.png" width="672" /></p>
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb123-1" title="1"><span class="kw">ggplot</span>(df) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(P, <span class="dt">y =</span> ..density..), </a>
+<a class="sourceLine" id="cb123-2" title="2">    <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">theme_minimal</span>(<span class="dt">base_size =</span> <span class="dv">16</span>)</a></code></pre></div>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="Notas-Curso-Estadistica_files/figure-html/unnamed-chunk-129-2.png" width="672" /></p>
+
+<div id="refs" class="references">
+<div>
+<p>Hall, Peter. 1987. “On Kullback-Leibler Loss and Density Estimation.” <em>The Annals of Statistics</em> 15 (4): 1491–1519. <a href="https://doi.org/10.1214/aos/1176350606">https://doi.org/10.1214/aos/1176350606</a>.</p>
+</div>
+<div>
+<p>Härdle, Wolfgang, Axel Werwatz, Marlene Müller, and Stefan Sperlich. 2004. <em>Nonparametric and Semiparametric Models</em>. Springer Series in Statistics. Berlin, Heidelberg: Springer Berlin Heidelberg. <a href="https://doi.org/10.1007/978-3-642-17146-8">https://doi.org/10.1007/978-3-642-17146-8</a>.</p>
+</div>
+<div>
+<p>Kruschke, John K. 2014. “Doing Bayesian data analysis: A tutorial with R, JAGS, and Stan, second edition.” In <em>Doing Bayesian Data Analysis: A Tutorial with R, Jags, and Stan, Second Edition</em>, 1–759.</p>
+</div>
+</div>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-Kruschke2014">
+<p>Kruschke, John K. 2014. “Doing Bayesian data analysis: A tutorial with R, JAGS, and Stan, second edition.” In <em>Doing Bayesian Data Analysis: A Tutorial with R, Jags, and Stan, Second Edition</em>, 1–759.</p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="jacknife-y-bootstrap.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["Notas-Curso-Estadistica.pdf"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
