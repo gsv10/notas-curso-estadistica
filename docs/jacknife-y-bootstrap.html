@@ -307,7 +307,7 @@ para la media?</p>
 <p>Note que esta pregunta es difícil ya que no tenemos ningún tipo de
 información adicional.</p>
 <p>Las dos técnicas que veremos a continuación nos permitirán extraer
- de la muestra.</p>
+<em>información adicional</em> de la muestra.</p>
 
 <div class="remark">
  <span class="remark"><em>Nota: </em></span> Para efectos de este capítulo, llamaremos <span class="math inline">\(T_{n}=T\left(  X_{1},\ldots,X_{n}\right)\)</span> al estadístico formado por la muestra de
@@ -644,7 +644,7 @@ elemento. Solo basta estimar la media de cada columna:</p>
 </tbody>
 </table>
 <p>````</p>
-<p>Definamos el sesgo  como</p>
+<p>Definamos el sesgo <em>jackife</em> como</p>
 <p><span class="math display">\[\begin{equation*}
 b_{jack} = (n-1) (\overline{T}_{n} - T_{n})
 \end{equation*}\]</span></p>
@@ -688,7 +688,7 @@ correctamente <span class="math inline">\(\mathrm{Sesgo}\left( T_{n} \right)\)</
 error del <span class="math inline">\(n^{-2}\)</span>.
 </div>
 
-<p>Podemos usar los  para generar muestras adicionales para
+<p>Podemos usar los <span class="math inline">\(T\_i\)</span> para generar muestras adicionales para
 estimar el parámetro <span class="math inline">\(\theta\)</span>.</p>
 <p>En este caso defina el siguiente estimador:</p>
 <p><span class="math display">\[
@@ -696,7 +696,7 @@ estimar el parámetro <span class="math inline">\(\theta\)</span>.</p>
 \]</span></p>
 
 <div class="remark">
- <span class="remark"><em>Nota: </em></span> A <span class="math inline">\(\widetilde{T}_{i}\)</span> se le llaman  y
+ <span class="remark"><em>Nota: </em></span> A <span class="math inline">\(\widetilde{T}_{i}\)</span> se le llaman <strong>pseudo-valores</strong> y
 representa el aporte o peso que tiene la variable <span class="math inline">\(X_{i}\)</span> para
 estimar <span class="math inline">\(T_{n}\)</span>.
 </div>
@@ -905,7 +905,7 @@ Se sigue que
 <p>El problema es que este intervalo depende de <span class="math inline">\(H\)</span> desconocido.</p>
 </div>
 
-<p>Para resolver este problema, se puede construir una versión  de <span class="math inline">\(H\)</span> usando lo que sabemos hasta ahora.</p>
+<p>Para resolver este problema, se puede construir una versión <em>bootstrap</em> de <span class="math inline">\(H\)</span> usando lo que sabemos hasta ahora.</p>
 <p><span class="math display">\[
 \widehat{H}(r)=\frac{1}{B} \sum_{b=1}^{B} I\left(R_{n, b}^{*} \leq r\right)
 \]</span>

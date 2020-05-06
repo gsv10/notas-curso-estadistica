@@ -75,7 +75,7 @@ Note que esta pregunta es difícil ya que no tenemos ningún tipo de
 información adicional.
 
 Las dos técnicas que veremos a continuación nos permitirán extraer
-\emph{información adicional} de la muestra.
+_información adicional_ de la muestra.
 
 ```{remark}
 Para efectos de este capítulo, llamaremos \(T_{n}=T\left(
@@ -167,7 +167,7 @@ knitr::kable(T_i[1:10])
 
 ````
 
-Definamos el sesgo \emph{jackife} como
+Definamos el sesgo _jackife_ como
 
 
 
@@ -221,7 +221,7 @@ error del \(n^{-2}\).
 ```
 
 
-Podemos usar los \emph{T\_i} para generar muestras adicionales para
+Podemos usar los $T\_i$ para generar muestras adicionales para
 estimar el parámetro \(\theta\).
 
 En este caso  defina el siguiente estimador:
@@ -231,7 +231,7 @@ En este caso  defina el siguiente estimador:
 \]
 
 ```{remark}
-A \(\widetilde{T}_{i}\) se le llaman \textbf{pseudo-valores} y
+A \(\widetilde{T}_{i}\) se le llaman **pseudo-valores** y
 representa el aporte o peso que tiene la variable \(X_{i}\) para
 estimar \(T_{n}\).
 ```
@@ -512,7 +512,7 @@ El problema es que este intervalo depende de \(H\) desconocido.
 ```
 
 
-Para resolver este problema, se puede construir una versión \emph{bootstrap} de \(H\) usando lo que sabemos hasta ahora.
+Para resolver este problema, se puede construir una versión _bootstrap_ de \(H\) usando lo que sabemos hasta ahora.
 
 \[
 \widehat{H}(r)=\frac{1}{B} \sum_{b=1}^{B} I\left(R_{n, b}^{*} \leq r\right)

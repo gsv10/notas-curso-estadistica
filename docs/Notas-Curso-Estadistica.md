@@ -1363,7 +1363,7 @@ Note que esta pregunta es difícil ya que no tenemos ningún tipo de
 información adicional.
 
 Las dos técnicas que veremos a continuación nos permitirán extraer
-\emph{información adicional} de la muestra.
+_información adicional_ de la muestra.
 
 \BeginKnitrBlock{remark}<div class="remark">\iffalse{} <span class="remark"><em>Nota: </em></span>  \fi{}Para efectos de este capítulo, llamaremos \(T_{n}=T\left(
   X_{1},\ldots,X_{n}\right)\) al estadístico formado por la muestra de
@@ -1520,7 +1520,7 @@ x\\
 
 ````
 
-Definamos el sesgo \emph{jackife} como
+Definamos el sesgo _jackife_ como
 
 
 
@@ -1576,7 +1576,7 @@ correctamente \(\mathrm{Sesgo}\left( T_{n} \right)\) hasta con un
 error del \(n^{-2}\).</div>\EndKnitrBlock{remark}
 
 
-Podemos usar los \emph{T\_i} para generar muestras adicionales para
+Podemos usar los $T\_i$ para generar muestras adicionales para
 estimar el parámetro \(\theta\).
 
 En este caso  defina el siguiente estimador:
@@ -1585,7 +1585,7 @@ En este caso  defina el siguiente estimador:
 \widetilde{T}_{i}=n T_{n}-(n-1) T_{(-i)}.
 \]
 
-\BeginKnitrBlock{remark}<div class="remark">\iffalse{} <span class="remark"><em>Nota: </em></span>  \fi{}A \(\widetilde{T}_{i}\) se le llaman \textbf{pseudo-valores} y
+\BeginKnitrBlock{remark}<div class="remark">\iffalse{} <span class="remark"><em>Nota: </em></span>  \fi{}A \(\widetilde{T}_{i}\) se le llaman **pseudo-valores** y
 representa el aporte o peso que tiene la variable \(X_{i}\) para
 estimar \(T_{n}\).</div>\EndKnitrBlock{remark}
 
@@ -1912,7 +1912,7 @@ El problema es que este intervalo depende de \(H\) desconocido.
 </div>\EndKnitrBlock{remark}
 
 
-Para resolver este problema, se puede construir una versión \emph{bootstrap} de \(H\) usando lo que sabemos hasta ahora.
+Para resolver este problema, se puede construir una versión _bootstrap_ de \(H\) usando lo que sabemos hasta ahora.
 
 \[
 \widehat{H}(r)=\frac{1}{B} \sum_{b=1}^{B} I\left(R_{n, b}^{*} \leq r\right)
