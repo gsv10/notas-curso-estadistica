@@ -3,7 +3,7 @@ bookdown::gitbook:
   config:
     toc:
       before: |
-        <li><a href="./">Notas CA-403</a></li>
+        <li><a href="./">Curso de Estadística</a></li>
       after: 
     download: ["pdf"]
 bookdown::pdf_book:
