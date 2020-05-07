@@ -2059,7 +2059,6 @@ Así que basta cambiar el punto 1. del algoritmo mencionando anteriormente con
 \NormalTok{    Tboot_b[b] <-}\StringTok{ }\KeywordTok{var}\NormalTok{(xb)}
 \NormalTok{\}}
 
-
 \NormalTok{Tboot_b[}\DecValTok{1}\OperatorTok{:}\DecValTok{10}\NormalTok{]}
 \end{Highlighting}
 \end{Shaded}
@@ -2109,7 +2108,7 @@ Por supuesto podemos encontrar los estadísticos usuales para esta nueva muestra
 ## [1] 74.19367
 \end{verbatim}
 
-```
+\texttt{}
 
 \hypertarget{intervalos-de-confianza}{%
 \subsection{Intervalos de confianza}\label{intervalos-de-confianza}}
@@ -2140,7 +2139,7 @@ T_{n} \pm z_{\alpha / 2} \widehat{\mathrm{Se}}_{\mathrm{boot}}
 ## [1] 283.8315 574.6653
 \end{verbatim}
 
-```
+\texttt{}
 
 \subsubsection{Intervalo pivotal}
 
@@ -2178,6 +2177,7 @@ Para resolver este problema, se puede construir una versión \emph{bootstrap} de
 donde \(R_{n, b}^{*}=\widehat{\theta}_{n, b}^{*}-\widehat{\theta}_{n}\).
 
 Sea \(r_{\beta}^{*}\) el cuantil muestral de tamaño \(\beta\) de \(\left(R_{n, 1}^{*}, \ldots, R_{n, B}^{*}\right)\) y sea \(\theta_{\beta}^{*}\) el cuantil muestral de tamaño \(\beta\) de \(\left(\theta_{n, 1}^{*}, \ldots, \theta_{n, B}^{*}\right)\).
+
 \BeginKnitrBlock{remark}
 \iffalse{} {Nota: } \fi{}Según la notación anterior note que
 \begin{equation*}
@@ -2223,7 +2223,7 @@ It follows that an approximate \(1-\alpha\) confidence interval is \(C_{n}=(\wid
 ## 267.1250 552.9294
 \end{verbatim}
 
-```
+\texttt{}
 
 \hypertarget{intervalo-pivotal-studentizado}{%
 \subsection{Intervalo pivotal studentizado}\label{intervalo-pivotal-studentizado}}
@@ -2303,7 +2303,7 @@ Note que para este caso tenemos que hacer bootstrap para cada estimador bootstra
 ## 309.8684 521.6372
 \end{verbatim}
 
-```
+\texttt{}
 
 \hypertarget{resumiendo}{%
 \subsection{Resumiendo}\label{resumiendo}}
@@ -2342,27 +2342,12 @@ Bootstrap Pivotal Estudentizado & 309.8684 & 521.6372\\
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
-\tightlist
 \item
   Repita los ejercicios anteriores para calcular intervalos de confianza para la distancia promedio y la varianza del desplazamiento de las personas. Use los métodos de Jacknife y Bootstrap (con todos sus intervalos de confianza).
-\end{enumerate}
-
-Dada que la distancia es una medida que puede ser influenciada por distancias muy cortas o muy largas, se puede calcular el logaritmo de esta variable para eliminar la escala de la distancias.
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{1}
-\tightlist
+  Dada que la distancia es una medida que puede ser influenciada por distancias muy cortas o muy largas, se puede calcular el logaritmo de esta variable para eliminar la escala de la distancias.
 \item
   Verifique que esta última variable se podría estimar paramétricamente con una distribución normal.
-\end{enumerate}
-
-Repita los cálculos anteriores tomando como cuantiles los de una normal con media 0 y varianza 1.
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{2}
-\tightlist
+  Repita los cálculos anteriores tomando como cuantiles los de una normal con media 0 y varianza 1.
 \item
   Compare los intervalos calculados y comente los resultados.
 \end{enumerate}

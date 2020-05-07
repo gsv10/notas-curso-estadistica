@@ -842,8 +842,7 @@ v_{\mathrm{boot}} \stackrel{\mathrm{a.s.}}{\longrightarrow} \mathbb{V}_{\widehat
 <a class="sourceLine" id="cb60-6" title="6">    Tboot_b[b] &lt;-<span class="st"> </span><span class="kw">var</span>(xb)</a>
 <a class="sourceLine" id="cb60-7" title="7">}</a>
 <a class="sourceLine" id="cb60-8" title="8"></a>
-<a class="sourceLine" id="cb60-9" title="9"></a>
-<a class="sourceLine" id="cb60-10" title="10">Tboot_b[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>]</a></code></pre></div>
+<a class="sourceLine" id="cb60-9" title="9">Tboot_b[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>]</a></code></pre></div>
 <pre><code>##  [1] 414.1915 391.2966 310.2777 468.8409 400.5235 380.8023 496.4924 418.5968
 ##  [9] 461.3902 547.3446</code></pre>
 <div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb62-1" title="1"><span class="kw">plot</span>(Tboot_b)</a></code></pre></div>
@@ -855,7 +854,7 @@ v_{\mathrm{boot}} \stackrel{\mathrm{a.s.}}{\longrightarrow} \mathbb{V}_{\widehat
 <pre><code>## [1] 5431.092</code></pre>
 <div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb67-1" title="1">(sdboot &lt;-<span class="st"> </span><span class="kw">sqrt</span>(Vboot))</a></code></pre></div>
 <pre><code>## [1] 73.69594</code></pre>
-<p>```</p>
+<p><code></code></p>
 <div id="intervalos-de-confianza" class="section level3">
 <h3><span class="header-section-number">3.3.1</span> Intervalos de confianza</h3>
 
@@ -875,7 +874,7 @@ T_{n} \pm z_{\alpha / 2} \widehat{\mathrm{Se}}_{\mathrm{boot}}
 
 <div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb69-1" title="1"><span class="kw">c</span>(Tn <span class="op">-</span><span class="st"> </span>z <span class="op">*</span><span class="st"> </span>sdboot, Tn <span class="op">+</span><span class="st"> </span>z <span class="op">*</span><span class="st"> </span>sdboot)</a></code></pre></div>
 <pre><code>## [1] 284.8070 573.6898</code></pre>
-<p>```</p>
+<p><code></code></p>
 
 <p>Sea <span class="math inline">\(\theta=T(F)\)</span> y <span class="math inline">\(\widehat{\theta}_{n}=T\left(\widehat{F}_{n}\right)\)</span> y defina la cantidad pivotal <span class="math inline">\(R_{n}=\widehat{\theta}_{n}-\theta .\)</span></p>
 <p>Sea <span class="math inline">\(H(r)\)</span> la función de distribución del pivote:
@@ -905,7 +904,7 @@ Se sigue que
 \widehat{H}(r)=\frac{1}{B} \sum_{b=1}^{B} I\left(R_{n, b}^{*} \leq r\right)
 \]</span>
 donde <span class="math inline">\(R_{n, b}^{*}=\widehat{\theta}_{n, b}^{*}-\widehat{\theta}_{n}\)</span>.</p>
-Sea <span class="math inline">\(r_{\beta}^{*}\)</span> el cuantil muestral de tamaño <span class="math inline">\(\beta\)</span> de <span class="math inline">\(\left(R_{n, 1}^{*}, \ldots, R_{n, B}^{*}\right)\)</span> y sea <span class="math inline">\(\theta_{\beta}^{*}\)</span> el cuantil muestral de tamaño <span class="math inline">\(\beta\)</span> de <span class="math inline">\(\left(\theta_{n, 1}^{*}, \ldots, \theta_{n, B}^{*}\right)\)</span>.
+<p>Sea <span class="math inline">\(r_{\beta}^{*}\)</span> el cuantil muestral de tamaño <span class="math inline">\(\beta\)</span> de <span class="math inline">\(\left(R_{n, 1}^{*}, \ldots, R_{n, B}^{*}\right)\)</span> y sea <span class="math inline">\(\theta_{\beta}^{*}\)</span> el cuantil muestral de tamaño <span class="math inline">\(\beta\)</span> de <span class="math inline">\(\left(\theta_{n, 1}^{*}, \ldots, \theta_{n, B}^{*}\right)\)</span>.</p>
 
 <div class="remark">
  <span class="remark"><em>Nota: </em></span> Según la notación anterior note que
@@ -944,7 +943,7 @@ It follows that an approximate <span class="math inline">\(1-\alpha\)</span> con
 <a class="sourceLine" id="cb71-2" title="2"><span class="st">    </span><span class="kw">quantile</span>(Tboot_b, <span class="fl">0.05</span><span class="op">/</span><span class="dv">2</span>))</a></code></pre></div>
 <pre><code>##    97.5%     2.5% 
 ## 267.5099 556.9997</code></pre>
-<p>```</p>
+<p><code></code></p>
 </div>
 <div id="intervalo-pivotal-studentizado" class="section level3">
 <h3><span class="header-section-number">3.3.2</span> Intervalo pivotal studentizado</h3>
@@ -1004,7 +1003,7 @@ Note que para este caso tenemos que hacer bootstrap para cada estimador bootstra
 <a class="sourceLine" id="cb74-2" title="2"><span class="st">    </span><span class="kw">quantile</span>(z_star, <span class="fl">0.05</span><span class="op">/</span><span class="dv">2</span>) <span class="op">*</span><span class="st"> </span>sdboot)</a></code></pre></div>
 <pre><code>##    97.5%     2.5% 
 ## 308.6135 518.6002</code></pre>
-<p>```</p>
+<p><code></code></p>
 </div>
 <div id="resumiendo" class="section level3">
 <h3><span class="header-section-number">3.3.3</span> Resumiendo</h3>
@@ -1053,15 +1052,11 @@ Note que para este caso tenemos que hacer bootstrap para cada estimador bootstra
 <div id="ejercicios" class="section level2">
 <h2><span class="header-section-number">3.4</span> Ejercicios</h2>
 <ol style="list-style-type: decimal">
-<li>Repita los ejercicios anteriores para calcular intervalos de confianza para la distancia promedio y la varianza del desplazamiento de las personas. Use los métodos de Jacknife y Bootstrap (con todos sus intervalos de confianza).</li>
-</ol>
-<p>Dada que la distancia es una medida que puede ser influenciada por distancias muy cortas o muy largas, se puede calcular el logaritmo de esta variable para eliminar la escala de la distancias.</p>
-<ol start="2" style="list-style-type: decimal">
-<li>Verifique que esta última variable se podría estimar paramétricamente con una distribución normal.</li>
-</ol>
-<p>Repita los cálculos anteriores tomando como cuantiles los de una normal con media 0 y varianza 1.</p>
-<ol start="3" style="list-style-type: decimal">
-<li>Compare los intervalos calculados y comente los resultados.</li>
+<li><p>Repita los ejercicios anteriores para calcular intervalos de confianza para la distancia promedio y la varianza del desplazamiento de las personas. Use los métodos de Jacknife y Bootstrap (con todos sus intervalos de confianza).
+Dada que la distancia es una medida que puede ser influenciada por distancias muy cortas o muy largas, se puede calcular el logaritmo de esta variable para eliminar la escala de la distancias.</p></li>
+<li><p>Verifique que esta última variable se podría estimar paramétricamente con una distribución normal.
+Repita los cálculos anteriores tomando como cuantiles los de una normal con media 0 y varianza 1.</p></li>
+<li><p>Compare los intervalos calculados y comente los resultados.</p></li>
 </ol>
 
 </div>

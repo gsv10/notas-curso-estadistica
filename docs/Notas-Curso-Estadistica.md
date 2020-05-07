@@ -1803,7 +1803,6 @@ for (b in 1:B) {
     Tboot_b[b] <- var(xb)
 }
 
-
 Tboot_b[1:10]
 ```
 
@@ -1812,12 +1811,12 @@ Tboot_b[1:10]
 ##  [9] 462.3363 594.5774
 ```
   
-  
-  ```r
-  plot(Tboot_b)
-  ```
-  
-  ![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-89-1.pdf)<!-- --> 
+
+```r
+plot(Tboot_b)
+```
+
+![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-89-1.pdf)<!-- --> 
   
   Por supuesto podemos encontrar los estadísticos usuales para esta nueva muestra
 
@@ -1848,7 +1847,7 @@ Tboot_b[1:10]
 ## [1] 74.19367
 ```
 
-```
+``` ```
 
 ### Intervalos de confianza
 
@@ -1874,7 +1873,7 @@ c(Tn - z * sdboot, Tn + z * sdboot)
 ## [1] 283.8315 574.6653
 ```
 
-```
+``` ```
 
 \subsubsection{Intervalo pivotal}
 
@@ -1912,6 +1911,7 @@ Para resolver este problema, se puede construir una versión _bootstrap_ de \(H\
 donde \(R_{n, b}^{*}=\widehat{\theta}_{n, b}^{*}-\widehat{\theta}_{n}\).
 
 Sea  \(r_{\beta}^{*}\) el cuantil muestral de tamaño  \(\beta\) de  \(\left(R_{n, 1}^{*}, \ldots, R_{n, B}^{*}\right)\) y sea \(\theta_{\beta}^{*}\) el cuantil muestral de tamaño  \(\beta\) de \(\left(\theta_{n, 1}^{*}, \ldots, \theta_{n, B}^{*}\right)\).
+
 \BeginKnitrBlock{remark}<div class="remark">\iffalse{} <span class="remark"><em>Nota: </em></span>  \fi{}Según la notación anterior note que
 \begin{equation*}
 r_{\beta}^{*}= \theta_{\beta}^{*}-\widehat{\theta}_{n}
@@ -1951,7 +1951,7 @@ c(2 * Tn - quantile(Tboot_b, 1 - 0.05/2), 2 * Tn -
 ## 267.1250 552.9294
 ```
 
-```
+``` ```
 
 ### Intervalo pivotal studentizado
 
@@ -2025,7 +2025,7 @@ c(Tn - quantile(z_star, 1 - 0.05/2) * sdboot, Tn -
 ```
 
 
-```
+``` ```
 
 
 ### Resumiendo
@@ -2064,11 +2064,9 @@ Bootstrap Pivotal Estudentizado & 309.8684 & 521.6372\\
 
 
 1. Repita los ejercicios anteriores para calcular intervalos de confianza para la distancia promedio y la varianza del desplazamiento de las personas. Use los métodos de Jacknife y Bootstrap (con todos sus intervalos de confianza).
-  
 Dada que la distancia es una medida que puede ser influenciada por distancias muy cortas o muy largas, se puede calcular el logaritmo de esta variable para eliminar la escala de la distancias.
   
 2. Verifique que esta última variable se podría estimar paramétricamente con una distribución normal.
-  
 Repita los cálculos anteriores tomando como cuantiles los de una normal con media 0 y varianza 1.
 
 3. Compare los intervalos calculados y comente los resultados.
