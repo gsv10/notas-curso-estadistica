@@ -3089,6 +3089,30 @@ cuestiones de practicidad se tomará \(\theta_0 = 0.1\).
 \end{Highlighting}
 \end{Shaded}
 
+Obtenemos una tasa de aceptación del 49.4 y tasa de rechazo del 50.59
+
+Podemos desechar los primeros 500 pasos (por ejemplo) del proceso ya que estos son de \enquote{calentamiento}. De esta forma podremos estimar la media y la varianza de las trayectoria.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{mean}\NormalTok{(trayectoria[}\DecValTok{500}\OperatorTok{:}\NormalTok{n_pasos])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.6808914
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{sd}\NormalTok{(trayectoria[}\DecValTok{500}\OperatorTok{:}\NormalTok{n_pasos])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.09721105
+\end{verbatim}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{df <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{x =} \DecValTok{1}\OperatorTok{:}\NormalTok{n_pasos, }\DataTypeTok{P =}\NormalTok{ trayectoria)}
@@ -3098,16 +3122,16 @@ cuestiones de practicidad se tomará \(\theta_0 = 0.1\).
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-129-1.pdf}
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-130-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{ggplot}\NormalTok{(df) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_histogram}\NormalTok{(}\KeywordTok{aes}\NormalTok{(P, }\DataTypeTok{y =}\NormalTok{ ..density..), }
+\KeywordTok{ggplot}\NormalTok{(df[}\DecValTok{500}\OperatorTok{:}\NormalTok{n_pasos, ]) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_histogram}\NormalTok{(}\KeywordTok{aes}\NormalTok{(P, }\DataTypeTok{y =}\NormalTok{ ..density..), }
     \DataTypeTok{color =} \StringTok{"white"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{theme_minimal}\NormalTok{(}\DataTypeTok{base_size =} \DecValTok{16}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-129-2.pdf}
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-130-2.pdf}
 
 \printbibliography
 

@@ -2024,6 +2024,7 @@ c(Tn - quantile(z_star, 1 - 0.05/2) * sdboot, Tn -
 ## 309.8684 521.6372
 ```
 
+
 ```
 
 
@@ -2647,6 +2648,8 @@ cuestiones de practicidad se tomará \(\theta_0 = 0.1\).
 
 
 
+
+
 ```r
 # Carga de datos observados
 datos_observados <- c(rep(0, 6), rep(1, 14))
@@ -2711,6 +2714,31 @@ for (t in 2:(n_pasos - 1)) {
 ```
 
 
+Obtenemos una tasa de aceptación del 49.4 y tasa de rechazo del 50.59
+
+Podemos desechar los primeros 500 pasos (por ejemplo) del proceso ya que estos son de "calentamiento". De esta forma podremos estimar la media y la varianza de las trayectoria. 
+
+
+```r
+mean(trayectoria[500:n_pasos])
+```
+
+```
+## [1] 0.6808914
+```
+
+```r
+sd(trayectoria[500:n_pasos])
+```
+
+```
+## [1] 0.09721105
+```
+
+
+
+
+
 ```r
 df <- data.frame(x = 1:n_pasos, P = trayectoria)
 
@@ -2718,14 +2746,15 @@ ggplot(df[1:500, ]) + geom_line(aes(x, P), size = 0.5) +
     coord_flip() + theme_minimal(base_size = 16)
 ```
 
-![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-129-1.pdf)<!-- --> 
+![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-130-1.pdf)<!-- --> 
 
 ```r
-ggplot(df) + geom_histogram(aes(P, y = ..density..), 
+ggplot(df[500:n_pasos, ]) + geom_histogram(aes(P, y = ..density..), 
     color = "white") + theme_minimal(base_size = 16)
 ```
 
-![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-129-2.pdf)<!-- --> 
+![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-130-2.pdf)<!-- --> 
+
 
 <!--chapter:end:03-estimacion-densidades-bayes.Rmd-->
 
