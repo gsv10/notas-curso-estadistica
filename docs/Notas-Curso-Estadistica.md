@@ -297,7 +297,7 @@ Finalmente, podemos encontrar el valor óptimo  de esta datos dado por  $h=$`h_o
 ![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-12-1.pdf)<!-- --> 
 
 
-\newpage
+
 
 ## Estimación No-paramétrica de densidad
 
@@ -321,7 +321,7 @@ para todo $x$ in $\mathbb{R}$.
 \BeginKnitrBlock{remark}<div class="remark">\iffalse{} <span class="remark"><em>Nota: </em></span>  \fi{}¿Podríamos derivar \(\hat{F}_n\) para encontrar el estimar \(\hat{f}_n\)?</div>\EndKnitrBlock{remark}
 
 La respuesta es si (más o menos).
-\newpage
+
 Suponga que $h>0$ tenemos la aproximación
 \[
 f(x)\approx\frac{F(x+h)-F(x-h)}{2h}.
@@ -339,7 +339,7 @@ Podemos rescribirlo de la forma,
 \]
 con  $K_{0}(u)=\frac{1}{2}I(-1<u\leq1)$, lo cuál es equivalente al caso del histograma.
 
-\newpage
+
 
 ### Otra construcción
 
@@ -382,7 +382,7 @@ Finalmente se tiene que
 <!-- \includegraphics[width=\linewidth]{manual_figure/np-density-interval-crop.pdf} -->
 <!-- \end{center} -->
 
-\newpage
+
 \BeginKnitrBlock{remark}<div class="remark">\iffalse{} <span class="remark"><em>Nota: </em></span>  \fi{}¿Qué pasaría si cambiaríamos la función \(K\) del histograma por una más general?</div>\EndKnitrBlock{remark}
 
 Esta función debería cumplir las siguientes características
@@ -411,7 +411,7 @@ Entonces se tendría que la expresión general para un estimador por núcleos es
 \hat{f}_{h}\left( x \right) = \frac{1}{nh}\sum_{i=1}^{n} K\left( \frac{x-x_{i}}{h} \right)
 \end{equation*}
 
-\newpage
+
 
 \BeginKnitrBlock{remark}<div class="remark">\iffalse{} <span class="remark"><em>Nota: </em></span>  \fi{}¿Qué pasaría si modificamos el ancho de banda \(h\) para un mismo kernel?</div>\EndKnitrBlock{remark}
 
@@ -419,13 +419,13 @@ Nuevamente sería el ancho de banda ya que
 
 ![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-18-1.pdf)<!-- --> 
 
-\newpage
+
 
 \BeginKnitrBlock{remark}<div class="remark">\iffalse{} <span class="remark"><em>Nota: </em></span>  \fi{}¿Qué pasaría si modificamos el kernel para un mismo ancho de banda \(h\)?</div>\EndKnitrBlock{remark}
 
 ![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-20-1.pdf)<!-- --> 
 
-\newpage
+
 
 Recordemos nuevamente la fórmula
 
@@ -444,7 +444,7 @@ Cada sumando de esta expresión es una función por si misma. Si la integramos s
 
 ![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-21-1.pdf)<!-- --> 
 
-\newpage
+
 
 ## Propiedades Estadísticas
 
@@ -462,7 +462,7 @@ donde
 
 \(\mathrm{Var}\left(\hat{f}_{h}(x)\right)=\mathbb{E}\left[\hat{f}_{h}(x)-\mathbb{E}\hat{f}_{h}(x)\right]^{2}\) and \(\mathrm{Sesgo}\left(\hat{f}_{h}(x)\right)=\mathbb{E}\left[\hat{f}_{h}(x)\right]-f(x)\).
 
-\newpage
+
 
 ### Varianza
 
@@ -501,7 +501,7 @@ Por lo tanto se obtiene que
 \mathrm{Var}\left(\hat{f}_{h}(x)\right) = \frac{1}{nh} \Vert K\Vert_{2}^{2}f(x) + o\left(\frac{1}{nh}\right), \text{ si } nh\to \infty.
 \end{equation*}
 
-\newpage
+
 
 ### Sesgo
 
@@ -541,7 +541,7 @@ $\int(f^{\prime\prime\prime}(x))dx<\infty$.}</div>\EndKnitrBlock{exercise}
 
 \BeginKnitrBlock{remark}<div class="remark">\iffalse{} <span class="remark"><em>Nota: </em></span>  \fi{}Note como los cambios en el ancho de banda modifican la suavidad (sesgo) y el aplanamiento de la curva (varianza).</div>\EndKnitrBlock{remark}
 
-\newpage
+
 
 ### Error cuadrático medio y Error cuadrático medio integrado
 
@@ -558,7 +558,7 @@ Y el error cuadrático medio integrado se escribe como,
 & = \int \mathrm{Sesgo}\left(\hat{f}_{h}(x)\right)^{2} + \mathrm{Var}\left(\hat{f}_{h}(x)\right)dx                                                        \\
 & = \frac{h^{4}}{4}\mu_{2}^{2}(K)\left\Vert f^{\prime\prime}(x)\right\Vert_{2}^{2} +\frac{1}{nh}\Vert K\Vert_{2}^{2}+o(h^{4})+o\left(\frac{1}{nh}\right).
 \end{align*}
-\newpage
+
 ### Ancho de banda óptimo
 
 Minimizando el \(\mathrm{MISE}\) con respecto a \(h\) obtenemos
@@ -578,7 +578,7 @@ Evaluando $h_{opt}$ en el \(\mathrm{MISE}\) tenemos que
 
 ![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-28-1.pdf)<!-- --> 
 
-\newpage
+
 
 \BeginKnitrBlock{remark}<div class="remark">\iffalse{} <span class="remark"><em>Nota: </em></span>  \fi{}Formalmente, es posible probar que si $f$ es $\beta$ veces continuamente diferenciable y  $\int\left(f^{(\beta)}\right)^{2}<\infty$, entonces se tiene que
 \[
@@ -587,7 +587,7 @@ Evaluando $h_{opt}$ en el \(\mathrm{MISE}\) tenemos que
 Por lo tanto se podría aproximar a una tasa paramétrica de convergencia si
 \(\beta\) es grande.</div>\EndKnitrBlock{remark}
 
-\newpage
+
 
 ## Escogiendo el ancho de banda
 
@@ -606,7 +606,7 @@ Veremos dos métodos para determinar un \(h\) que funcione:
 - Validación cruzada.
 
 
-\newpage
+
 
 ### Referencia normal
 
@@ -666,7 +666,7 @@ Combinando ambos estimadores, podemos obtener,
 \hat{h}_{rn} = 1.06 \min \left\{\frac{\widehat{\mathrm{IQR}}^{X}}{1.34}, \hat{\sigma }\right\} n^{-\frac{1}{5}}
 \end{equation*}
 
-\newpage
+
 
 ### Validación Cruzada
 
@@ -690,7 +690,7 @@ Primero note que \(\int f^{2}(x)dx\) NO DEPENDE de \(h\). Podemos minimizar la e
 
 Vamos a resolver esto en dos pasos partes
 
-\newpage
+
 
 **Integral \(\textcolor{blue}{\int\hat{f}_{h}(x)f(x)dx}\)**   
 
@@ -715,7 +715,7 @@ donde
 \[
 \hat{f}_{h,-i}(x)=\frac{1}{(n-1)h}\sum_{\substack{j=1\\ j\neq i}}^{n}K\left( \frac{x-X_{i}}{h} \right) .
 \]
-\newpage
+
 
 **Integral \(\textcolor{red}{\int\hat{f}_{h}^{2}(x)dx}\)**  
 
@@ -731,7 +731,7 @@ Siguiendo con el término \(\textcolor{red}{\int\hat{f}_{h}^{2}(x)dx}\) note que
 
 donde $K*K$ es la convolución de  $K$  consigo misma.
 
-\newpage
+
 Finalmente tenemos la  función,
 
 \[
@@ -747,7 +747,7 @@ CV(h)=\int\hat{f}_{h}^{2}(x)dx-\frac{2}{(n-1)h}\sum_{i=1}^{n}\mathop{\sum_{j=1}^
 \]
 y luego calcular numéricamente la integral.</div>\EndKnitrBlock{remark}
 
-\newpage
+
 
 ### Intervalos de confianza para estimadores de densidad no paramétricos
 
@@ -790,7 +790,7 @@ Podemos reemplazar \(f(x)\) por su estimador \(\hat{f}_{h}(x)\).  Entonces tendr
 \BeginKnitrBlock{remark}<div class="remark">\iffalse{} <span class="remark"><em>Nota: </em></span>  \fi{}Este intervalo de confianza solo funciona en cada punto particular de \(f(x)\).
 
 Existe una versión más general para determinar la banda de confianza de toda la función. Por favor revisar la página 62 de [@Hardle2004].</div>\EndKnitrBlock{remark}
-\newpage
+
 
 ## Laboratorio
 
@@ -1361,7 +1361,7 @@ _información adicional_ de la muestra.
   X_{1},\ldots,X_{n}\right)\) al estadístico formado por la muestra de
 los \(X_{i}\)'s.</div>\EndKnitrBlock{remark}
 
-\newpage
+
 
 ## Jacknife
 
@@ -1703,7 +1703,7 @@ c(Tjack - z * sdjack/sqrt(n), Tjack + z * sdjack/sqrt(n))
 
 
 
-\newpage
+
 
 
 ## Bootstrap

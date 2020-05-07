@@ -83,7 +83,7 @@ Para efectos de este capítulo, llamaremos \(T_{n}=T\left(
 los \(X_{i}\)'s.
 ```
 
-\newpage
+
 
 ## Jacknife
 
@@ -335,7 +335,7 @@ Tjack + z * sdjack / sqrt(n))
 
 
 
-\newpage
+
 
 
 ## Bootstrap
