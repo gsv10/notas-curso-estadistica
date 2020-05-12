@@ -2451,52 +2451,16 @@ Este caso sería una simple caminata aleatoria sin ningún interés en particula
 Suponga además, que el viajero quiere estar más tiempo donde haya una mayor cantidad de personas \(P\) pero siguiendo ese patrón aleatorio. Entonces la forma de describir su decisión de moverse sería:
 
 
+* Tira la moneda y decide si va a la izquierda o la derecha.
+    1. Si el lugar nuevo tiene \textbf{MÁS} personas que el actual salta a ese lugar. 
+    2. Si el lugar nuevo tiene \textbf{MENOS} personas entonces el viajero         tiene que decidir si se queda o se mueve. | calcula la probabilidad         de moverse como $p_{moverse} = P_{nuevo}/P_{actual}$.
+    
+        **Tira un número aleatorio entre 0 y 1 $r$**
+        
+        1. Si $p_{moverse}>r$ entonces se mueve. 
+        2. Sino, se queda donde está. 
+        
 
-<!-- ```{r echo=FALSE} -->
-<!-- knitr::asis_output(if (knitr:::is_latex_output()) { -->
-<!--   ' -->
-<!-- \\begin{tabular}{p{6cm}|p{6cm}} -->
-<!-- \\toprule -->
-<!-- \\multicolumn{2}{c}{Tira la moneda y decide si va a la izquierda o la derecha} \\\\ -->
-<!-- \\midrule -->
-<!-- \\multicolumn{2}{c}{Tiene dos opciones} \\\\ -->
-<!-- \\midrule \\midrule -->
-<!-- Si el lugar nuevo tiene \\textbf{MÁS} personas que el actual salta a ese lugar  -->
-<!-- &	Si el lugar nuevo tiene \\textbf{MENOS} personas entonces calcula la probabilidad de moverse como \$p_{moverse} = P_{nuevo}/P_{actual}\$.  -->
-
-<!-- Entonces el viajero tira un número aleatorio del 0 al 1 y si este	menor que \$p_{moverse}\$ entonces se mueve.  -->
-
-<!-- Si tira un número mayor a \$p_{moverse}\$ se queda donde está. \\\\ -->
-<!-- \\bottomrule -->
-<!-- \\end{tabular} -->
-<!-- ' -->
-
-<!-- } else { -->
-<!--   '<table> -->
-<!-- 	<TR> -->
-<!-- 	<TD style = "text-align:center", COLSPAN="2">Tira la moneda y decide -->
-<!-- 	si va a la izquierda o la derecha</TD> -->
-<!-- 	</TR> -->
-<!-- 	<TR> -->
-<!-- 	<TD style = "text-align:center" COLSPAN="2">Tiene dos opciones</TD> -->
-<!-- 	</TR> -->
-<!-- 	<TR> -->
-<!-- 	<TD>Si el lugar nuevo tiene **MÁS** personas que el actual salta a ese -->
-<!-- 	lugar</TD> -->
-<!-- 	<TD>Si el lugar nuevo tiene **MENOS** personas entonces calcula la -->
-<!-- 	probabilidad de moverse como \$p_{moverse} = P_{nuevo}/P_{actual}\$. -->
-
-<!-- 	Entonces el viajero tira un número aleatorio del 0 al 1 y si este -->
-<!-- 	menor que \$p_{moverse}\$ entonces se mueve. -->
-
-<!-- 	Si tira un número mayor a \$p_{moverse}\$ se queda donde está. </TD> -->
-<!-- </TR> -->
-<!-- </table>' -->
-<!-- }) -->
-<!-- ``` -->
-
-
-	
 
 
 ```r
@@ -3009,13 +2973,29 @@ acf(Metro_2coinsA$theta2 - Metro_2coinsA$theta1)
 
 ![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-131-3.pdf)<!-- --> 
 
+
+
 ```r
 Metro_2coinsA %>% filter(step < 500) %>% gf_path(theta2 ~ 
-    theta1, color = ~step, alpha = 0.5) %>% gf_point(theta2 ~ 
-    theta1, color = ~step, alpha = 0.5)
+    theta1, color = ~step, alpha = 0.5, arrow = arrow(type = "open", 
+    angle = 30, length = unit(0.1, "inches"))) + theme_minimal()
 ```
 
-![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-131-4.pdf)<!-- --> 
+![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-132-1.pdf)<!-- --> 
+
+
+```r
+library(gganimate)
+Metro_2coinsAplot <- Metro_2coinsA %>% filter(step < 
+    500) %>% gf_path(theta2 ~ theta1, color = ~step, 
+    alpha = 0.5, arrow = arrow(type = "open", angle = 30)) + 
+    theme_minimal() + transition_reveal(step)
+
+animate(Metro_2coinsAplot, fps = 1)
+```
+
+
+
 
 
 ```r
@@ -3026,21 +3006,32 @@ Metro_2coinsB <- metro_2coins(z1 = 6, n1 = 8, z2 = 2,
 Metro_2coinsB %>% gf_density2d(theta2 ~ theta1)
 ```
 
-![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-132-1.pdf)<!-- --> 
+![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-135-1.pdf)<!-- --> 
 
 ```r
 acf(Metro_2coinsB$theta2 - Metro_2coinsB$theta1)
 ```
 
-![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-132-2.pdf)<!-- --> 
+![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-135-2.pdf)<!-- --> 
+
 
 ```r
 Metro_2coinsB %>% filter(step < 500) %>% gf_path(theta2 ~ 
-    theta1, color = ~step, alpha = 0.5) %>% gf_point(theta2 ~ 
-    theta1, color = ~step, alpha = 0.5)
+    theta1, color = ~step, alpha = 0.5, arrow = arrow(type = "open", 
+    angle = 30, length = unit(0.1, "inches"))) + theme_minimal()
 ```
 
-![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-132-3.pdf)<!-- --> 
+![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-136-1.pdf)<!-- --> 
+
+
+```r
+Metro_2coinsBplot <- Metro_2coinsA %>% filter(step < 
+    500) %>% gf_path(theta2 ~ theta1, color = ~step, 
+    alpha = 0.5, arrow = arrow(type = "open", angle = 30)) + 
+    theme_minimal() + transition_reveal(step)
+
+animate(Metro_2coinsBplot, fps = 1)
+```
 
 
 ### Muestreo de Gibbs
@@ -3119,27 +3110,40 @@ Gibbs <- gibbs_2coins(z1 = 6, n1 = 8, z2 = 2, n2 = 7,
 Gibbs %>% gf_density2d(theta2 ~ theta1)
 ```
 
-![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-135-1.pdf)<!-- --> 
+![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-140-1.pdf)<!-- --> 
 
 ```r
 Gibbs %>% gf_dens(~theta1)
 ```
 
-![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-135-2.pdf)<!-- --> 
+![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-140-2.pdf)<!-- --> 
 
 ```r
 acf(Gibbs$theta1)
 ```
 
-![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-135-3.pdf)<!-- --> 
+![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-140-3.pdf)<!-- --> 
+
+
 
 ```r
 Gibbs %>% filter(step < 500) %>% gf_path(theta2 ~ theta1, 
-    color = ~step, alpha = 0.5) %>% gf_point(theta2 ~ 
-    theta1, color = ~step, alpha = 0.5)
+    color = ~step, alpha = 0.5, arrow = arrow(type = "open", 
+        angle = 30, length = unit(0.1, "inches"))) + 
+    theme_minimal()
 ```
 
-![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-135-4.pdf)<!-- --> 
+![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-141-1.pdf)<!-- --> 
+
+
+```r
+Gibbsplot <- Gibbs %>% filter(step < 500) %>% gf_path(theta2 ~ 
+    theta1, color = ~step, alpha = 0.5, arrow = arrow(type = "open", 
+    angle = 30)) + theme_minimal() + transition_reveal(step)
+
+animate(Gibbsplot, fps = 1)
+```
+
 
 
 
@@ -3151,29 +3155,40 @@ Gibbs %>% filter(step%%2 == 0) %>% gf_density2d(theta2 ~
     theta1)
 ```
 
-![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-136-1.pdf)<!-- --> 
+![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-143-1.pdf)<!-- --> 
 
 ```r
 Gibbs %>% filter(step%%2 == 0) %>% gf_density(~(theta2 - 
     theta1))
 ```
 
-![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-136-2.pdf)<!-- --> 
+![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-143-2.pdf)<!-- --> 
 
 ```r
 Gibbs %>% filter(step%%2 == 0) %>% mutate(difference = theta2 - 
     theta1) %>% pull(difference) %>% acf()
 ```
 
-![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-136-3.pdf)<!-- --> 
+![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-143-3.pdf)<!-- --> 
+
 
 ```r
 Gibbs %>% filter(step < 500, step%%2 == 0) %>% gf_path(theta2 ~ 
-    theta1, color = ~step, alpha = 0.5) %>% gf_point(theta2 ~ 
-    theta1, color = ~step, alpha = 0.5)
+    theta1, color = ~step, alpha = 0.5, arrow = arrow(type = "open", 
+    angle = 30, length = unit(0.1, "inches"))) + theme_minimal()
 ```
 
-![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-136-4.pdf)<!-- --> 
+![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-144-1.pdf)<!-- --> 
+
+
+```r
+Gibbsplot2 <- Gibbs %>% filter(step < 500, step%%2 == 
+    0) %>% gf_path(theta2 ~ theta1, color = ~step, 
+    alpha = 0.5, arrow = arrow(type = "open", angle = 30)) + 
+    theme_minimal() + transition_reveal(step)
+
+animate(Gibbsplot2, fps = 1)
+```
 
 
 <!--chapter:end:03-estimacion-densidades-bayes.Rmd-->

@@ -208,7 +208,7 @@
 \maketitle
 
 {
-\setcounter{tocdepth}{1}
+\setcounter{tocdepth}{3}
 \tableofcontents
 }
 \hypertarget{introducciuxf3n}{%
@@ -2772,6 +2772,31 @@ Este caso sería una simple caminata aleatoria sin ningún interés en particula
 
 Suponga además, que el viajero quiere estar más tiempo donde haya una mayor cantidad de personas \(P\) pero siguiendo ese patrón aleatorio. Entonces la forma de describir su decisión de moverse sería:
 
+\begin{itemize}
+\tightlist
+\item
+  Tira la moneda y decide si va a la izquierda o la derecha.
+
+  \begin{enumerate}
+  \def\labelenumi{\arabic{enumi}.}
+  \item
+    Si el lugar nuevo tiene \textbf{MÁS} personas que el actual salta a ese lugar.
+  \item
+    Si el lugar nuevo tiene \textbf{MENOS} personas entonces el viajero tiene que decidir si se queda o se mueve. \textbar{} calcula la probabilidad de moverse como \(p_{moverse} = P_{nuevo}/P_{actual}\).
+
+    \textbf{Tira un número aleatorio entre 0 y 1 \(r\)}
+
+    \begin{enumerate}
+    \def\labelenumii{\arabic{enumii}.}
+    \tightlist
+    \item
+      Si \(p_{moverse}>r\) entonces se mueve.
+    \item
+      Sino, se queda donde está.
+    \end{enumerate}
+  \end{enumerate}
+\end{itemize}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{P <-}\StringTok{ }\DecValTok{1}\OperatorTok{:}\DecValTok{7}
@@ -3322,12 +3347,24 @@ Tratemos de encontrar los parámetros para la distribución posterior usando un 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{Metro_2coinsA }\OperatorTok{%>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(step }\OperatorTok{<}\StringTok{ }\DecValTok{500}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{gf_path}\NormalTok{(theta2 }\OperatorTok{~}\StringTok{ }
-\StringTok{    }\NormalTok{theta1, }\DataTypeTok{color =} \OperatorTok{~}\NormalTok{step, }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{gf_point}\NormalTok{(theta2 }\OperatorTok{~}\StringTok{ }
-\StringTok{    }\NormalTok{theta1, }\DataTypeTok{color =} \OperatorTok{~}\NormalTok{step, }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{)}
+\StringTok{    }\NormalTok{theta1, }\DataTypeTok{color =} \OperatorTok{~}\NormalTok{step, }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{, }\DataTypeTok{arrow =} \KeywordTok{arrow}\NormalTok{(}\DataTypeTok{type =} \StringTok{"open"}\NormalTok{, }
+    \DataTypeTok{angle =} \DecValTok{30}\NormalTok{, }\DataTypeTok{length =} \KeywordTok{unit}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\StringTok{"inches"}\NormalTok{))) }\OperatorTok{+}\StringTok{ }\KeywordTok{theme_minimal}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-131-4.pdf}
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-132-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(gganimate)}
+\NormalTok{Metro_2coinsAplot <-}\StringTok{ }\NormalTok{Metro_2coinsA }\OperatorTok{%>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(step }\OperatorTok{<}\StringTok{ }
+\StringTok{    }\DecValTok{500}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{gf_path}\NormalTok{(theta2 }\OperatorTok{~}\StringTok{ }\NormalTok{theta1, }\DataTypeTok{color =} \OperatorTok{~}\NormalTok{step, }
+    \DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{, }\DataTypeTok{arrow =} \KeywordTok{arrow}\NormalTok{(}\DataTypeTok{type =} \StringTok{"open"}\NormalTok{, }\DataTypeTok{angle =} \DecValTok{30}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{theme_minimal}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{transition_reveal}\NormalTok{(step)}
+
+\KeywordTok{animate}\NormalTok{(Metro_2coinsAplot, }\DataTypeTok{fps =} \DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3339,7 +3376,7 @@ Tratemos de encontrar los parámetros para la distribución posterior usando un 
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-132-1.pdf}
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-135-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3347,17 +3384,28 @@ Tratemos de encontrar los parámetros para la distribución posterior usando un 
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-132-2.pdf}
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-135-2.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{Metro_2coinsB }\OperatorTok{%>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(step }\OperatorTok{<}\StringTok{ }\DecValTok{500}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{gf_path}\NormalTok{(theta2 }\OperatorTok{~}\StringTok{ }
-\StringTok{    }\NormalTok{theta1, }\DataTypeTok{color =} \OperatorTok{~}\NormalTok{step, }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{gf_point}\NormalTok{(theta2 }\OperatorTok{~}\StringTok{ }
-\StringTok{    }\NormalTok{theta1, }\DataTypeTok{color =} \OperatorTok{~}\NormalTok{step, }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{)}
+\StringTok{    }\NormalTok{theta1, }\DataTypeTok{color =} \OperatorTok{~}\NormalTok{step, }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{, }\DataTypeTok{arrow =} \KeywordTok{arrow}\NormalTok{(}\DataTypeTok{type =} \StringTok{"open"}\NormalTok{, }
+    \DataTypeTok{angle =} \DecValTok{30}\NormalTok{, }\DataTypeTok{length =} \KeywordTok{unit}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\StringTok{"inches"}\NormalTok{))) }\OperatorTok{+}\StringTok{ }\KeywordTok{theme_minimal}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-132-3.pdf}
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-136-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Metro_2coinsBplot <-}\StringTok{ }\NormalTok{Metro_2coinsA }\OperatorTok{%>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(step }\OperatorTok{<}\StringTok{ }
+\StringTok{    }\DecValTok{500}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{gf_path}\NormalTok{(theta2 }\OperatorTok{~}\StringTok{ }\NormalTok{theta1, }\DataTypeTok{color =} \OperatorTok{~}\NormalTok{step, }
+    \DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{, }\DataTypeTok{arrow =} \KeywordTok{arrow}\NormalTok{(}\DataTypeTok{type =} \StringTok{"open"}\NormalTok{, }\DataTypeTok{angle =} \DecValTok{30}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{theme_minimal}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{transition_reveal}\NormalTok{(step)}
+
+\KeywordTok{animate}\NormalTok{(Metro_2coinsBplot, }\DataTypeTok{fps =} \DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
 
 \hypertarget{muestreo-de-gibbs}{%
 \subsection{Muestreo de Gibbs}\label{muestreo-de-gibbs}}
@@ -3444,7 +3492,7 @@ f\left(\theta_{1} | \theta_{2}, D\right) &=f\left(\theta_{1}, \theta_{2} | D\rig
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-135-1.pdf}
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-140-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3452,7 +3500,7 @@ f\left(\theta_{1} | \theta_{2}, D\right) &=f\left(\theta_{1}, \theta_{2} | D\rig
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-135-2.pdf}
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-140-2.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3460,17 +3508,28 @@ f\left(\theta_{1} | \theta_{2}, D\right) &=f\left(\theta_{1}, \theta_{2} | D\rig
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-135-3.pdf}
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-140-3.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{Gibbs }\OperatorTok{%>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(step }\OperatorTok{<}\StringTok{ }\DecValTok{500}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{gf_path}\NormalTok{(theta2 }\OperatorTok{~}\StringTok{ }\NormalTok{theta1, }
-    \DataTypeTok{color =} \OperatorTok{~}\NormalTok{step, }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{gf_point}\NormalTok{(theta2 }\OperatorTok{~}\StringTok{ }
-\StringTok{    }\NormalTok{theta1, }\DataTypeTok{color =} \OperatorTok{~}\NormalTok{step, }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{)}
+    \DataTypeTok{color =} \OperatorTok{~}\NormalTok{step, }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{, }\DataTypeTok{arrow =} \KeywordTok{arrow}\NormalTok{(}\DataTypeTok{type =} \StringTok{"open"}\NormalTok{, }
+        \DataTypeTok{angle =} \DecValTok{30}\NormalTok{, }\DataTypeTok{length =} \KeywordTok{unit}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\StringTok{"inches"}\NormalTok{))) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{theme_minimal}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-135-4.pdf}
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-141-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Gibbsplot <-}\StringTok{ }\NormalTok{Gibbs }\OperatorTok{%>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(step }\OperatorTok{<}\StringTok{ }\DecValTok{500}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{gf_path}\NormalTok{(theta2 }\OperatorTok{~}\StringTok{ }
+\StringTok{    }\NormalTok{theta1, }\DataTypeTok{color =} \OperatorTok{~}\NormalTok{step, }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{, }\DataTypeTok{arrow =} \KeywordTok{arrow}\NormalTok{(}\DataTypeTok{type =} \StringTok{"open"}\NormalTok{, }
+    \DataTypeTok{angle =} \DecValTok{30}\NormalTok{)) }\OperatorTok{+}\StringTok{ }\KeywordTok{theme_minimal}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{transition_reveal}\NormalTok{(step)}
+
+\KeywordTok{animate}\NormalTok{(Gibbsplot, }\DataTypeTok{fps =} \DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
 
 Ciclos completos
 
@@ -3481,7 +3540,7 @@ Ciclos completos
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-136-1.pdf}
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-143-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3490,7 +3549,7 @@ Ciclos completos
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-136-2.pdf}
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-143-2.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3499,17 +3558,28 @@ Ciclos completos
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-136-3.pdf}
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-143-3.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{Gibbs }\OperatorTok{%>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(step }\OperatorTok{<}\StringTok{ }\DecValTok{500}\NormalTok{, step}\OperatorTok{%%}\DecValTok{2} \OperatorTok{==}\StringTok{ }\DecValTok{0}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{gf_path}\NormalTok{(theta2 }\OperatorTok{~}\StringTok{ }
-\StringTok{    }\NormalTok{theta1, }\DataTypeTok{color =} \OperatorTok{~}\NormalTok{step, }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{gf_point}\NormalTok{(theta2 }\OperatorTok{~}\StringTok{ }
-\StringTok{    }\NormalTok{theta1, }\DataTypeTok{color =} \OperatorTok{~}\NormalTok{step, }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{)}
+\StringTok{    }\NormalTok{theta1, }\DataTypeTok{color =} \OperatorTok{~}\NormalTok{step, }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{, }\DataTypeTok{arrow =} \KeywordTok{arrow}\NormalTok{(}\DataTypeTok{type =} \StringTok{"open"}\NormalTok{, }
+    \DataTypeTok{angle =} \DecValTok{30}\NormalTok{, }\DataTypeTok{length =} \KeywordTok{unit}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\StringTok{"inches"}\NormalTok{))) }\OperatorTok{+}\StringTok{ }\KeywordTok{theme_minimal}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-136-4.pdf}
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-144-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Gibbsplot2 <-}\StringTok{ }\NormalTok{Gibbs }\OperatorTok{%>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(step }\OperatorTok{<}\StringTok{ }\DecValTok{500}\NormalTok{, step}\OperatorTok{%%}\DecValTok{2} \OperatorTok{==}\StringTok{ }
+\StringTok{    }\DecValTok{0}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{gf_path}\NormalTok{(theta2 }\OperatorTok{~}\StringTok{ }\NormalTok{theta1, }\DataTypeTok{color =} \OperatorTok{~}\NormalTok{step, }
+    \DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{, }\DataTypeTok{arrow =} \KeywordTok{arrow}\NormalTok{(}\DataTypeTok{type =} \StringTok{"open"}\NormalTok{, }\DataTypeTok{angle =} \DecValTok{30}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{theme_minimal}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{transition_reveal}\NormalTok{(step)}
+
+\KeywordTok{animate}\NormalTok{(Gibbsplot2, }\DataTypeTok{fps =} \DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
 
 \printbibliography
 
