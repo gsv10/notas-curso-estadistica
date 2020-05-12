@@ -116,10 +116,13 @@
 
 %\usepackage{inputenc}
 % \usepackage{newpxtext,newpxmath}
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}
 \usepackage[spanish]{babel}
 \usepackage{booktabs}
 \usepackage{csquotes}
-\usepackage{amsmath, amsthm, amssymb}
+\usepackage{bm}
+\usepackage{amsmath, amsthm, amssymb,amsbsy}
 \usepackage{mathtools}
 \usepackage{graphics, graphicx}
 % \usepackage{setspace}
@@ -2560,10 +2563,10 @@ Como solo se tiene la hora de dormir y la hora de despertarse, se debe tomar la 
 
 \includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-111-1.pdf}
 
-Ahora supongamos que se tiene quiere ajustar una previa continua a este modelo. Para esto usaremos una distribución Beta con parámetros \(\alpha\) y \(\beta\), de la forma
+Ahora supongamos que se tiene quiere ajustar una previa continua a este modelo. Para esto usaremos una distribución Beta con parámetros \(a\) y \(b\), de la forma
 
 \[
-    f(p\vert \alpha, \beta) \propto p^{1-\alpha} (1-p)^{1-\beta}.
+    f(p\vert \alpha, \beta) \propto p^{1-a} (1-p)^{1-b}.
 \]
 
 El ajuste de los parámetros de la Beta depende mucho de la información
@@ -2750,36 +2753,24 @@ Finalmente basta con tomar el muestreo de la posterior
 
 \includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-123-1.pdf}
 
-\hypertarget{monte-carlo-methods}{%
-\section{Monte Carlo methods}\label{monte-carlo-methods}}
+\hypertarget{muxe9todos-monte-carlo}{%
+\section{Métodos Monte Carlo}\label{muxe9todos-monte-carlo}}
+
+\hypertarget{una-moneda}{%
+\section{Una moneda}\label{una-moneda}}
 
 El tratamiento clásico de la estimación de parámetros bayesiana nos dice que si tenemos una densidad previa y la ``combinamos'' con la verosimilitud de los datos, estos nos dará una densidad con más información. Se podría repetir el proceso varias veces para tratar de ajustar mejor la densidad posterior.
 
 Sin embargo, se podría usar potencia de los métodos Monte Carlo para que esta búsqueda sea muy efectiva para encontrar los parámetros adecuados.
 
 \hypertarget{ejemplo-del-viajero}{%
-\section{Ejemplo del viajero}\label{ejemplo-del-viajero}}
+\subsection{Ejemplo del viajero}\label{ejemplo-del-viajero}}
 
 Suponga que tenemos un viajero que quiere estar en 7 lugares distintos (suponga que están en línea recta) y la probabilidad de pasar a un lugar a otro se decide tirando una moneda no sesgada (50\% a la derecha y 50\% a la izquierda).
 
 Este caso sería una simple caminata aleatoria sin ningún interés en particular.
 
 Suponga además, que el viajero quiere estar más tiempo donde haya una mayor cantidad de personas \(P\) pero siguiendo ese patrón aleatorio. Entonces la forma de describir su decisión de moverse sería:
-
-\begin{tabular}{p{6cm}|p{6cm}}
-\toprule
-\multicolumn{2}{c}{Tira la moneda y decide si va a la izquierda o la derecha} \\
-\midrule
-\multicolumn{2}{c}{Tiene dos opciones} \\
-\midrule \midrule
-Si el lugar nuevo tiene \textbf{MÁS} personas que el actual salta a ese lugar 
-&   Si el lugar nuevo tiene \textbf{MENOS} personas entonces calcula la probabilidad de moverse como $p_{moverse} = P_{nuevo}/P_{actual}$. 
-
-Entonces el viajero tira un número aleatorio del 0 al 1 y si este   menor que $(p_{moverse}$ entonces se mueve. 
-
-Si tira un número mayor a $p_{moverse}$ se queda donde está. \\
-\bottomrule
-\end{tabular}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2827,7 +2818,7 @@ Si tira un número mayor a $p_{moverse}$ se queda donde está. \\
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-126-1.pdf}
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-125-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2836,7 +2827,7 @@ Si tira un número mayor a $p_{moverse}$ se queda donde está. \\
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-126-2.pdf}
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-125-2.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2858,8 +2849,65 @@ Si tira un número mayor a $p_{moverse}$ se queda donde está. \\
 ## [1] 1.798412
 \end{verbatim}
 
+\hypertarget{cadenas-de-markov}{%
+\subsection{Cadenas de Markov}\label{cadenas-de-markov}}
+
+Recuerde que estamos buscando el \enquote{camino} que el viajero tomará para pasar la mayor parte del tiempo de en los lugares más poblados (con mayor \(\theta\)).
+
+\begin{equation*}
+\theta_{1} \curvearrowright \theta_{2} \curvearrowright \ldots \curvearrowright \theta_{50000}.
+\end{equation*}
+
+Denotamos \(\theta_{1}\to\theta_{2}\) si el viajero pasó de \(\theta_{1}\) hacia \(\theta_{2}\).
+
+Entonces
+
+\begin{itemize}
+\tightlist
+\item
+  \(\mathbb{P}\left(\theta \rightarrow \theta+1\right)=0.5 \min \left(\frac{P(\theta+1)}{P(\theta)} / , 1\right)\)
+\item
+  \(\mathbb{P}\left(\theta + 1 \rightarrow \theta\right)=0.5 \min \left(\frac{P(\theta)}{P(\theta+1)} / , 1\right)\)
+\end{itemize}
+
+Entonces la razón entre estas dos probabilidades es
+
+\begin{align*}
+    \frac{\mathbb{P}\left(\theta \rightarrow \theta+1\right)}{\mathbb{P}\left(\theta +1 \rightarrow \theta\right)} &=\frac{0.5 \min (P(\theta+1) / P(\theta), 1)}{0.5 \min (P(\theta) / P(\theta+1), 1)} \\
+    &=\left\{\begin{array}{ll}
+        \frac{P(\theta+1)}{P(\theta) } & \text { si } P(\theta+1)>P(\theta) \\
+        \frac{P(\theta+1) }{P(\theta)} & \text { si } P(\theta+1)<P(\theta)
+    \end{array}\right.\\
+    &=\frac{P(\theta+1)}{P(\theta)}.
+\end{align*}
+
+Es decir que la razón de las probabilidades es equivalente a la razón entre las proporción de las poblaciones. Por lo tanto la mayoría de las veces se estará en los lugares con mayor población.
+
+Esta cadena se puede escribir usando una matriz de transición de la forma
+
+\begin{equation*}
+T= \left(\begin{array}{ccccc}
+\ddots & \mathbb{P}(\theta-2 \rightarrow \theta-1) & 0 & 0 & 0 \\
+\ddots & \mathbb{P}(\theta-1 \rightarrow \theta-1) & \mathbb{P}(\theta-1 \rightarrow \theta) & 0 & 0 \\
+0 & \mathbb{P}(\theta \rightarrow \theta-1) & \mathbb{P}(\theta \rightarrow \theta) & \mathbb{P}(\theta \rightarrow \theta+1) & 0 \\
+0 & 0 & \mathbb{P}(\theta+1 \rightarrow \theta) & \mathbb{P}(\theta+1 \rightarrow \theta+1) & \ddots \\
+0 & 0 & 0 & \mathbb{P}(\theta+2 \rightarrow \theta+1) & \ddots
+\end{array}\right)
+\end{equation*}
+
+La matriz \(T\) tiene las propiedades
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Existencia de una única distribución estacionaria (llamada \(f\) más adelante).
+\item
+  Es ergódica, i.e., es aperíodica y positiva recurrente. Recuerde que una cadena de markov es érgodica si siempre se puede pasar de un estado a otro (no necesariamente en 1 paso). Otra forma de verlo es que la para alguna potencia de \(T\) todos los sus elementos serán positivos estrictos.
+\end{enumerate}
+
 \hypertarget{el-algoritmo-de-metropolis-hasting}{%
-\section{El algoritmo de Metropolis-Hasting}\label{el-algoritmo-de-metropolis-hasting}}
+\subsection{El algoritmo de Metropolis-Hasting}\label{el-algoritmo-de-metropolis-hasting}}
 
 El ejemplo anterior era bastante sencillo pero demuestra que se puede
 encontrar el mejor estimador posible simplemente ejecutando una y otra
@@ -2880,8 +2928,8 @@ En palabras simples el algoritmo de Metropoli Hasting es
 \item
   Estime la razón
   \[
-   R=\frac{f\left(\theta^{*}\right) p\left(\theta^{t-1} |
-       \theta^{*}\right)}{f\left(\theta^{t-1}\right) p\left(\theta^{*} |
+   R=\frac{f\left(\theta^{*}\right) L\left(\theta^{t-1} |
+       \theta^{*}\right)}{f\left(\theta^{t-1}\right) L\left(\theta^{*} |
        \theta^{t-1}\right)}
   \]
 \item
@@ -2896,15 +2944,15 @@ formas, dependiendo de la densidad de proposición
 
 Si esta es independiente de las elecciones anteriores entonces,
 \[
-    p\left(\theta^{*} | \theta^{t-1}\right)=p\left(\theta^{*}\right)
+    L\left(\theta^{*} | \theta^{t-1}\right)=L\left(\theta^{*}\right)
 \]
 
 Otras formas es escoger
 \[
-    p\left(\theta^{*} |
+    L\left(\theta^{*} |
     \theta^{t-1}\right)=h\left(\theta^{*}-\theta^{t-1}\right)
 \]
-donde \(h\) es simetrica alrededor del origen. En este tipo de
+donde \(h\) es simétrica alrededor del origen. En este tipo de
 cadenas, la razón \(R\) tiene la forma
 \[
     R=\frac{f\left(\theta^{*}\right)}{f\left(\theta^{t-1}\right)}
@@ -2917,6 +2965,38 @@ Una última opción es tomar
 
 donde \(Z\) es una normal centrada con cierta estructura de varianza.
 
+\hypertarget{por-quuxe9-el-algoritmo-de-metropolis-hasting-funciona}{%
+\subsection{¿Por qué el algoritmo de Metropolis Hasting funciona?}\label{por-quuxe9-el-algoritmo-de-metropolis-hasting-funciona}}
+
+\begin{equation}
+\mathbb{P}\left(\theta_{\star} | \theta^{(t)}\right)=L\left(\theta_{\star} | \theta^{(t)}\right) \cdot \min \left\{1, \frac{f\left(\theta_{\star}\right) L\left(\theta^{(t)} | \theta_{\star}\right)}{f\left(\theta^{(t)}\right) L\left(\theta_{\star} | \theta^{(t)}\right)}\right\}
+\end{equation}
+
+Si se comienza en \(f\left(\theta^{(t)}\right)\) entonces
+
+\begin{align}
+\begin{array}{l}
+f\left(\theta^{(t)}\right) \mathbb{P}\left(\theta_{\star} | \theta^{(t)}\right) \\
+\quad=\quad f\left(\theta^{(t)}\right) L\left(\theta_{\star} | \theta^{(t)}\right) \min \left\{1, \frac{f\left(\theta_{\star}\right) L\left(\theta^{(t)} | \theta_{\star}\right)}{f\left(\theta^{(t)}\right) L\left(\theta_{\star} | \theta^{(t)}\right)}\right\} \\
+\quad=\min \left\{f\left(\theta^{(t)}\right) L\left(\theta_{\star} | \theta^{(t)}\right), f\left(\theta_{\star}\right) L\left(\theta^{(t)} | \theta_{\star}\right)\right\} \\
+\quad=\quad f\left(\theta_{\star}\right) L\left(\theta^{(t)} | \theta_{\star}\right) \min \left\{\frac{f\left(\theta^{(t)}\right) L\left(\theta_{\star} | \theta^{(t)}\right)}{f\left(\theta_{\star}\right) L\left(\theta^{\left(t | \theta_{\star}\right)}\right.}, 1\right\} \\
+\quad=f\left(\theta_{\star}\right) \mathbb{P}\left(\theta^{(t)} | \theta_{\star}\right)
+\end{array}
+\end{align}
+
+Asumiendo que existe una cantidad finita de estados \(\theta_{1}, \ldots, \theta_{M}\), entonces.
+
+\begin{equation*}
+f\left(\theta_{j}\right) = \underbrace{\sum_{i=1}^{M} f\left(\theta_{i}\right) \mathbb{P} \left(\theta_{j} | \theta_{i}\right)}_{\text {Probabilidad total  }}=\sum_{i=1}^{M} f\left(\theta_{j}\right) \mathbb{P} \left(\theta_{i} | \theta_{j}\right)
+\end{equation*}
+
+Cual indica que no importa donde empecemos siempre llegaremos a la densidad estacionaria \(f\).
+
+\href{https://www.ece.iastate.edu/~namrata/EE527_Spring08/l4c.pdf}{Para más detalles}
+
+\hypertarget{extensiuxf3n-al-caso-del-viajero}{%
+\subsection{Extensión al caso del viajero}\label{extensiuxf3n-al-caso-del-viajero}}
+
 Retomemos el ejemplo del viajero. Supongamos que ahora existen una
 cantidad infinita de lugares a los que puede ir y que la población de
 cada isla es proporcional a la densidad posterior. Además, el viajero
@@ -2926,7 +3006,7 @@ salto cae de forma continua en el intervalo \([0,1]\).
 Para hacer este ejemplo concreto, el viajero no conoce cuál es su
 probabilidad de salto \(\theta\) pero sabe que ha tirado la
 moneda \(N\) veces y observado \(z\) exitos. Por lo tanto tendremos
-una verosimilitud de \(f(z, N | \theta)=\theta^{z}(1-\theta)^{(N-z)}\).
+una verosimilitud de \(L(z, N | \theta)=\theta^{z}(1-\theta)^{(N-z)}\).
 
 La previa será dada por \(f(\theta)=\operatorname{beta}(\theta | a, b)\).
 
@@ -2940,7 +3020,7 @@ Entonces el algoritmo de Metropolis Hasting se puede reformular como
 \item
   Simule un valor de salto\(\Delta \theta \sim \mathcal{N}\left(0,\sigma^{2}\right)\) y denote \(\theta^{t} = \theta^{t} + \Delta\theta\).
 \item
-  Probabilidad de aceptación \$ p\_\{\text {moverse }\}\$
+  Probabilidad de aceptación \(p_{\text {moverse }}\)
   \begin{align*}
    p_{\text {moverse }}
      & =\min \left(1, \frac{P\left(\theta_{\ast}\right)}{P\left(\theta_{t-1}\right)}\right) \\
@@ -3068,7 +3148,7 @@ Podemos desechar los primeros 500 pasos (por ejemplo) del proceso ya que estos s
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-130-1.pdf}
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-129-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3077,7 +3157,359 @@ Podemos desechar los primeros 500 pasos (por ejemplo) del proceso ya que estos s
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-130-2.pdf}
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-129-2.pdf}
+
+\hypertarget{dos-monedas}{%
+\section{Dos monedas}\label{dos-monedas}}
+
+Un problema con el algoritmo de Metropolis-Hastings (M-H) es que solo funciona para la estimación de un solo parámetro.
+
+El muestreo de Gibbs está pensado en el caso de la estimación de muchos parámetros de forma bastante ordenada.
+
+Supongamos que tenemos dos monedas y queremos ver la proporción de escudos generados entre las dos monedas:
+
+Tenemos:
+
+\begin{itemize}
+\tightlist
+\item
+  Parámetros: \(\theta_{1}\) y \(\theta_{2}\).
+\item
+  Datos: \(N_{1}\) tiradas de la moneda 1 y \(N_{2}\) tiradas de la moneda 2. (cada una tuvo \(z_{1}\) y \(z_{2}\) éxitos).
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\item
+  Verosimilitud: Bernoulli.
+  \begin{equation*}
+  y_{1}^{i}\sim \mathrm{Bernoulli}(\theta_{1}) 
+  \quad 
+  y_{2}^{i}\sim \mathrm{Bernoulli}(\theta_{2}) 
+  \end{equation*}
+\item
+  Previa: Beta independiente para cada \(\theta\).
+  \begin{equation*}
+  \theta_{1}\sim \mathrm{Beta}(a_{1},b_{1}) 
+  \quad 
+  \theta_{2}\sim \mathrm{Beta}(a_{2},b_{2}) 
+  \end{equation*}
+\end{enumerate}
+
+La distribución posterior se puede escribir como
+
+\begin{align*}
+f\left(\theta_{1}, \theta_{2} | D\right) &=f\left(D | \theta_{1}, \theta_{2}\right) f\left(\theta_{1}, \theta_{2}\right) / f(D) \\
+&=\theta_{1}^{z_{1}}\left(1-\theta_{1}\right)^{N_{1}-z_{1}} \theta_{1}^{z_{2}}\left(1-\theta_{2}\right)^{N_{2}-z_{2}} f\left(\theta_{1}, \theta_{2}\right) / f(D) \\
+&=\frac{\theta_{1}^{z_{1}}\left(1-\theta_{1}\right)^{N_{1}-z_{1}} \theta_{1}^{z_{2}}\left(1-\theta_{2}\right)^{N_{2}-z_{2}} \theta_{1}^{a_{1}-1}\left(1-\theta_{1}\right)^{b_{1}-1} \theta_{2}^{a_{2}-1}\left(1-\theta_{2}\right)^{b_{2}-1}}{f(D) B\left(a_{1}, b_{1}\right) B\left(a_{2}, b_{2}\right)} \\
+&=\frac{\theta_{1}^{z_{1}+a_{1}-1}\left(1-\theta_{1}\right)^{N_{1}-z_{1}+b_{1}-1} \theta_{2}^{z_{2}+a_{2}-1}\left(1-\theta_{2}\right)^{N_{2}-z_{2}+b_{2}-1}}{f(D) B\left(a_{1}, b_{1}\right) B\left(a_{2}, b_{2}\right)}
+\end{align*}
+
+Entonces la distribución posterior de \(\left(\theta_{1}, \theta_{2}\right)\) son dos distribuciones independientes Betas:
+\(\operatorname{Beta}\left(z_{1}+a, N_{1}-z_{1}+b_{1}\right)\) y \(\operatorname{Beta}\left(z_{2}+a, N_{2}-z_{2}+b_{2}\right)\)
+
+Tratemos de encontrar los parámetros para la distribución posterior usando un algoritmo de Metropolis-Hasting. \href{https://rpruim.github.io/Kruschke-Notes/markov-chain-monte-carlo-mcmc.html\#metropolis}{Función tomada de Kruschke-Notes}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{metro_2coins <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(}
+\NormalTok{  z1, n1,              }\CommentTok{# z = successes, n = trials}
+\NormalTok{  z2, n2,              }\CommentTok{# z = successes, n = trials}
+  \DataTypeTok{size  =} \KeywordTok{c}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\FloatTok{0.1}\NormalTok{), }\CommentTok{# sds of jump distribution}
+  \DataTypeTok{start =} \KeywordTok{c}\NormalTok{(}\FloatTok{0.5}\NormalTok{, }\FloatTok{0.5}\NormalTok{), }\CommentTok{# value of thetas to start at}
+  \DataTypeTok{num_steps =} \FloatTok{5e4}\NormalTok{,     }\CommentTok{# number of steps to run the algorithm}
+  \DataTypeTok{prior1 =}\NormalTok{ dbeta,      }\CommentTok{# function describing prior}
+  \DataTypeTok{prior2 =}\NormalTok{ dbeta,      }\CommentTok{# function describing prior}
+  \DataTypeTok{args1 =} \KeywordTok{list}\NormalTok{(),      }\CommentTok{# additional args for prior1}
+  \DataTypeTok{args2 =} \KeywordTok{list}\NormalTok{()      }\CommentTok{# additional args for prior2}
+\NormalTok{  ) \{}
+  
+\NormalTok{  theta1            <-}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\OtherTok{NA}\NormalTok{, num_steps)  }\CommentTok{# trick to pre-alocate memory}
+\NormalTok{  theta2            <-}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\OtherTok{NA}\NormalTok{, num_steps)  }\CommentTok{# trick to pre-alocate memory}
+\NormalTok{  proposed_theta1   <-}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\OtherTok{NA}\NormalTok{, num_steps)  }\CommentTok{# trick to pre-alocate memory}
+\NormalTok{  proposed_theta2   <-}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\OtherTok{NA}\NormalTok{, num_steps)  }\CommentTok{# trick to pre-alocate memory}
+\NormalTok{  move              <-}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\OtherTok{NA}\NormalTok{, num_steps)  }\CommentTok{# trick to pre-alocate memory}
+\NormalTok{  theta1[}\DecValTok{1}\NormalTok{]         <-}\StringTok{ }\NormalTok{start[}\DecValTok{1}\NormalTok{]}
+\NormalTok{  theta2[}\DecValTok{1}\NormalTok{]         <-}\StringTok{ }\NormalTok{start[}\DecValTok{2}\NormalTok{]}
+
+\NormalTok{  size1 <-}\StringTok{ }\NormalTok{size[}\DecValTok{1}\NormalTok{] }
+\NormalTok{  size2 <-}\StringTok{ }\NormalTok{size[}\DecValTok{2}\NormalTok{] }
+  
+  \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{(num_steps}\DecValTok{-1}\NormalTok{)) \{}
+    \CommentTok{# head to new "island"}
+\NormalTok{    proposed_theta1[i }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{] <-}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(}\DecValTok{1}\NormalTok{, theta1[i], size1)}
+\NormalTok{    proposed_theta2[i }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{] <-}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(}\DecValTok{1}\NormalTok{, theta2[i], size2)}
+    
+    \ControlFlowTok{if}\NormalTok{ (proposed_theta1[i }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{] }\OperatorTok{<=}\StringTok{ }\DecValTok{0} \OperatorTok{||}
+\StringTok{        }\NormalTok{proposed_theta1[i }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{] }\OperatorTok{>=}\StringTok{ }\DecValTok{1} \OperatorTok{||}
+\StringTok{        }\NormalTok{proposed_theta2[i }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{] }\OperatorTok{<=}\StringTok{ }\DecValTok{0} \OperatorTok{||}
+\StringTok{        }\NormalTok{proposed_theta2[i }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{] }\OperatorTok{>=}\StringTok{ }\DecValTok{1}\NormalTok{) \{}
+\NormalTok{      proposed_posterior <-}\StringTok{ }\DecValTok{0}  \CommentTok{# because prior is 0}
+\NormalTok{    \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{      current_prior <-}\StringTok{ }
+\StringTok{        }\KeywordTok{do.call}\NormalTok{(prior1, }\KeywordTok{c}\NormalTok{(}\KeywordTok{list}\NormalTok{(theta1[i]), args1)) }\OperatorTok{*}
+\StringTok{        }\KeywordTok{do.call}\NormalTok{(prior2, }\KeywordTok{c}\NormalTok{(}\KeywordTok{list}\NormalTok{(theta2[i]), args2))}
+\NormalTok{      current_likelihood  <-}\StringTok{ }
+\StringTok{        }\KeywordTok{dbinom}\NormalTok{(z1, n1, theta1[i]) }\OperatorTok{*}
+\StringTok{        }\KeywordTok{dbinom}\NormalTok{(z2, n2, theta2[i])}
+\NormalTok{      current_posterior   <-}\StringTok{ }\NormalTok{current_prior }\OperatorTok{*}\StringTok{ }\NormalTok{current_likelihood}
+      
+\NormalTok{      proposed_prior <-}\StringTok{ }
+\StringTok{        }\KeywordTok{do.call}\NormalTok{(prior1, }\KeywordTok{c}\NormalTok{(}\KeywordTok{list}\NormalTok{(proposed_theta1[i}\OperatorTok{+}\DecValTok{1}\NormalTok{]), args1)) }\OperatorTok{*}
+\StringTok{        }\KeywordTok{do.call}\NormalTok{(prior2, }\KeywordTok{c}\NormalTok{(}\KeywordTok{list}\NormalTok{(proposed_theta2[i}\OperatorTok{+}\DecValTok{1}\NormalTok{]), args2))}
+\NormalTok{      proposed_likelihood  <-}\StringTok{ }
+\StringTok{        }\KeywordTok{dbinom}\NormalTok{(z1, n1, proposed_theta1[i}\OperatorTok{+}\DecValTok{1}\NormalTok{]) }\OperatorTok{*}
+\StringTok{        }\KeywordTok{dbinom}\NormalTok{(z2, n2, proposed_theta2[i}\OperatorTok{+}\DecValTok{1}\NormalTok{])}
+\NormalTok{      proposed_posterior   <-}\StringTok{ }\NormalTok{proposed_prior }\OperatorTok{*}\StringTok{ }\NormalTok{proposed_likelihood}
+\NormalTok{    \}}
+\NormalTok{    prob_move           <-}\StringTok{ }\NormalTok{proposed_posterior }\OperatorTok{/}\StringTok{ }\NormalTok{current_posterior}
+    
+    \CommentTok{# sometimes we "sail back"}
+    \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{runif}\NormalTok{(}\DecValTok{1}\NormalTok{) }\OperatorTok{>}\StringTok{ }\NormalTok{prob_move) \{ }\CommentTok{# sail back}
+\NormalTok{       move[i }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{] <-}\StringTok{ }\OtherTok{FALSE}
+\NormalTok{      theta1[i }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{] <-}\StringTok{ }\NormalTok{theta1[i]}
+\NormalTok{      theta2[i }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{] <-}\StringTok{ }\NormalTok{theta2[i]}
+\NormalTok{    \} }\ControlFlowTok{else}\NormalTok{ \{                    }\CommentTok{# stay}
+\NormalTok{       move[i }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{] <-}\StringTok{ }\OtherTok{TRUE}
+\NormalTok{      theta1[i }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{] <-}\StringTok{ }\NormalTok{proposed_theta1[i }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{]}
+\NormalTok{      theta2[i }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{] <-}\StringTok{ }\NormalTok{proposed_theta2[i }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{]}
+\NormalTok{    \}}
+\NormalTok{  \}}
+  
+  \KeywordTok{tibble}\NormalTok{(}
+    \DataTypeTok{step =} \DecValTok{1}\OperatorTok{:}\NormalTok{num_steps, }
+    \DataTypeTok{theta1 =}\NormalTok{ theta1,}
+    \DataTypeTok{theta2 =}\NormalTok{ theta2,}
+    \DataTypeTok{proposed_theta1 =}\NormalTok{ proposed_theta1,}
+    \DataTypeTok{proposed_theta2 =}\NormalTok{ proposed_theta2,}
+    \DataTypeTok{move =}\NormalTok{ move, }
+    \DataTypeTok{size1 =}\NormalTok{ size1,}
+    \DataTypeTok{size2 =}\NormalTok{ size2}
+\NormalTok{  )}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Metro_2coinsA <-}\StringTok{ }\KeywordTok{metro_2coins}\NormalTok{(}\DataTypeTok{z1 =} \DecValTok{6}\NormalTok{, }\DataTypeTok{n1 =} \DecValTok{8}\NormalTok{, }\DataTypeTok{z2 =} \DecValTok{2}\NormalTok{, }
+    \DataTypeTok{n2 =} \DecValTok{7}\NormalTok{, }\DataTypeTok{size =} \KeywordTok{c}\NormalTok{(}\FloatTok{0.02}\NormalTok{, }\FloatTok{0.02}\NormalTok{), }\DataTypeTok{args1 =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{shape1 =} \DecValTok{2}\NormalTok{, }
+        \DataTypeTok{shape2 =} \DecValTok{2}\NormalTok{), }\DataTypeTok{args2 =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{shape1 =} \DecValTok{2}\NormalTok{, }\DataTypeTok{shape2 =} \DecValTok{2}\NormalTok{))}
+
+\NormalTok{Metro_2coinsA }\OperatorTok{%>%}\StringTok{ }\KeywordTok{gf_density2d}\NormalTok{(theta2 }\OperatorTok{~}\StringTok{ }\NormalTok{theta1)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-131-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Metro_2coinsA }\OperatorTok{%>%}\StringTok{ }\KeywordTok{gf_density}\NormalTok{(}\OperatorTok{~}\NormalTok{(theta2 }\OperatorTok{-}\StringTok{ }\NormalTok{theta1))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-131-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{acf}\NormalTok{(Metro_2coinsA}\OperatorTok{$}\NormalTok{theta2 }\OperatorTok{-}\StringTok{ }\NormalTok{Metro_2coinsA}\OperatorTok{$}\NormalTok{theta1)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-131-3.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Metro_2coinsA }\OperatorTok{%>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(step }\OperatorTok{<}\StringTok{ }\DecValTok{500}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{gf_path}\NormalTok{(theta2 }\OperatorTok{~}\StringTok{ }
+\StringTok{    }\NormalTok{theta1, }\DataTypeTok{color =} \OperatorTok{~}\NormalTok{step, }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{gf_point}\NormalTok{(theta2 }\OperatorTok{~}\StringTok{ }
+\StringTok{    }\NormalTok{theta1, }\DataTypeTok{color =} \OperatorTok{~}\NormalTok{step, }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-131-4.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Metro_2coinsB <-}\StringTok{ }\KeywordTok{metro_2coins}\NormalTok{(}\DataTypeTok{z1 =} \DecValTok{6}\NormalTok{, }\DataTypeTok{n1 =} \DecValTok{8}\NormalTok{, }\DataTypeTok{z2 =} \DecValTok{2}\NormalTok{, }
+    \DataTypeTok{n2 =} \DecValTok{7}\NormalTok{, }\DataTypeTok{size =} \KeywordTok{c}\NormalTok{(}\FloatTok{0.2}\NormalTok{, }\FloatTok{0.2}\NormalTok{), }\DataTypeTok{args1 =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{shape1 =} \DecValTok{2}\NormalTok{, }
+        \DataTypeTok{shape2 =} \DecValTok{2}\NormalTok{), }\DataTypeTok{args2 =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{shape1 =} \DecValTok{2}\NormalTok{, }\DataTypeTok{shape2 =} \DecValTok{2}\NormalTok{))}
+
+\NormalTok{Metro_2coinsB }\OperatorTok{%>%}\StringTok{ }\KeywordTok{gf_density2d}\NormalTok{(theta2 }\OperatorTok{~}\StringTok{ }\NormalTok{theta1)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-132-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{acf}\NormalTok{(Metro_2coinsB}\OperatorTok{$}\NormalTok{theta2 }\OperatorTok{-}\StringTok{ }\NormalTok{Metro_2coinsB}\OperatorTok{$}\NormalTok{theta1)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-132-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Metro_2coinsB }\OperatorTok{%>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(step }\OperatorTok{<}\StringTok{ }\DecValTok{500}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{gf_path}\NormalTok{(theta2 }\OperatorTok{~}\StringTok{ }
+\StringTok{    }\NormalTok{theta1, }\DataTypeTok{color =} \OperatorTok{~}\NormalTok{step, }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{gf_point}\NormalTok{(theta2 }\OperatorTok{~}\StringTok{ }
+\StringTok{    }\NormalTok{theta1, }\DataTypeTok{color =} \OperatorTok{~}\NormalTok{step, }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-132-3.pdf}
+
+\hypertarget{muestreo-de-gibbs}{%
+\subsection{Muestreo de Gibbs}\label{muestreo-de-gibbs}}
+
+Para este ejemplo \(\left( \theta_{1},\theta_{2} \right)\), entonces la forma de escoger la posteriores en cada paso sería de la forma:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Tome al azar un \(\boldsymbol{\theta}^{0} = \left( \theta_{1}^{0},\theta_{2}^{0} \right)\).
+\item
+  Escoja \(\theta_{1}^{1}\) a partir de la distribución
+  \(f\left(\theta_{1} \vert \theta_{1}=\theta_{1}^{0}, \theta_{2}=\theta_{2}^{0}, \boldsymbol{X} \right)\).
+\item
+  Escoja \(\theta_{2}^{1}\) a partir de la distribución
+  \(f\left(\theta_{2} \vert \theta_{1}=\theta_{1}^{1}, \theta_{2}=\theta_{2}^{0}, \boldsymbol{X} \right)\).
+\end{enumerate}
+
+Esto completa un ciclo del muestreo. Cada ciclo genera nuevos \(\boldsymbol{\theta}^{i} = \left( \theta_{1}^{i},\theta_{2}^{i} \right)\) hasta que el proceso converja.
+
+\BeginKnitrBlock{remark}
+\iffalse{} {Nota: } \fi{}En realidad el muestreo de Gibbs se basa en el algoritmo de M-H, con la diferencia que la elección de los parámetros se escogen teniendo en cuanta los datos y fijando los otros parámetros. Es decir,
+
+\begin{align*}
+&{\left[\theta_{1} | \theta_{2}, \ldots, \theta_{M}, datos \right]} \\
+&{\left[\theta_{2} | \theta_{1}, \theta_{3}, \ldots, \theta_{M}, datos \right]} \\
+&{\left[\theta_{M} | \theta_{1}, \ldots, \theta_{M-1}, datos \right]}
+\end{align*}
+\EndKnitrBlock{remark}
+
+El tratamiento teórico puede ser consultado \href{https://www.ece.iastate.edu/~namrata/EE527_Spring08/l4c.pdf\#page=16}{aquí}
+
+\begin{align*}\begin{aligned}
+f\left(\theta_{1} | \theta_{2}, D\right) &=f\left(\theta_{1}, \theta_{2} | D\right) / f\left(\theta_{2} | D\right) \\
+&=f\left(\theta_{1}, \theta_{2} | D\right) \int f\left(\theta_{1}, \theta_{2} | D\right)d \theta_{1}  \\
+&=\frac{\operatorname{dbeta}\left(\theta_{1}, z_{1}+a_{1}, N_{1}-z_{1}+b_{1}\right) \cdot \operatorname{dbeta}\left(\theta_{2}, z_{2}+a_{2}, N_{2}-z_{2}+b_{2}\right)}{\int  \operatorname{dbeta}\left(\theta_{1}, z_{1}+a_{1}, N_{1}-z_{1}+b_{1}\right) \cdot \operatorname{dbeta}\left(\theta_{2} | z_{2}+a_{2}, N_{2}-z_{2}+b_{2}\right)d \theta_{1}} \\
+&=\frac{\operatorname{dbeta}\left(\theta_{1}, z_{1}+a_{1}, N_{1}-z_{1}+b_{1}\right) \cdot \operatorname{dbeta}\left(\theta_{2}, z_{2}+a_{2}, N_{2}-z_{2}+b_{2}\right)}{\operatorname{dbeta}\left(\theta_{2} | z_{2}+a_{2}, N_{2}-z_{2}+b_{2}\right) \int  \operatorname{dbeta}\left(\theta_{1}, z_{1}+a_{1}, N_{1}-z_{1}+b_{1}\right)d \theta_{1}} \\
+&=\frac{\operatorname{dbeta}\left(\theta_{1}, z_{1}+a_{1}, N_{1}-z_{1}+b_{1}\right)}{\int  \operatorname{dbeta}\left(\theta_{1}, z_{1}+a_{1}, N_{1}-z_{1}+b_{1}\right)d \theta_{1}} \\
+&=\operatorname{dbeta}\left(\theta_{1}, z_{1}+a_{1}, N_{1}-z_{1}+b_{1}\right)
+\end{aligned}\end{align*}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{gibbs_2coins <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(}
+\NormalTok{  z1, n1,              }\CommentTok{# z = successes, n = trials}
+\NormalTok{  z2, n2,              }\CommentTok{# z = successes, n = trials}
+  \DataTypeTok{start =} \KeywordTok{c}\NormalTok{(}\FloatTok{0.5}\NormalTok{, }\FloatTok{0.5}\NormalTok{), }\CommentTok{# value of thetas to start at}
+  \DataTypeTok{num_steps =} \FloatTok{1e4}\NormalTok{,     }\CommentTok{# number of steps to run the algorithm}
+\NormalTok{  a1, b1,              }\CommentTok{# params for prior for theta1}
+\NormalTok{  a2, b2               }\CommentTok{# params for prior for theta2}
+\NormalTok{  ) \{}
+  
+\NormalTok{  theta1            <-}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\OtherTok{NA}\NormalTok{, num_steps)  }\CommentTok{# trick to pre-alocate memory}
+\NormalTok{  theta2            <-}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\OtherTok{NA}\NormalTok{, num_steps)  }\CommentTok{# trick to pre-alocate memory}
+\NormalTok{  theta1[}\DecValTok{1}\NormalTok{]         <-}\StringTok{ }\NormalTok{start[}\DecValTok{1}\NormalTok{]}
+\NormalTok{  theta2[}\DecValTok{1}\NormalTok{]         <-}\StringTok{ }\NormalTok{start[}\DecValTok{2}\NormalTok{]}
+  
+  \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{(num_steps}\DecValTok{-1}\NormalTok{)) \{}
+    \ControlFlowTok{if}\NormalTok{ (i }\OperatorTok{%%}\StringTok{ }\DecValTok{2} \OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{) \{ }\CommentTok{# update theta1}
+\NormalTok{      theta1[i}\OperatorTok{+}\DecValTok{1}\NormalTok{] <-}\StringTok{ }\KeywordTok{rbeta}\NormalTok{(}\DecValTok{1}\NormalTok{, z1 }\OperatorTok{+}\StringTok{ }\NormalTok{a1, n1 }\OperatorTok{-}\StringTok{ }\NormalTok{z1 }\OperatorTok{+}\StringTok{ }\NormalTok{b1)}
+\NormalTok{      theta2[i}\OperatorTok{+}\DecValTok{1}\NormalTok{] <-}\StringTok{ }\NormalTok{theta2[i]}
+\NormalTok{    \} }\ControlFlowTok{else}\NormalTok{ \{           }\CommentTok{# update theta2}
+\NormalTok{      theta1[i}\OperatorTok{+}\DecValTok{1}\NormalTok{] <-}\StringTok{ }\NormalTok{theta1[i]}
+\NormalTok{      theta2[i}\OperatorTok{+}\DecValTok{1}\NormalTok{] <-}\StringTok{ }\KeywordTok{rbeta}\NormalTok{(}\DecValTok{1}\NormalTok{, z2 }\OperatorTok{+}\StringTok{ }\NormalTok{a2, n2 }\OperatorTok{-}\StringTok{ }\NormalTok{z2 }\OperatorTok{+}\StringTok{ }\NormalTok{b2)}
+\NormalTok{    \}}
+\NormalTok{  \}}
+  
+  \KeywordTok{tibble}\NormalTok{(}
+    \DataTypeTok{step =} \DecValTok{1}\OperatorTok{:}\NormalTok{num_steps, }
+    \DataTypeTok{theta1 =}\NormalTok{ theta1,}
+    \DataTypeTok{theta2 =}\NormalTok{ theta2,}
+\NormalTok{  )}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Gibbs <-}\StringTok{ }\KeywordTok{gibbs_2coins}\NormalTok{(}\DataTypeTok{z1 =} \DecValTok{6}\NormalTok{, }\DataTypeTok{n1 =} \DecValTok{8}\NormalTok{, }\DataTypeTok{z2 =} \DecValTok{2}\NormalTok{, }\DataTypeTok{n2 =} \DecValTok{7}\NormalTok{, }
+    \DataTypeTok{a1 =} \DecValTok{2}\NormalTok{, }\DataTypeTok{b1 =} \DecValTok{2}\NormalTok{, }\DataTypeTok{a2 =} \DecValTok{2}\NormalTok{, }\DataTypeTok{b2 =} \DecValTok{2}\NormalTok{)}
+
+\NormalTok{Gibbs }\OperatorTok{%>%}\StringTok{ }\KeywordTok{gf_density2d}\NormalTok{(theta2 }\OperatorTok{~}\StringTok{ }\NormalTok{theta1)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-135-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Gibbs }\OperatorTok{%>%}\StringTok{ }\KeywordTok{gf_dens}\NormalTok{(}\OperatorTok{~}\NormalTok{theta1)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-135-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{acf}\NormalTok{(Gibbs}\OperatorTok{$}\NormalTok{theta1)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-135-3.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Gibbs }\OperatorTok{%>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(step }\OperatorTok{<}\StringTok{ }\DecValTok{500}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{gf_path}\NormalTok{(theta2 }\OperatorTok{~}\StringTok{ }\NormalTok{theta1, }
+    \DataTypeTok{color =} \OperatorTok{~}\NormalTok{step, }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{gf_point}\NormalTok{(theta2 }\OperatorTok{~}\StringTok{ }
+\StringTok{    }\NormalTok{theta1, }\DataTypeTok{color =} \OperatorTok{~}\NormalTok{step, }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-135-4.pdf}
+
+Ciclos completos
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Gibbs }\OperatorTok{%>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(step}\OperatorTok{%%}\DecValTok{2} \OperatorTok{==}\StringTok{ }\DecValTok{0}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{gf_density2d}\NormalTok{(theta2 }\OperatorTok{~}\StringTok{ }
+\StringTok{    }\NormalTok{theta1)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-136-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Gibbs }\OperatorTok{%>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(step}\OperatorTok{%%}\DecValTok{2} \OperatorTok{==}\StringTok{ }\DecValTok{0}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{gf_density}\NormalTok{(}\OperatorTok{~}\NormalTok{(theta2 }\OperatorTok{-}\StringTok{ }
+\StringTok{    }\NormalTok{theta1))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-136-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Gibbs }\OperatorTok{%>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(step}\OperatorTok{%%}\DecValTok{2} \OperatorTok{==}\StringTok{ }\DecValTok{0}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{difference =}\NormalTok{ theta2 }\OperatorTok{-}\StringTok{ }
+\StringTok{    }\NormalTok{theta1) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{pull}\NormalTok{(difference) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{acf}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-136-3.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Gibbs }\OperatorTok{%>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(step }\OperatorTok{<}\StringTok{ }\DecValTok{500}\NormalTok{, step}\OperatorTok{%%}\DecValTok{2} \OperatorTok{==}\StringTok{ }\DecValTok{0}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{gf_path}\NormalTok{(theta2 }\OperatorTok{~}\StringTok{ }
+\StringTok{    }\NormalTok{theta1, }\DataTypeTok{color =} \OperatorTok{~}\NormalTok{step, }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{gf_point}\NormalTok{(theta2 }\OperatorTok{~}\StringTok{ }
+\StringTok{    }\NormalTok{theta1, }\DataTypeTok{color =} \OperatorTok{~}\NormalTok{step, }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-136-4.pdf}
 
 \printbibliography
 

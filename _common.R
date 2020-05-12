@@ -4,6 +4,7 @@ options(tinytex.verbose = TRUE)
 
 options(knitr.duplicate.label = "allow")
 knitr::opts_chunk$set(
+  crop = NULL,
   cache = TRUE,
   tidy = TRUE,
   tidy.opts = list(width.cutoff = 50),
@@ -13,4 +14,5 @@ knitr::opts_chunk$set(
 )
 
 library(tidyverse)
+library(ggformula)
 

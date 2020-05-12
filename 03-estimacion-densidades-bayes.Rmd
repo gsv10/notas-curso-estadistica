@@ -62,7 +62,7 @@ De acuerdo la combinación de estas dos distribuciones forma una familia conjuga
 
 Suponga que se hace una encuesta a 27 estudiantes y se encuentra que
 11 dicen que duermen más de 8 horas diarias y el resto no. Nuestro
-objetivo es encontrar inferencias sobre la proporción $p$ de
+objetivo es encontrar inferencias sobre la proporción \(p\) de
 estudiantes que duermen al menos 8 horas diarias. El modelo más
 adecuado es
 
@@ -70,8 +70,8 @@ adecuado es
 		f(x \vert p) \propto p^s (1-p)^f
 \]
 
-donde $s$ es la cantidad de estudiantes que duermen más de 8 horas y
-$f$ los que duermen menos de 8 horas.
+donde \(s\) es la cantidad de estudiantes que duermen más de 8 horas y
+\(f\) los que duermen menos de 8 horas.
 
 Una primera aproximación para la previa es usar una distribución
 discreta. En este caso, el investigador asigna una probabilidad a
@@ -128,17 +128,17 @@ summary(horas_sueno)
 hist(horas_sueno, main = "")
 ```
 
-Ahora supongamos que se tiene quiere ajustar una previa continua a este modelo. Para esto usaremos una distribución Beta con parámetros $\alpha$ y $\beta$, de la forma
+Ahora supongamos que se tiene quiere ajustar una previa continua a este modelo. Para esto usaremos una distribución Beta con parámetros \(a\) y \(b\), de la forma
 
 \[
-	f(p\vert \alpha, \beta) \propto p^{1-\alpha} (1-p)^{1-\beta}.
+	f(p\vert \alpha, \beta) \propto p^{1-a} (1-p)^{1-b}.
 \]
 
 El ajuste de los parámetros de la Beta depende mucho de la información
 previa que se tenga del modelo. Una forma fácil de estimarlo es a
 través de cuantiles con los cuales se puede reescribir estos
-parámetros. En particular, suponga que se cree que el $50\%$ de las
-observaciones la proporción será menor que 0.3 y  el $90\%$ será menor
+parámetros. En particular, suponga que se cree que el \(50\%\) de las
+observaciones la proporción será menor que 0.3 y  el \(90\%\) será menor
 que 0.5.
 
 Para esto ajustaremos los siguientes parámetros
@@ -156,7 +156,7 @@ f <- 16
 ```
 
 En este caso se obtendra la distribución posterior Beta con paramétros
-$\alpha + s$ y $\beta + f$,
+\(\alpha + s\) y \(\beta + f\),
 
 ```{r}
 curve(
@@ -226,9 +226,9 @@ quisiéramos extraerla directamente de los datos?
 
 El método que usaremos será el siguiente:
 
-- Elija una cuadrícula de valores de $p$ sobre un intervalo que cubra
+- Elija una cuadrícula de valores de \(p\) sobre un intervalo que cubra
 la densidad posterior.
-- Calcule el producto de la probabilidad $L (p)$ y el $f (p)$ sobre
+- Calcule el producto de la probabilidad \(L (p)\) y el \(f (p)\) sobre
 esa grilla.
 - Normalice dividiendo cada producto por la suma de los productos. En
 esto paso, estamos aproximando la densidad posterior por una
@@ -248,7 +248,7 @@ prior <- c(1, 5.2,  8, 7.2, 4.6, 2.1, 0.7, 0.1, 0, 0)
 prior <- prior / sum(prior) 
 ```
 
-Con la función  `histprior` construye los valores de $p$ sobre una
+Con la función  `histprior` construye los valores de \(p\) sobre una
 grilla.
 
 ```{r}
@@ -272,7 +272,7 @@ Luego recordando que nuestra posterior es \(beta(s+1,f+1)\) tenemos que
 	)
 ```
 
-Para conseguir la distribución posterior, solo debemos de construirla para una secuencia ordenada de valores $p$
+Para conseguir la distribución posterior, solo debemos de construirla para una secuencia ordenada de valores \(p\)
 
 ```{r}
 p = seq(0, 1, length = 1000)
@@ -287,13 +287,14 @@ ps <- sample(p, replace = TRUE, prob = post)
 hist(ps, xlab = "p", main = "")
 ```
 
-## Monte Carlo methods
+## Métodos Monte Carlo 
 
+## Una moneda
 El tratamiento clásico de la estimación de parámetros bayesiana nos dice que si tenemos una densidad previa y la ``combinamos'' con la verosimilitud de los datos, estos nos dará una densidad con más información. Se podría repetir el proceso varias veces para tratar de ajustar mejor la densidad posterior.
 
 Sin embargo, se podría usar potencia de los métodos Monte Carlo para que esta búsqueda sea muy efectiva para encontrar los parámetros adecuados.
 
-## Ejemplo del viajero
+### Ejemplo del viajero
 
 Suponga que tenemos un viajero que quiere estar en 7 lugares distintos (suponga que están en línea recta) y la probabilidad de pasar a un lugar a otro se decide tirando una moneda no sesgada (50\% a la derecha y 50\% a la izquierda).
 
@@ -301,48 +302,50 @@ Este caso sería una simple caminata aleatoria sin ningún interés en particula
 
 Suponga además, que el viajero quiere estar más tiempo donde haya una mayor cantidad de personas \(P\) pero siguiendo ese patrón aleatorio. Entonces la forma de describir su decisión de moverse sería:
 
-```{r echo=FALSE}
-knitr::asis_output(if (knitr:::is_latex_output()) {
-  '
-\\begin{tabular}{p{6cm}|p{6cm}}
-\\toprule
-\\multicolumn{2}{c}{Tira la moneda y decide si va a la izquierda o la derecha} \\\\
-\\midrule
-\\multicolumn{2}{c}{Tiene dos opciones} \\\\
-\\midrule \\midrule
-Si el lugar nuevo tiene \\textbf{MÁS} personas que el actual salta a ese lugar 
-&	Si el lugar nuevo tiene \\textbf{MENOS} personas entonces calcula la probabilidad de moverse como $p_{moverse} = P_{nuevo}/P_{actual}$. 
 
-Entonces el viajero tira un número aleatorio del 0 al 1 y si este	menor que $(p_{moverse}$ entonces se mueve. 
 
-Si tira un número mayor a $p_{moverse}$ se queda donde está. \\\\
-\\bottomrule
-\\end{tabular}
-'
-  
-} else {
-  '<table>
-	<TR>
-	<TD style = "text-align:center", COLSPAN="2">Tira la moneda y decide
-	si va a la izquierda o la derecha</TD>
-	</TR>
-	<TR>
-	<TD style = "text-align:center" COLSPAN="2">Tiene dos opciones</TD>
-	</TR>
-	<TR>
-	<TD>Si el lugar nuevo tiene **MÁS** personas que el actual salta a ese
-	lugar</TD>
-	<TD>Si el lugar nuevo tiene **MENOS** personas entonces calcula la
-	probabilidad de moverse como $p_{moverse} = P_{nuevo}/P_{actual}$.
+<!-- ```{r echo=FALSE} -->
+<!-- knitr::asis_output(if (knitr:::is_latex_output()) { -->
+<!--   ' -->
+<!-- \\begin{tabular}{p{6cm}|p{6cm}} -->
+<!-- \\toprule -->
+<!-- \\multicolumn{2}{c}{Tira la moneda y decide si va a la izquierda o la derecha} \\\\ -->
+<!-- \\midrule -->
+<!-- \\multicolumn{2}{c}{Tiene dos opciones} \\\\ -->
+<!-- \\midrule \\midrule -->
+<!-- Si el lugar nuevo tiene \\textbf{MÁS} personas que el actual salta a ese lugar  -->
+<!-- &	Si el lugar nuevo tiene \\textbf{MENOS} personas entonces calcula la probabilidad de moverse como \$p_{moverse} = P_{nuevo}/P_{actual}\$.  -->
 
-	Entonces el viajero tira un número aleatorio del 0 al 1 y si este
-	menor que $p_{moverse}$ entonces se mueve.
+<!-- Entonces el viajero tira un número aleatorio del 0 al 1 y si este	menor que \$p_{moverse}\$ entonces se mueve.  -->
 
-	Si tira un número mayor a $p_{moverse}$ se queda donde está. </TD>
-</TR>
-</table>'
-})
-```
+<!-- Si tira un número mayor a \$p_{moverse}\$ se queda donde está. \\\\ -->
+<!-- \\bottomrule -->
+<!-- \\end{tabular} -->
+<!-- ' -->
+
+<!-- } else { -->
+<!--   '<table> -->
+<!-- 	<TR> -->
+<!-- 	<TD style = "text-align:center", COLSPAN="2">Tira la moneda y decide -->
+<!-- 	si va a la izquierda o la derecha</TD> -->
+<!-- 	</TR> -->
+<!-- 	<TR> -->
+<!-- 	<TD style = "text-align:center" COLSPAN="2">Tiene dos opciones</TD> -->
+<!-- 	</TR> -->
+<!-- 	<TR> -->
+<!-- 	<TD>Si el lugar nuevo tiene **MÁS** personas que el actual salta a ese -->
+<!-- 	lugar</TD> -->
+<!-- 	<TD>Si el lugar nuevo tiene **MENOS** personas entonces calcula la -->
+<!-- 	probabilidad de moverse como \$p_{moverse} = P_{nuevo}/P_{actual}\$. -->
+
+<!-- 	Entonces el viajero tira un número aleatorio del 0 al 1 y si este -->
+<!-- 	menor que \$p_{moverse}\$ entonces se mueve. -->
+
+<!-- 	Si tira un número mayor a \$p_{moverse}\$ se queda donde está. </TD> -->
+<!-- </TR> -->
+<!-- </table>' -->
+<!-- }) -->
+<!-- ``` -->
 
 
 	
@@ -403,7 +406,56 @@ mean(trayectoria)
 sd(trayectoria) 
 ```
 
-## El algoritmo de Metropolis-Hasting
+### Cadenas de Markov
+
+Recuerde que estamos buscando el "camino" que el viajero tomará para pasar la mayor parte del tiempo de en los lugares más poblados (con mayor \(\theta\)).  
+
+\begin{equation*}
+\theta_{1} \curvearrowright \theta_{2} \curvearrowright \ldots \curvearrowright \theta_{50000}.
+\end{equation*}
+
+Denotamos \(\theta_{1}\to\theta_{2}\) si el viajero pasó de \(\theta_{1}\) hacia \(\theta_{2}\). 
+
+Entonces 
+
+- \(\mathbb{P}\left(\theta \rightarrow \theta+1\right)=0.5  \min \left(\frac{P(\theta+1)}{P(\theta)} / , 1\right)\)
+- \(\mathbb{P}\left(\theta + 1 \rightarrow \theta\right)=0.5  \min \left(\frac{P(\theta)}{P(\theta+1)} / , 1\right)\)
+
+Entonces la razón entre estas dos probabilidades es 
+
+\begin{align*}
+	\frac{\mathbb{P}\left(\theta \rightarrow \theta+1\right)}{\mathbb{P}\left(\theta +1 \rightarrow \theta\right)} &=\frac{0.5 \min (P(\theta+1) / P(\theta), 1)}{0.5 \min (P(\theta) / P(\theta+1), 1)} \\
+	&=\left\{\begin{array}{ll}
+		\frac{P(\theta+1)}{P(\theta) } & \text { si } P(\theta+1)>P(\theta) \\
+		\frac{P(\theta+1) }{P(\theta)} & \text { si } P(\theta+1)<P(\theta)
+	\end{array}\right.\\
+	&=\frac{P(\theta+1)}{P(\theta)}.
+\end{align*}
+
+Es decir que la razón de las probabilidades es equivalente a la razón entre las proporción de las poblaciones. Por lo tanto la mayoría de las veces se estará en los lugares con mayor población. 
+
+Esta cadena se puede escribir usando una matriz de transición de la forma 
+
+
+\begin{equation*}
+T= \left(\begin{array}{ccccc}
+\ddots & \mathbb{P}(\theta-2 \rightarrow \theta-1) & 0 & 0 & 0 \\
+\ddots & \mathbb{P}(\theta-1 \rightarrow \theta-1) & \mathbb{P}(\theta-1 \rightarrow \theta) & 0 & 0 \\
+0 & \mathbb{P}(\theta \rightarrow \theta-1) & \mathbb{P}(\theta \rightarrow \theta) & \mathbb{P}(\theta \rightarrow \theta+1) & 0 \\
+0 & 0 & \mathbb{P}(\theta+1 \rightarrow \theta) & \mathbb{P}(\theta+1 \rightarrow \theta+1) & \ddots \\
+0 & 0 & 0 & \mathbb{P}(\theta+2 \rightarrow \theta+1) & \ddots
+\end{array}\right)
+\end{equation*}
+
+
+La matriz \(T\)  tiene las propiedades 
+
+1. Existencia de una única distribución estacionaria (llamada \(f\) más adelante). 
+2. Es ergódica, i.e., es aperíodica y positiva recurrente. Recuerde que una cadena de markov es érgodica si siempre se puede pasar de un estado a otro (no necesariamente en 1 paso). Otra forma de verlo es que la para alguna potencia de \(T\) todos los sus elementos serán positivos estrictos.  
+
+
+
+### El algoritmo de Metropolis-Hasting
 
 El ejemplo anterior era bastante sencillo pero demuestra que se puede
 encontrar el mejor estimador posible simplemente ejecutando una y otra
@@ -419,8 +471,8 @@ En palabras simples el algoritmo de Metropoli Hasting es
 \(p\left(\theta^{*} | \theta^{t-1}\right)\)
 2. Estime la razón
 \[
-	R=\frac{f\left(\theta^{*}\right) p\left(\theta^{t-1} |
-		\theta^{*}\right)}{f\left(\theta^{t-1}\right) p\left(\theta^{*} |
+	R=\frac{f\left(\theta^{*}\right) L\left(\theta^{t-1} |
+		\theta^{*}\right)}{f\left(\theta^{t-1}\right) L\left(\theta^{*} |
 		\theta^{t-1}\right)}
 \]
 3. Estima la probabilidad de aceptación \(	p_{\text {moverse }}=\min \{R, 1\}\).
@@ -432,15 +484,15 @@ formas, dependiendo de la densidad de proposición
 
 Si esta es independiente de las elecciones anteriores entonces,
 \[
-	p\left(\theta^{*} | \theta^{t-1}\right)=p\left(\theta^{*}\right)
+	L\left(\theta^{*} | \theta^{t-1}\right)=L\left(\theta^{*}\right)
 \]
 
 Otras formas es escoger
 \[
-	p\left(\theta^{*} |
+	L\left(\theta^{*} |
 	\theta^{t-1}\right)=h\left(\theta^{*}-\theta^{t-1}\right)
 \]
-donde \(h\) es simetrica alrededor del origen. En este tipo de
+donde \(h\) es simétrica alrededor del origen. En este tipo de
 cadenas, la razón \(R\) tiene la forma
 \[
 	R=\frac{f\left(\theta^{*}\right)}{f\left(\theta^{t-1}\right)}
@@ -453,6 +505,38 @@ Una última opción es tomar
 
 donde \(Z\) es una normal centrada con cierta estructura de varianza.
 
+
+###  ¿Por qué el algoritmo de Metropolis Hasting funciona?
+
+
+\begin{equation}
+\mathbb{P}\left(\theta_{\star} | \theta^{(t)}\right)=L\left(\theta_{\star} | \theta^{(t)}\right) \cdot \min \left\{1, \frac{f\left(\theta_{\star}\right) L\left(\theta^{(t)} | \theta_{\star}\right)}{f\left(\theta^{(t)}\right) L\left(\theta_{\star} | \theta^{(t)}\right)}\right\}
+\end{equation}
+
+Si se comienza en \(f\left(\theta^{(t)}\right)\) entonces
+
+\begin{align}
+\begin{array}{l}
+f\left(\theta^{(t)}\right) \mathbb{P}\left(\theta_{\star} | \theta^{(t)}\right) \\
+\quad=\quad f\left(\theta^{(t)}\right) L\left(\theta_{\star} | \theta^{(t)}\right) \min \left\{1, \frac{f\left(\theta_{\star}\right) L\left(\theta^{(t)} | \theta_{\star}\right)}{f\left(\theta^{(t)}\right) L\left(\theta_{\star} | \theta^{(t)}\right)}\right\} \\
+\quad=\min \left\{f\left(\theta^{(t)}\right) L\left(\theta_{\star} | \theta^{(t)}\right), f\left(\theta_{\star}\right) L\left(\theta^{(t)} | \theta_{\star}\right)\right\} \\
+\quad=\quad f\left(\theta_{\star}\right) L\left(\theta^{(t)} | \theta_{\star}\right) \min \left\{\frac{f\left(\theta^{(t)}\right) L\left(\theta_{\star} | \theta^{(t)}\right)}{f\left(\theta_{\star}\right) L\left(\theta^{\left(t | \theta_{\star}\right)}\right.}, 1\right\} \\
+\quad=f\left(\theta_{\star}\right) \mathbb{P}\left(\theta^{(t)} | \theta_{\star}\right)
+\end{array}
+\end{align}
+
+Asumiendo que existe una cantidad finita de estados \(\theta_{1}, \ldots, \theta_{M}\), entonces. 
+
+\begin{equation*}
+f\left(\theta_{j}\right) = \underbrace{\sum_{i=1}^{M} f\left(\theta_{i}\right) \mathbb{P} \left(\theta_{j} | \theta_{i}\right)}_{\text {Probabilidad total  }}=\sum_{i=1}^{M} f\left(\theta_{j}\right) \mathbb{P} \left(\theta_{i} | \theta_{j}\right)
+\end{equation*}
+
+Cual indica que no importa donde empecemos siempre llegaremos a la densidad estacionaria \(f\). 
+
+[Para más detalles](https://www.ece.iastate.edu/~namrata/EE527_Spring08/l4c.pdf)
+
+### Extensión al caso del viajero
+
 Retomemos el ejemplo del viajero. Supongamos que ahora existen una
 cantidad infinita de lugares a los que puede ir y que la población de
 cada isla es proporcional a la densidad posterior. Además, el viajero
@@ -462,7 +546,7 @@ salto cae de forma continua en el intervalo \([0,1]\).
 Para hacer este ejemplo concreto, el viajero no conoce cuál es su 
 probabilidad de salto \(\theta\) pero sabe que ha tirado la
 moneda \(N\) veces y observado \(z\) exitos. Por lo tanto tendremos
-una verosimilitud de \(f(z, N |
+una verosimilitud de \(L(z, N |
 \theta)=\theta^{z}(1-\theta)^{(N-z)}\).
 
 La  previa será dada por \(f(\theta)=\operatorname{beta}(\theta | a,
@@ -477,7 +561,7 @@ Entonces el algoritmo de Metropolis Hasting se puede reformular como
 1. Simule un valor de salto\(\Delta \theta \sim
 \mathcal{N}\left(0,\sigma^{2}\right)\) y denote \(\theta^{t} =
 \theta^{t} + \Delta\theta\).
-2. Probabilidad de aceptación $	p_{\text {moverse }}$
+2. Probabilidad de aceptación \(	p_{\text {moverse }}\)
 \begin{align*}
 	p_{\text {moverse }}
 	  & =\min \left(1, \frac{P\left(\theta_{\ast}\right)}{P\left(\theta_{t-1}\right)}\right) \\
@@ -605,5 +689,279 @@ ggplot(df[500:n_pasos, ]) +
   geom_histogram(aes(P, y = ..density..), color = "white") +
   theme_minimal(base_size = 16)
 
+```
+
+## Dos monedas
+
+Un problema con el algoritmo de Metropolis-Hastings (M-H) es que solo funciona para la estimación de un solo parámetro.  
+
+
+El muestreo de Gibbs está pensado en el caso de la estimación de muchos parámetros de forma bastante ordenada.  
+
+Supongamos que tenemos dos monedas y queremos ver la proporción de escudos generados entre las dos monedas: 
+
+Tenemos: 
+
+- Parámetros: \(\theta_{1}\) y \(\theta_{2}\). 
+- Datos: \(N_{1}\) tiradas de la moneda 1 y \(N_{2}\) tiradas de la moneda 2. (cada una tuvo \(z_{1}\) y \(z_{2}\) éxitos). 
+3. Verosimilitud: Bernoulli. 
+\begin{equation*}
+y_{1}^{i}\sim \mathrm{Bernoulli}(\theta_{1}) 
+\quad 
+y_{2}^{i}\sim \mathrm{Bernoulli}(\theta_{2}) 
+\end{equation*}
+
+
+4. Previa: Beta independiente para cada \(\theta\). 
+\begin{equation*}
+\theta_{1}\sim \mathrm{Beta}(a_{1},b_{1}) 
+\quad 
+\theta_{2}\sim \mathrm{Beta}(a_{2},b_{2}) 
+\end{equation*}
+
+La distribución posterior se puede escribir como 
+
+\begin{align*}
+f\left(\theta_{1}, \theta_{2} | D\right) &=f\left(D | \theta_{1}, \theta_{2}\right) f\left(\theta_{1}, \theta_{2}\right) / f(D) \\
+&=\theta_{1}^{z_{1}}\left(1-\theta_{1}\right)^{N_{1}-z_{1}} \theta_{1}^{z_{2}}\left(1-\theta_{2}\right)^{N_{2}-z_{2}} f\left(\theta_{1}, \theta_{2}\right) / f(D) \\
+&=\frac{\theta_{1}^{z_{1}}\left(1-\theta_{1}\right)^{N_{1}-z_{1}} \theta_{1}^{z_{2}}\left(1-\theta_{2}\right)^{N_{2}-z_{2}} \theta_{1}^{a_{1}-1}\left(1-\theta_{1}\right)^{b_{1}-1} \theta_{2}^{a_{2}-1}\left(1-\theta_{2}\right)^{b_{2}-1}}{f(D) B\left(a_{1}, b_{1}\right) B\left(a_{2}, b_{2}\right)} \\
+&=\frac{\theta_{1}^{z_{1}+a_{1}-1}\left(1-\theta_{1}\right)^{N_{1}-z_{1}+b_{1}-1} \theta_{2}^{z_{2}+a_{2}-1}\left(1-\theta_{2}\right)^{N_{2}-z_{2}+b_{2}-1}}{f(D) B\left(a_{1}, b_{1}\right) B\left(a_{2}, b_{2}\right)}
+\end{align*}
+
+Entonces la distribución posterior de \(\left(\theta_{1}, \theta_{2}\right)\) son dos distribuciones independientes Betas:
+\(\operatorname{Beta}\left(z_{1}+a, N_{1}-z_{1}+b_{1}\right)\) y \(\operatorname{Beta}\left(z_{2}+a, N_{2}-z_{2}+b_{2}\right)\)
+
+
+Tratemos de encontrar los parámetros para la distribución posterior usando un algoritmo de Metropolis-Hasting. [Función tomada de Kruschke-Notes ](https://rpruim.github.io/Kruschke-Notes/markov-chain-monte-carlo-mcmc.html#metropolis)
+
+```{r, tidy=FALSE}
+metro_2coins <- function(
+  z1, n1,              # z = successes, n = trials
+  z2, n2,              # z = successes, n = trials
+  size  = c(0.1, 0.1), # sds of jump distribution
+  start = c(0.5, 0.5), # value of thetas to start at
+  num_steps = 5e4,     # number of steps to run the algorithm
+  prior1 = dbeta,      # function describing prior
+  prior2 = dbeta,      # function describing prior
+  args1 = list(),      # additional args for prior1
+  args2 = list()      # additional args for prior2
+  ) {
+  
+  theta1            <- rep(NA, num_steps)  # trick to pre-alocate memory
+  theta2            <- rep(NA, num_steps)  # trick to pre-alocate memory
+  proposed_theta1   <- rep(NA, num_steps)  # trick to pre-alocate memory
+  proposed_theta2   <- rep(NA, num_steps)  # trick to pre-alocate memory
+  move              <- rep(NA, num_steps)  # trick to pre-alocate memory
+  theta1[1]         <- start[1]
+  theta2[1]         <- start[2]
+
+  size1 <- size[1] 
+  size2 <- size[2] 
+  
+  for (i in 1:(num_steps-1)) {
+    # head to new "island"
+    proposed_theta1[i + 1] <- rnorm(1, theta1[i], size1)
+    proposed_theta2[i + 1] <- rnorm(1, theta2[i], size2)
+    
+    if (proposed_theta1[i + 1] <= 0 ||
+        proposed_theta1[i + 1] >= 1 ||
+        proposed_theta2[i + 1] <= 0 ||
+        proposed_theta2[i + 1] >= 1) {
+      proposed_posterior <- 0  # because prior is 0
+    } else {
+      current_prior <- 
+        do.call(prior1, c(list(theta1[i]), args1)) *
+        do.call(prior2, c(list(theta2[i]), args2))
+      current_likelihood  <- 
+        dbinom(z1, n1, theta1[i]) *
+        dbinom(z2, n2, theta2[i])
+      current_posterior   <- current_prior * current_likelihood
+      
+      proposed_prior <- 
+        do.call(prior1, c(list(proposed_theta1[i+1]), args1)) *
+        do.call(prior2, c(list(proposed_theta2[i+1]), args2))
+      proposed_likelihood  <- 
+        dbinom(z1, n1, proposed_theta1[i+1]) *
+        dbinom(z2, n2, proposed_theta2[i+1])
+      proposed_posterior   <- proposed_prior * proposed_likelihood
+    }
+    prob_move           <- proposed_posterior / current_posterior
+    
+    # sometimes we "sail back"
+    if (runif(1) > prob_move) { # sail back
+       move[i + 1] <- FALSE
+      theta1[i + 1] <- theta1[i]
+      theta2[i + 1] <- theta2[i]
+    } else {                    # stay
+       move[i + 1] <- TRUE
+      theta1[i + 1] <- proposed_theta1[i + 1]
+      theta2[i + 1] <- proposed_theta2[i + 1]
+    }
+  }
+  
+  tibble(
+    step = 1:num_steps, 
+    theta1 = theta1,
+    theta2 = theta2,
+    proposed_theta1 = proposed_theta1,
+    proposed_theta2 = proposed_theta2,
+    move = move, 
+    size1 = size1,
+    size2 = size2
+  )
+}
+```
+
+```{r}
+Metro_2coinsA <-
+  metro_2coins(
+    z1 = 6,
+    n1 = 8,
+    z2 = 2,
+    n2 = 7,
+    size = c(0.02, 0.02),
+    args1 = list(shape1 = 2, shape2 = 2),
+    args2 = list(shape1 = 2, shape2 = 2)
+  )
+
+Metro_2coinsA %>%
+  gf_density2d(theta2 ~ theta1)
+
+Metro_2coinsA %>%
+  gf_density( ~ (theta2 - theta1))
+
+acf(Metro_2coinsA$theta2 - Metro_2coinsA$theta1)
+
+Metro_2coinsA %>% filter(step < 500) %>%
+  gf_path(theta2 ~ theta1, color = ~ step, alpha = 0.5) %>%
+  gf_point(theta2 ~ theta1, color = ~ step, alpha = 0.5) 
+```
+
+```{r}
+Metro_2coinsB <-
+  metro_2coins(
+    z1 = 6,
+    n1 = 8,
+    z2 = 2,
+    n2 = 7,
+    size = c(0.2, 0.2),
+    args1 = list(shape1 = 2, shape2 = 2),
+    args2 = list(shape1 = 2, shape2 = 2)
+  )
+
+Metro_2coinsB %>%
+  gf_density2d(theta2 ~ theta1)
+
+acf(Metro_2coinsB$theta2 - Metro_2coinsB$theta1)
+
+Metro_2coinsB %>% filter(step < 500) %>%
+  gf_path(theta2 ~ theta1, color = ~ step, alpha = 0.5) %>%
+  gf_point(theta2 ~ theta1, color = ~ step, alpha = 0.5) 
+```
+
+
+### Muestreo de Gibbs
+
+Para este ejemplo \(\left( \theta_{1},\theta_{2} \right)\), entonces la forma de escoger la posteriores en cada paso sería de la forma:
+
+1. Tome al azar un \(\boldsymbol{\theta}^{0} = \left( \theta_{1}^{0},\theta_{2}^{0} \right)\).
+2. Escoja \(\theta_{1}^{1}\) a partir de la distribución
+\(f\left(\theta_{1} \vert \theta_{1}=\theta_{1}^{0}, \theta_{2}=\theta_{2}^{0}, \boldsymbol{X}   \right)\).
+3. Escoja \(\theta_{2}^{1}\) a partir de la distribución
+\(f\left(\theta_{2} \vert \theta_{1}=\theta_{1}^{1}, \theta_{2}=\theta_{2}^{0}, \boldsymbol{X}   \right)\).
+
+Esto completa un ciclo del muestreo. Cada ciclo genera nuevos  \(\boldsymbol{\theta}^{i} = \left( \theta_{1}^{i},\theta_{2}^{i} \right)\) hasta que el proceso converja.
+
+
+```{remark}
+En realidad el muestreo de Gibbs se basa en el algoritmo de M-H, con la diferencia que la elección de los parámetros se escogen teniendo en cuanta los datos y fijando los otros parámetros. Es decir,
+
+\begin{align*}
+&{\left[\theta_{1} | \theta_{2}, \ldots, \theta_{M}, datos \right]} \\
+&{\left[\theta_{2} | \theta_{1}, \theta_{3}, \ldots, \theta_{M}, datos \right]} \\
+&{\left[\theta_{M} | \theta_{1}, \ldots, \theta_{M-1}, datos \right]}
+\end{align*}
+
+```
+
+El tratamiento teórico puede ser consultado [aquí](https://www.ece.iastate.edu/~namrata/EE527_Spring08/l4c.pdf#page=16)
+
+\begin{align*}\begin{aligned}
+f\left(\theta_{1} | \theta_{2}, D\right) &=f\left(\theta_{1}, \theta_{2} | D\right) / f\left(\theta_{2} | D\right) \\
+&=f\left(\theta_{1}, \theta_{2} | D\right) \int f\left(\theta_{1}, \theta_{2} | D\right)d \theta_{1}  \\
+&=\frac{\operatorname{dbeta}\left(\theta_{1}, z_{1}+a_{1}, N_{1}-z_{1}+b_{1}\right) \cdot \operatorname{dbeta}\left(\theta_{2}, z_{2}+a_{2}, N_{2}-z_{2}+b_{2}\right)}{\int  \operatorname{dbeta}\left(\theta_{1}, z_{1}+a_{1}, N_{1}-z_{1}+b_{1}\right) \cdot \operatorname{dbeta}\left(\theta_{2} | z_{2}+a_{2}, N_{2}-z_{2}+b_{2}\right)d \theta_{1}} \\
+&=\frac{\operatorname{dbeta}\left(\theta_{1}, z_{1}+a_{1}, N_{1}-z_{1}+b_{1}\right) \cdot \operatorname{dbeta}\left(\theta_{2}, z_{2}+a_{2}, N_{2}-z_{2}+b_{2}\right)}{\operatorname{dbeta}\left(\theta_{2} | z_{2}+a_{2}, N_{2}-z_{2}+b_{2}\right) \int  \operatorname{dbeta}\left(\theta_{1}, z_{1}+a_{1}, N_{1}-z_{1}+b_{1}\right)d \theta_{1}} \\
+&=\frac{\operatorname{dbeta}\left(\theta_{1}, z_{1}+a_{1}, N_{1}-z_{1}+b_{1}\right)}{\int  \operatorname{dbeta}\left(\theta_{1}, z_{1}+a_{1}, N_{1}-z_{1}+b_{1}\right)d \theta_{1}} \\
+&=\operatorname{dbeta}\left(\theta_{1}, z_{1}+a_{1}, N_{1}-z_{1}+b_{1}\right)
+\end{aligned}\end{align*}
+
+```{r, tidy=FALSE}
+gibbs_2coins <- function(
+  z1, n1,              # z = successes, n = trials
+  z2, n2,              # z = successes, n = trials
+  start = c(0.5, 0.5), # value of thetas to start at
+  num_steps = 1e4,     # number of steps to run the algorithm
+  a1, b1,              # params for prior for theta1
+  a2, b2               # params for prior for theta2
+  ) {
+  
+  theta1            <- rep(NA, num_steps)  # trick to pre-alocate memory
+  theta2            <- rep(NA, num_steps)  # trick to pre-alocate memory
+  theta1[1]         <- start[1]
+  theta2[1]         <- start[2]
+  
+  for (i in 1:(num_steps-1)) {
+    if (i %% 2 == 1) { # update theta1
+      theta1[i+1] <- rbeta(1, z1 + a1, n1 - z1 + b1)
+      theta2[i+1] <- theta2[i]
+    } else {           # update theta2
+      theta1[i+1] <- theta1[i]
+      theta2[i+1] <- rbeta(1, z2 + a2, n2 - z2 + b2)
+    }
+  }
+  
+  tibble(
+    step = 1:num_steps, 
+    theta1 = theta1,
+    theta2 = theta2,
+  )
+}
+```
+
+
+```{r}
+Gibbs <-
+  gibbs_2coins(z1 = 6, n1 = 8,
+               z2 = 2, n2 = 7,
+               a1 = 2, b1 = 2, a2 = 2, b2 = 2)  
+
+Gibbs %>% gf_density2d(theta2 ~ theta1)
+
+Gibbs %>% gf_dens( ~ theta1)
+
+acf(Gibbs$theta1)
+
+Gibbs %>% filter(step < 500) %>%
+  gf_path(theta2 ~ theta1, color = ~ step, alpha = 0.5) %>%
+  gf_point(theta2 ~ theta1, color = ~ step, alpha = 0.5) 
+```
+
+
+
+Ciclos completos 
+
+```{r}
+Gibbs %>% filter(step %% 2 == 0) %>% gf_density2d(theta2 ~ theta1)
+
+Gibbs %>% filter(step %% 2 == 0) %>% gf_density( ~ (theta2 - theta1))
+
+Gibbs %>% filter(step %% 2 == 0) %>% 
+  mutate(difference = theta2 - theta1) %>%
+  pull(difference) %>%
+  acf()
+
+Gibbs %>% filter(step < 500, step %% 2 == 0) %>%
+  gf_path(theta2 ~ theta1, color = ~ step, alpha = 0.5) %>%
+  gf_point(theta2 ~ theta1, color = ~ step, alpha = 0.5) 
 ```
 
