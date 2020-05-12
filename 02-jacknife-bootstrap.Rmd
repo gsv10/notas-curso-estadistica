@@ -673,6 +673,6 @@ Repita los cálculos anteriores tomando como cuantiles los de una normal con med
 
 3. Compare los intervalos calculados y comente los resultados.
 
-
+4. Del libro [@Wasserman2006] **Sección 3:** 2, 3, 7, 9, 11.
 
   

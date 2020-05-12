@@ -1,13 +1,15 @@
 --- 
-title: "Notas de Clase CA-403"
+title: "Notas Curso de Estadística"
 author: "Maikol Solís"
 date: ""
 site: bookdown::bookdown_site
 documentclass: book
 fontsize: 12pt
 monofont: "Source Code Pro"
+colorlinks: true
 bibliography: [bibliografia.bib]
 biblio-style: authoryear
+biblatexoptions: [url=false, doi=false, eprint=false, isbn=false]
 link-citations: yes
 description: ""
 ---
@@ -1259,7 +1261,12 @@ ggplot(data = fani) + geom_line(aes(x, y), color = "blue") +
 
 **Si se atreven: ¿Se podría hacer una versión animada de ese gráfico para visualizar el significado real de este el intervalo de confianza?**</div>\EndKnitrBlock{exercise}
 
+## Ejercicios 
 
+Del libro de [@Hardle2004] hagan los siguientes ejercicios
+
+1. **Sección 2:** 1, 2, 3, 5, 7, 14
+2. **Sección 3:** 4, 8, 10, 11, 16, 
 
 <!--chapter:end:01-estimacion-densidades-no-parametricas.Rmd-->
 
@@ -2071,7 +2078,7 @@ Repita los cálculos anteriores tomando como cuantiles los de una normal con med
 
 3. Compare los intervalos calculados y comente los resultados.
 
-
+4. Del libro [@Wasserman2006] **Sección 3:** 2, 3, 7, 9, 11.
 
   
 
@@ -2863,12 +2870,12 @@ y_{2}^{i}\sim \mathrm{Bernoulli}(\theta_{2})
 La distribución posterior se puede escribir como 
 
 \begin{align*}
-f\left(\theta_{1}, \theta_{2} | D\right) &=f\left(D | \theta_{1}, \theta_{2}\right) f\left(\theta_{1}, \theta_{2}\right) / f(D) \\
-&=\theta_{1}^{z_{1}}\left(1-\theta_{1}\right)^{N_{1}-z_{1}} \theta_{1}^{z_{2}}\left(1-\theta_{2}\right)^{N_{2}-z_{2}} f\left(\theta_{1}, \theta_{2}\right) / f(D) \\
+f\left(\theta_{1}, \theta_{2} | D\right) 
+&=f\left(D | \theta_{1}, \theta_{2}\right) \frac{f\left(\theta_{1}, \theta_{2}\right)}{f(D)} \\
+&=\theta_{1}^{z_{1}}\left(1-\theta_{1}\right)^{N_{1}-z_{1}} \theta_{1}^{z_{2}}\left(1-\theta_{2}\right)^{N_{2}-z_{2}} \frac{f\left(\theta_{1}, \theta_{2}\right)}{f(D)}  \\
 &=\frac{\theta_{1}^{z_{1}}\left(1-\theta_{1}\right)^{N_{1}-z_{1}} \theta_{1}^{z_{2}}\left(1-\theta_{2}\right)^{N_{2}-z_{2}} \theta_{1}^{a_{1}-1}\left(1-\theta_{1}\right)^{b_{1}-1} \theta_{2}^{a_{2}-1}\left(1-\theta_{2}\right)^{b_{2}-1}}{f(D) B\left(a_{1}, b_{1}\right) B\left(a_{2}, b_{2}\right)} \\
 &=\frac{\theta_{1}^{z_{1}+a_{1}-1}\left(1-\theta_{1}\right)^{N_{1}-z_{1}+b_{1}-1} \theta_{2}^{z_{2}+a_{2}-1}\left(1-\theta_{2}\right)^{N_{2}-z_{2}+b_{2}-1}}{f(D) B\left(a_{1}, b_{1}\right) B\left(a_{2}, b_{2}\right)}
 \end{align*}
-
 Entonces la distribución posterior de \(\left(\theta_{1}, \theta_{2}\right)\) son dos distribuciones independientes Betas:
 \(\operatorname{Beta}\left(z_{1}+a, N_{1}-z_{1}+b_{1}\right)\) y \(\operatorname{Beta}\left(z_{2}+a, N_{2}-z_{2}+b_{2}\right)\)
 
@@ -3062,14 +3069,15 @@ Esto completa un ciclo del muestreo. Cada ciclo genera nuevos  \(\boldsymbol{\th
 
 El tratamiento teórico puede ser consultado [aquí](https://www.ece.iastate.edu/~namrata/EE527_Spring08/l4c.pdf#page=16)
 
-\begin{align*}\begin{aligned}
-f\left(\theta_{1} | \theta_{2}, D\right) &=f\left(\theta_{1}, \theta_{2} | D\right) / f\left(\theta_{2} | D\right) \\
-&=f\left(\theta_{1}, \theta_{2} | D\right) \int f\left(\theta_{1}, \theta_{2} | D\right)d \theta_{1}  \\
+\begin{align*}
+f\left(\theta_{1} | \theta_{2}, D\right) 
+&= \frac{f\left(\theta_{1}, \theta_{2} | D\right)}{f\left(\theta_{2} | D\right)}  \\
+&= \frac{f\left(\theta_{1}, \theta_{2} | D\right)}{\int f\left(\theta_{1}, \theta_{2} | D\right)d \theta_{1}}   \\
 &=\frac{\operatorname{dbeta}\left(\theta_{1}, z_{1}+a_{1}, N_{1}-z_{1}+b_{1}\right) \cdot \operatorname{dbeta}\left(\theta_{2}, z_{2}+a_{2}, N_{2}-z_{2}+b_{2}\right)}{\int  \operatorname{dbeta}\left(\theta_{1}, z_{1}+a_{1}, N_{1}-z_{1}+b_{1}\right) \cdot \operatorname{dbeta}\left(\theta_{2} | z_{2}+a_{2}, N_{2}-z_{2}+b_{2}\right)d \theta_{1}} \\
 &=\frac{\operatorname{dbeta}\left(\theta_{1}, z_{1}+a_{1}, N_{1}-z_{1}+b_{1}\right) \cdot \operatorname{dbeta}\left(\theta_{2}, z_{2}+a_{2}, N_{2}-z_{2}+b_{2}\right)}{\operatorname{dbeta}\left(\theta_{2} | z_{2}+a_{2}, N_{2}-z_{2}+b_{2}\right) \int  \operatorname{dbeta}\left(\theta_{1}, z_{1}+a_{1}, N_{1}-z_{1}+b_{1}\right)d \theta_{1}} \\
 &=\frac{\operatorname{dbeta}\left(\theta_{1}, z_{1}+a_{1}, N_{1}-z_{1}+b_{1}\right)}{\int  \operatorname{dbeta}\left(\theta_{1}, z_{1}+a_{1}, N_{1}-z_{1}+b_{1}\right)d \theta_{1}} \\
 &=\operatorname{dbeta}\left(\theta_{1}, z_{1}+a_{1}, N_{1}-z_{1}+b_{1}\right)
-\end{aligned}\end{align*}
+\end{align*}
 
 
 ```r
@@ -3194,6 +3202,14 @@ Gibbsplot2 <- Gibbs %>% filter(step < 500, step%%2 ==
 animate(Gibbsplot2, fps = 1)
 ```
 
+## Ejercicios 
+
+1. Del libro [@Albert2009] 
+   - **Sección 3:** 3, 7.
+   - **Sección 6:** 1, 3.
+2. Del libro [@Kruschke2014] 
+   - **Sección 6:** 2.
+   - **Sección 7:** 2.
 
 <!--chapter:end:03-estimacion-densidades-bayes.Rmd-->
 

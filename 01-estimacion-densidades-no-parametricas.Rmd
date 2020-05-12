@@ -1686,4 +1686,9 @@ Implementar el intervalo confianza visto en clase para estimadores de densidades
 **Si se atreven: ¿Se podría hacer una versión animada de ese gráfico para visualizar el significado real de este el intervalo de confianza?**
 ```
 
+## Ejercicios 
 
+Del libro de [@Hardle2004] hagan los siguientes ejercicios
+
+1. **Sección 2:** 1, 2, 3, 5, 7, 14
+2. **Sección 3:** 4, 8, 10, 11, 16, 

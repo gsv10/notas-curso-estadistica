@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Capítulo 4 Estimación de densidades con Bayes | Notas de Clase CA-403</title>
-  <meta name="description" content="Capítulo 4 Estimación de densidades con Bayes | Notas de Clase CA-403" />
+  <title>Capítulo 4 Estimación de densidades con Bayes | Notas Curso de Estadística</title>
+  <meta name="description" content="Capítulo 4 Estimación de densidades con Bayes | Notas Curso de Estadística" />
   <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Capítulo 4 Estimación de densidades con Bayes | Notas de Clase CA-403" />
+  <meta property="og:title" content="Capítulo 4 Estimación de densidades con Bayes | Notas Curso de Estadística" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Capítulo 4 Estimación de densidades con Bayes | Notas de Clase CA-403" />
+  <meta name="twitter:title" content="Capítulo 4 Estimación de densidades con Bayes | Notas Curso de Estadística" />
   
   
   
@@ -164,6 +164,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.5.4" data-path="estimación-de-densidades.html"><a href="estimación-de-densidades.html#validación-cruzada-1"><i class="fa fa-check"></i><b>2.5.4</b> Validación cruzada</a></li>
 <li class="chapter" data-level="2.5.5" data-path="estimación-de-densidades.html"><a href="estimación-de-densidades.html#temas-adicionales"><i class="fa fa-check"></i><b>2.5.5</b> Temas adicionales</a></li>
 </ul></li>
+<li class="chapter" data-level="2.6" data-path="estimación-de-densidades.html"><a href="estimación-de-densidades.html#ejercicios"><i class="fa fa-check"></i><b>2.6</b> Ejercicios</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="jacknife-y-bootstrap.html"><a href="jacknife-y-bootstrap.html"><i class="fa fa-check"></i><b>3</b> Jacknife y Bootstrap</a><ul>
 <li class="chapter" data-level="3.1" data-path="jacknife-y-bootstrap.html"><a href="jacknife-y-bootstrap.html#caso-concreto"><i class="fa fa-check"></i><b>3.1</b> Caso concreto</a></li>
@@ -173,7 +174,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.3.2" data-path="jacknife-y-bootstrap.html"><a href="jacknife-y-bootstrap.html#intervalo-pivotal-studentizado"><i class="fa fa-check"></i><b>3.3.2</b> Intervalo pivotal studentizado</a></li>
 <li class="chapter" data-level="3.3.3" data-path="jacknife-y-bootstrap.html"><a href="jacknife-y-bootstrap.html#resumiendo"><i class="fa fa-check"></i><b>3.3.3</b> Resumiendo</a></li>
 </ul></li>
-<li class="chapter" data-level="3.4" data-path="jacknife-y-bootstrap.html"><a href="jacknife-y-bootstrap.html#ejercicios"><i class="fa fa-check"></i><b>3.4</b> Ejercicios</a></li>
+<li class="chapter" data-level="3.4" data-path="jacknife-y-bootstrap.html"><a href="jacknife-y-bootstrap.html#ejercicios-1"><i class="fa fa-check"></i><b>3.4</b> Ejercicios</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="estimación-de-densidades-con-bayes.html"><a href="estimación-de-densidades-con-bayes.html"><i class="fa fa-check"></i><b>4</b> Estimación de densidades con Bayes</a><ul>
 <li class="chapter" data-level="4.1" data-path="estimación-de-densidades-con-bayes.html"><a href="estimación-de-densidades-con-bayes.html#introducción-a-la-estimación-bayesiana"><i class="fa fa-check"></i><b>4.1</b> Introducción a la estimación Bayesiana</a><ul>
@@ -193,6 +194,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.5" data-path="estimación-de-densidades-con-bayes.html"><a href="estimación-de-densidades-con-bayes.html#dos-monedas"><i class="fa fa-check"></i><b>4.5</b> Dos monedas</a><ul>
 <li class="chapter" data-level="4.5.1" data-path="estimación-de-densidades-con-bayes.html"><a href="estimación-de-densidades-con-bayes.html#muestreo-de-gibbs"><i class="fa fa-check"></i><b>4.5.1</b> Muestreo de Gibbs</a></li>
 </ul></li>
+<li class="chapter" data-level="4.6" data-path="estimación-de-densidades-con-bayes.html"><a href="estimación-de-densidades-con-bayes.html#ejercicios-2"><i class="fa fa-check"></i><b>4.6</b> Ejercicios</a></li>
 </ul></li>
 </ul>
 
@@ -203,7 +205,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Notas de Clase CA-403</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Notas Curso de Estadística</a>
           </h1>
         </div>
 
@@ -740,12 +742,13 @@ y_{2}^{i}\sim \mathrm{Bernoulli}(\theta_{2})
 </ol>
 <p>La distribución posterior se puede escribir como</p>
 <p><span class="math display">\[\begin{align*}
-f\left(\theta_{1}, \theta_{2} | D\right) &amp;=f\left(D | \theta_{1}, \theta_{2}\right) f\left(\theta_{1}, \theta_{2}\right) / f(D) \\
-&amp;=\theta_{1}^{z_{1}}\left(1-\theta_{1}\right)^{N_{1}-z_{1}} \theta_{1}^{z_{2}}\left(1-\theta_{2}\right)^{N_{2}-z_{2}} f\left(\theta_{1}, \theta_{2}\right) / f(D) \\
+f\left(\theta_{1}, \theta_{2} | D\right) 
+&amp;=f\left(D | \theta_{1}, \theta_{2}\right) \frac{f\left(\theta_{1}, \theta_{2}\right)}{f(D)} \\
+&amp;=\theta_{1}^{z_{1}}\left(1-\theta_{1}\right)^{N_{1}-z_{1}} \theta_{1}^{z_{2}}\left(1-\theta_{2}\right)^{N_{2}-z_{2}} \frac{f\left(\theta_{1}, \theta_{2}\right)}{f(D)}  \\
 &amp;=\frac{\theta_{1}^{z_{1}}\left(1-\theta_{1}\right)^{N_{1}-z_{1}} \theta_{1}^{z_{2}}\left(1-\theta_{2}\right)^{N_{2}-z_{2}} \theta_{1}^{a_{1}-1}\left(1-\theta_{1}\right)^{b_{1}-1} \theta_{2}^{a_{2}-1}\left(1-\theta_{2}\right)^{b_{2}-1}}{f(D) B\left(a_{1}, b_{1}\right) B\left(a_{2}, b_{2}\right)} \\
 &amp;=\frac{\theta_{1}^{z_{1}+a_{1}-1}\left(1-\theta_{1}\right)^{N_{1}-z_{1}+b_{1}-1} \theta_{2}^{z_{2}+a_{2}-1}\left(1-\theta_{2}\right)^{N_{2}-z_{2}+b_{2}-1}}{f(D) B\left(a_{1}, b_{1}\right) B\left(a_{2}, b_{2}\right)}
-\end{align*}\]</span></p>
-<p>Entonces la distribución posterior de <span class="math inline">\(\left(\theta_{1}, \theta_{2}\right)\)</span> son dos distribuciones independientes Betas:
+\end{align*}\]</span>
+Entonces la distribución posterior de <span class="math inline">\(\left(\theta_{1}, \theta_{2}\right)\)</span> son dos distribuciones independientes Betas:
 <span class="math inline">\(\operatorname{Beta}\left(z_{1}+a, N_{1}-z_{1}+b_{1}\right)\)</span> y <span class="math inline">\(\operatorname{Beta}\left(z_{2}+a, N_{2}-z_{2}+b_{2}\right)\)</span></p>
 <p>Tratemos de encontrar los parámetros para la distribución posterior usando un algoritmo de Metropolis-Hasting. <a href="https://rpruim.github.io/Kruschke-Notes/markov-chain-monte-carlo-mcmc.html#metropolis">Función tomada de Kruschke-Notes</a></p>
 <div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb123-1" title="1">metro_2coins &lt;-<span class="st"> </span><span class="cf">function</span>(</a>
@@ -884,14 +887,15 @@ f\left(\theta_{1}, \theta_{2} | D\right) &amp;=f\left(D | \theta_{1}, \theta_{2}
 </div>
 
 <p>El tratamiento teórico puede ser consultado <a href="https://www.ece.iastate.edu/~namrata/EE527_Spring08/l4c.pdf#page=16">aquí</a></p>
-<p><span class="math display">\[\begin{align*}\begin{aligned}
-f\left(\theta_{1} | \theta_{2}, D\right) &amp;=f\left(\theta_{1}, \theta_{2} | D\right) / f\left(\theta_{2} | D\right) \\
-&amp;=f\left(\theta_{1}, \theta_{2} | D\right) \int f\left(\theta_{1}, \theta_{2} | D\right)d \theta_{1}  \\
+<p><span class="math display">\[\begin{align*}
+f\left(\theta_{1} | \theta_{2}, D\right) 
+&amp;= \frac{f\left(\theta_{1}, \theta_{2} | D\right)}{f\left(\theta_{2} | D\right)}  \\
+&amp;= \frac{f\left(\theta_{1}, \theta_{2} | D\right)}{\int f\left(\theta_{1}, \theta_{2} | D\right)d \theta_{1}}   \\
 &amp;=\frac{\operatorname{dbeta}\left(\theta_{1}, z_{1}+a_{1}, N_{1}-z_{1}+b_{1}\right) \cdot \operatorname{dbeta}\left(\theta_{2}, z_{2}+a_{2}, N_{2}-z_{2}+b_{2}\right)}{\int  \operatorname{dbeta}\left(\theta_{1}, z_{1}+a_{1}, N_{1}-z_{1}+b_{1}\right) \cdot \operatorname{dbeta}\left(\theta_{2} | z_{2}+a_{2}, N_{2}-z_{2}+b_{2}\right)d \theta_{1}} \\
 &amp;=\frac{\operatorname{dbeta}\left(\theta_{1}, z_{1}+a_{1}, N_{1}-z_{1}+b_{1}\right) \cdot \operatorname{dbeta}\left(\theta_{2}, z_{2}+a_{2}, N_{2}-z_{2}+b_{2}\right)}{\operatorname{dbeta}\left(\theta_{2} | z_{2}+a_{2}, N_{2}-z_{2}+b_{2}\right) \int  \operatorname{dbeta}\left(\theta_{1}, z_{1}+a_{1}, N_{1}-z_{1}+b_{1}\right)d \theta_{1}} \\
 &amp;=\frac{\operatorname{dbeta}\left(\theta_{1}, z_{1}+a_{1}, N_{1}-z_{1}+b_{1}\right)}{\int  \operatorname{dbeta}\left(\theta_{1}, z_{1}+a_{1}, N_{1}-z_{1}+b_{1}\right)d \theta_{1}} \\
 &amp;=\operatorname{dbeta}\left(\theta_{1}, z_{1}+a_{1}, N_{1}-z_{1}+b_{1}\right)
-\end{aligned}\end{align*}\]</span></p>
+\end{align*}\]</span></p>
 <div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb133-1" title="1">gibbs_2coins &lt;-<span class="st"> </span><span class="cf">function</span>(</a>
 <a class="sourceLine" id="cb133-2" title="2">  z1, n1,              <span class="co"># z = successes, n = trials</span></a>
 <a class="sourceLine" id="cb133-3" title="3">  z2, n2,              <span class="co"># z = successes, n = trials</span></a>
@@ -961,8 +965,27 @@ f\left(\theta_{1} | \theta_{2}, D\right) &amp;=f\left(\theta_{1}, \theta_{2} | D
 <a class="sourceLine" id="cb143-4" title="4"><span class="st">    </span><span class="kw">theme_minimal</span>() <span class="op">+</span><span class="st"> </span><span class="kw">transition_reveal</span>(step)</a>
 <a class="sourceLine" id="cb143-5" title="5"></a>
 <a class="sourceLine" id="cb143-6" title="6"><span class="kw">animate</span>(Gibbsplot2, <span class="dt">fps =</span> <span class="dv">1</span>)</a></code></pre></div>
+</div>
+</div>
+<div id="ejercicios-2" class="section level2">
+<h2><span class="header-section-number">4.6</span> Ejercicios</h2>
+<ol style="list-style-type: decimal">
+<li>Del libro <span class="citation">(Albert et al. <a href="#ref-Albert2009">2009</a>)</span>
+<ul>
+<li><strong>Sección 3:</strong> 3, 7.</li>
+<li><strong>Sección 6:</strong> 1, 3.</li>
+</ul></li>
+<li>Del libro <span class="citation">(Kruschke <a href="#ref-Kruschke2014">2014</a>)</span>
+<ul>
+<li><strong>Sección 6:</strong> 2.</li>
+<li><strong>Sección 7:</strong> 2.</li>
+</ul></li>
+</ol>
 
 <div id="refs" class="references">
+<div>
+<p>Albert, Jim, Robert Gentleman, Giovanni Parmigiani, and Kurt Hornik. 2009. <em>Bayesian computation with R</em>. New York, NY: Springer New York. <a href="https://doi.org/10.1007/978-0-387-92298-0">https://doi.org/10.1007/978-0-387-92298-0</a>.</p>
+</div>
 <div>
 <p>Hall, Peter. 1987. “On Kullback-Leibler Loss and Density Estimation.” <em>The Annals of Statistics</em> 15 (4): 1491–1519. <a href="https://doi.org/10.1214/aos/1176350606">https://doi.org/10.1214/aos/1176350606</a>.</p>
 </div>
@@ -972,12 +995,17 @@ f\left(\theta_{1} | \theta_{2}, D\right) &amp;=f\left(\theta_{1}, \theta_{2} | D
 <div>
 <p>Kruschke, John K. 2014. “Doing Bayesian data analysis: A tutorial with R, JAGS, and Stan, second edition.” In <em>Doing Bayesian Data Analysis: A Tutorial with R, Jags, and Stan, Second Edition</em>, 1–759.</p>
 </div>
+<div>
+<p>Wasserman, Larry. 2006. <em>All of Nonparametric Statistics</em>. Springer Texts in Statistics. New York, NY: Springer New York. <a href="https://doi.org/10.1007/0-387-30623-4">https://doi.org/10.1007/0-387-30623-4</a>.</p>
 </div>
 </div>
 </div>
 </div>
 <h3>References</h3>
 <div id="refs" class="references">
+<div id="ref-Albert2009">
+<p>Albert, Jim, Robert Gentleman, Giovanni Parmigiani, and Kurt Hornik. 2009. <em>Bayesian computation with R</em>. New York, NY: Springer New York. <a href="https://doi.org/10.1007/978-0-387-92298-0">https://doi.org/10.1007/978-0-387-92298-0</a>.</p>
+</div>
 <div id="ref-Kruschke2014">
 <p>Kruschke, John K. 2014. “Doing Bayesian data analysis: A tutorial with R, JAGS, and Stan, second edition.” In <em>Doing Bayesian Data Analysis: A Tutorial with R, Jags, and Stan, Second Edition</em>, 1–759.</p>
 </div>
