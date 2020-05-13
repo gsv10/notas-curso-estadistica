@@ -2670,7 +2670,7 @@ f(\boldsymbol{\theta})^\top T =   f(\boldsymbol{\theta})
 
 Cual indica que no importa donde empecemos siempre llegaremos a la densidad estacionaria \(f\). 
 
-[Para más detalles](https://www.ece.iastate.edu/~namrata/EE527_Spring08/l4c.pdf#page=32)
+[https://www.ece.iastate.edu/~namrata/EE527_Spring08/l4c.pdf#page=32](https://www.ece.iastate.edu/~namrata/EE527_Spring08/l4c.pdf#page=32)
 
 ### Extensión al caso del viajero
 
@@ -3067,7 +3067,7 @@ Esto completa un ciclo del muestreo. Cada ciclo genera nuevos  \(\boldsymbol{\th
 \end{align*}
 </div>\EndKnitrBlock{remark}
 
-El tratamiento teórico puede ser consultado [aquí](https://www.ece.iastate.edu/~namrata/EE527_Spring08/l4c.pdf#page=16)
+El tratamiento teórico puede ser consultado [https://www.ece.iastate.edu/~namrata/EE527_Spring08/l4c.pdf#page=16](https://www.ece.iastate.edu/~namrata/EE527_Spring08/l4c.pdf#page=16)
 
 \begin{align*}
 f\left(\theta_{1} | \theta_{2}, D\right) 
@@ -3201,6 +3201,514 @@ Gibbsplot2 <- Gibbs %>% filter(step < 500, step%%2 ==
 
 animate(Gibbsplot2, fps = 1)
 ```
+
+## Uso de JAGS 
+
+
+El paquete que usaremos en esta sección es `R2jags` y `coda`. Los cargamos con las instrucciones
+
+
+
+```r
+remotes::install_github("rpruim/CalvinBayes")
+```
+
+
+```r
+library(R2jags)
+library(coda)
+library(CalvinBayes)
+```
+
+
+
+
+
+```r
+bernoulli <- read.csv(file = "data/bernoulli.csv", 
+    sep = "")
+tibble::glimpse(bernoulli)
+```
+
+```
+## Rows: 50
+## Columns: 1
+## $ y <int> 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0,...
+```
+
+```r
+mean(bernoulli$y)
+```
+
+```
+## [1] 0.3
+```
+
+```r
+sd(bernoulli$y)
+```
+
+```
+## [1] 0.46291
+```
+En el lenguaje usual de JAGS, el modelo debe escribirse de la forma: 
+
+```
+model
+{
+    for (i in 1:N) {
+        y[i] ~ dbern(theta)
+    }
+    theta ~ dbeta(1, 1)
+}
+
+```
+
+donde `dbern` y `dbeta` son las densidades de una bernoulli y beta respectivamente. En este lenguage no existen versiones vectorizadas de las funciones por lo que todo debe llenarse usando `for`'s.  Una revisión completa de este lenguage la pueden econtrar en su manual de uso ^[[http://web.sgh.waw.pl/~atoroj/ekonometria_bayesowska/jags_user_manual.pdf](http://web.sgh.waw.pl/~atoroj/ekonometria_bayesowska/jags_user_manual.pdf)]
+
+El paquete `R2jags` tiene la capacidad que en lugar de usar este tipo de sintaxis, se pueda usar el lenguaje natural para escribir el modelo. Note el uso de `function` en este caso. 
+
+
+
+```r
+bern_model <- function() {
+    for (i in 1:N) {
+        y[i] ~ dbern(theta)
+    }
+    theta ~ dbeta(1, 1)
+}
+```
+
+
+
+
+```r
+bern_jags <- jags(data = list(y = bernoulli$y, N = nrow(bernoulli)), 
+    model.file = bern_model, parameters.to.save = c("theta"))
+```
+
+```
+## Compiling model graph
+##    Resolving undeclared variables
+##    Allocating nodes
+## Graph information:
+##    Observed stochastic nodes: 50
+##    Unobserved stochastic nodes: 1
+##    Total graph size: 53
+## 
+## Initializing model
+```
+
+Veamos el resultado 
+
+
+```r
+bern_jags
+```
+
+```
+## Inference for Bugs model at "/tmp/Rtmp1ygvHJ/model24b219a8212.txt", fit using jags,
+##  3 chains, each with 2000 iterations (first 1000 discarded)
+##  n.sims = 3000 iterations saved
+##          mu.vect sd.vect   2.5%    25%    50%    75%  97.5%  Rhat n.eff
+## theta      0.307   0.064  0.189  0.264  0.305  0.349  0.438 1.001  3000
+## deviance  62.069   1.368 61.087 61.189 61.530 62.403 65.725 1.001  3000
+## 
+## For each parameter, n.eff is a crude measure of effective sample size,
+## and Rhat is the potential scale reduction factor (at convergence, Rhat=1).
+## 
+## DIC info (using the rule, pD = var(deviance)/2)
+## pD = 0.9 and DIC = 63.0
+## DIC is an estimate of expected predictive error (lower deviance is better).
+```
+
+
+```r
+head(posterior(bern_jags))
+```
+
+```
+## Error in verosimilitud(theta, data): argument "data" is missing, with no default
+```
+
+
+```r
+gf_dhistogram(~theta, data = posterior(bern_jags), 
+    bins = 50) %>% gf_dens(~theta, size = 1.5, alpha = 0.8) %>% 
+    gf_dist("beta", shape1 = 16, shape2 = 36, color = "red")
+```
+
+```
+## Error in verosimilitud(theta, data): argument "data" is missing, with no default
+```
+
+
+```r
+bern_mcmc <- as.mcmc(bern_jags)
+plot(bern_mcmc)
+```
+
+![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-154-1.pdf)<!-- --> 
+
+
+```r
+library(bayesplot)
+mcmc_areas(bern_mcmc, pars = c("theta"), prob = 0.9)
+```
+
+![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-155-1.pdf)<!-- --> 
+
+
+```r
+mcmc_trace(bern_mcmc, pars = "theta")
+```
+
+![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-156-1.pdf)<!-- --> 
+
+
+```r
+mcmc_trace(bern_mcmc, pars = "theta") %>% gf_facet_grid(Chain ~ 
+    .) %>% gf_refine(scale_color_viridis_d())
+```
+
+```
+## Error: At least one layer must contain all faceting variables: `Chain`.
+## * Plot is missing `Chain`
+## * Layer 1 is missing `Chain`
+```
+
+![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-157-1.pdf)<!-- --> 
+
+
+```r
+plot_post(bern_mcmc[, "theta"], main = "theta", xlab = expression(theta), 
+    cenTend = "median", compVal = 0.5, ROPE = c(0.45, 
+        0.55), credMass = 0.9, quietly = TRUE)
+```
+
+![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-158-1.pdf)<!-- --> 
+
+
+```r
+twobernoulli <- read.csv("data/2bernoulli.csv")
+
+knitr::kable(twobernoulli)
+```
+
+
+\begin{tabular}{r|l}
+\hline
+y & s\\
+\hline
+1 & Reginald\\
+\hline
+0 & Reginald\\
+\hline
+1 & Reginald\\
+\hline
+1 & Reginald\\
+\hline
+1 & Reginald\\
+\hline
+1 & Reginald\\
+\hline
+1 & Reginald\\
+\hline
+0 & Reginald\\
+\hline
+0 & Tony\\
+\hline
+0 & Tony\\
+\hline
+1 & Tony\\
+\hline
+0 & Tony\\
+\hline
+0 & Tony\\
+\hline
+1 & Tony\\
+\hline
+0 & Tony\\
+\hline
+\end{tabular}
+
+```r
+Target <- twobernoulli %>% rename(hit = y, subject = s)
+
+Target %>% group_by(subject) %>% summarise(prop_0 = sum(1 - 
+    hit)/n(), prop_1 = sum(hit)/n(), attemps = n())
+```
+
+```
+## # A tibble: 2 x 4
+##   subject  prop_0 prop_1 attemps
+##   <chr>     <dbl>  <dbl>   <int>
+## 1 Reginald  0.25   0.75        8
+## 2 Tony      0.714  0.286       7
+```
+
+
+```r
+bern2_model <- function() {
+    for (i in 1:Nobs) {
+        # each response is Bernoulli with the appropriate
+        # theta
+        hit[i] ~ dbern(theta[subject[i]])
+    }
+    for (s in 1:Nsub) {
+        theta[s] ~ dbeta(2, 2)  # prior for each theta
+    }
+}
+```
+
+
+```r
+TargetList <- list(Nobs = nrow(Target), Nsub = 2, hit = Target$hit, 
+    subject = as.numeric(as.factor(Target$subject)))
+TargetList
+```
+
+```
+## $Nobs
+## [1] 15
+## 
+## $Nsub
+## [1] 2
+## 
+## $hit
+##  [1] 1 0 1 1 1 1 1 0 0 0 1 0 0 1 0
+## 
+## $subject
+##  [1] 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2
+```
+
+
+```r
+bern2_jags <- jags(data = TargetList, model = bern2_model, 
+    parameters.to.save = "theta")
+```
+
+```
+## Compiling model graph
+##    Resolving undeclared variables
+##    Allocating nodes
+## Graph information:
+##    Observed stochastic nodes: 15
+##    Unobserved stochastic nodes: 2
+##    Total graph size: 35
+## 
+## Initializing model
+```
+
+
+
+```r
+bern2_mcmc <- as.mcmc(bern2_jags)
+
+mcmc_acf(bern2_mcmc)
+```
+
+![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-163-1.pdf)<!-- --> 
+
+```r
+mcmc_combo(bern2_mcmc, combo = c("dens", "dens_overlay", 
+    "trace", "scatter"), pars = c("theta[1]", "theta[2]"))
+```
+
+![](Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-163-2.pdf)<!-- --> 
+
+## Uso de STAN
+
+STAN^[[https://mc-stan.org/](https://mc-stan.org/)] es otro tipo de lenguaje para definir modelos bayesiano. El lenguaje es un poco más sencillo, pero es particularmente útil para modelos bastante complejos. 
+
+STAN no usa el muestreo de Gibbs, sino en el método de Monte-Carlo Hamiltoniano. En el artículo [@Hoffman2014]  se propone el método NUTS para mejorar el muestreo de Gibbs. 
+
+En este curso no nos referiremos a este procedimiento, pero si veremos un poco de la sintaxis del lenguaje STAN.
+
+
+```stan
+data {
+  int<lower=0> N;               // number of trials
+  int<lower=0, upper=1> y[N];   // success on trial n
+}
+
+parameters {
+  real<lower=0, upper=1> theta; // chance of success
+}
+
+model {
+  theta ~ uniform(0, 1);        // prior
+  y ~ bernoulli(theta);         // likelihood
+}
+```
+
+
+
+
+
+```r
+library(rstan)
+
+fit <- stan(model_code = bern_stan@model_code, data = list(y = bernoulli$y, 
+    N = nrow(bernoulli)), iter = 5000)
+```
+
+```
+## 
+## SAMPLING FOR MODEL '4584de91ce47196187979d2da8a67926' NOW (CHAIN 1).
+## Chain 1: 
+## Chain 1: Gradient evaluation took 1.4e-05 seconds
+## Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.14 seconds.
+## Chain 1: Adjust your expectations accordingly!
+## Chain 1: 
+## Chain 1: 
+## Chain 1: Iteration:    1 / 5000 [  0%]  (Warmup)
+## Chain 1: Iteration:  500 / 5000 [ 10%]  (Warmup)
+## Chain 1: Iteration: 1000 / 5000 [ 20%]  (Warmup)
+## Chain 1: Iteration: 1500 / 5000 [ 30%]  (Warmup)
+## Chain 1: Iteration: 2000 / 5000 [ 40%]  (Warmup)
+## Chain 1: Iteration: 2500 / 5000 [ 50%]  (Warmup)
+## Chain 1: Iteration: 2501 / 5000 [ 50%]  (Sampling)
+## Chain 1: Iteration: 3000 / 5000 [ 60%]  (Sampling)
+## Chain 1: Iteration: 3500 / 5000 [ 70%]  (Sampling)
+## Chain 1: Iteration: 4000 / 5000 [ 80%]  (Sampling)
+## Chain 1: Iteration: 4500 / 5000 [ 90%]  (Sampling)
+## Chain 1: Iteration: 5000 / 5000 [100%]  (Sampling)
+## Chain 1: 
+## Chain 1:  Elapsed Time: 0.032881 seconds (Warm-up)
+## Chain 1:                0.035488 seconds (Sampling)
+## Chain 1:                0.068369 seconds (Total)
+## Chain 1: 
+## 
+## SAMPLING FOR MODEL '4584de91ce47196187979d2da8a67926' NOW (CHAIN 2).
+## Chain 2: 
+## Chain 2: Gradient evaluation took 7e-06 seconds
+## Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.07 seconds.
+## Chain 2: Adjust your expectations accordingly!
+## Chain 2: 
+## Chain 2: 
+## Chain 2: Iteration:    1 / 5000 [  0%]  (Warmup)
+## Chain 2: Iteration:  500 / 5000 [ 10%]  (Warmup)
+## Chain 2: Iteration: 1000 / 5000 [ 20%]  (Warmup)
+## Chain 2: Iteration: 1500 / 5000 [ 30%]  (Warmup)
+## Chain 2: Iteration: 2000 / 5000 [ 40%]  (Warmup)
+## Chain 2: Iteration: 2500 / 5000 [ 50%]  (Warmup)
+## Chain 2: Iteration: 2501 / 5000 [ 50%]  (Sampling)
+## Chain 2: Iteration: 3000 / 5000 [ 60%]  (Sampling)
+## Chain 2: Iteration: 3500 / 5000 [ 70%]  (Sampling)
+## Chain 2: Iteration: 4000 / 5000 [ 80%]  (Sampling)
+## Chain 2: Iteration: 4500 / 5000 [ 90%]  (Sampling)
+## Chain 2: Iteration: 5000 / 5000 [100%]  (Sampling)
+## Chain 2: 
+## Chain 2:  Elapsed Time: 0.033237 seconds (Warm-up)
+## Chain 2:                0.034277 seconds (Sampling)
+## Chain 2:                0.067514 seconds (Total)
+## Chain 2: 
+## 
+## SAMPLING FOR MODEL '4584de91ce47196187979d2da8a67926' NOW (CHAIN 3).
+## Chain 3: 
+## Chain 3: Gradient evaluation took 7e-06 seconds
+## Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.07 seconds.
+## Chain 3: Adjust your expectations accordingly!
+## Chain 3: 
+## Chain 3: 
+## Chain 3: Iteration:    1 / 5000 [  0%]  (Warmup)
+## Chain 3: Iteration:  500 / 5000 [ 10%]  (Warmup)
+## Chain 3: Iteration: 1000 / 5000 [ 20%]  (Warmup)
+## Chain 3: Iteration: 1500 / 5000 [ 30%]  (Warmup)
+## Chain 3: Iteration: 2000 / 5000 [ 40%]  (Warmup)
+## Chain 3: Iteration: 2500 / 5000 [ 50%]  (Warmup)
+## Chain 3: Iteration: 2501 / 5000 [ 50%]  (Sampling)
+## Chain 3: Iteration: 3000 / 5000 [ 60%]  (Sampling)
+## Chain 3: Iteration: 3500 / 5000 [ 70%]  (Sampling)
+## Chain 3: Iteration: 4000 / 5000 [ 80%]  (Sampling)
+## Chain 3: Iteration: 4500 / 5000 [ 90%]  (Sampling)
+## Chain 3: Iteration: 5000 / 5000 [100%]  (Sampling)
+## Chain 3: 
+## Chain 3:  Elapsed Time: 0.03141 seconds (Warm-up)
+## Chain 3:                0.032364 seconds (Sampling)
+## Chain 3:                0.063774 seconds (Total)
+## Chain 3: 
+## 
+## SAMPLING FOR MODEL '4584de91ce47196187979d2da8a67926' NOW (CHAIN 4).
+## Chain 4: 
+## Chain 4: Gradient evaluation took 8e-06 seconds
+## Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.08 seconds.
+## Chain 4: Adjust your expectations accordingly!
+## Chain 4: 
+## Chain 4: 
+## Chain 4: Iteration:    1 / 5000 [  0%]  (Warmup)
+## Chain 4: Iteration:  500 / 5000 [ 10%]  (Warmup)
+## Chain 4: Iteration: 1000 / 5000 [ 20%]  (Warmup)
+## Chain 4: Iteration: 1500 / 5000 [ 30%]  (Warmup)
+## Chain 4: Iteration: 2000 / 5000 [ 40%]  (Warmup)
+## Chain 4: Iteration: 2500 / 5000 [ 50%]  (Warmup)
+## Chain 4: Iteration: 2501 / 5000 [ 50%]  (Sampling)
+## Chain 4: Iteration: 3000 / 5000 [ 60%]  (Sampling)
+## Chain 4: Iteration: 3500 / 5000 [ 70%]  (Sampling)
+## Chain 4: Iteration: 4000 / 5000 [ 80%]  (Sampling)
+## Chain 4: Iteration: 4500 / 5000 [ 90%]  (Sampling)
+## Chain 4: Iteration: 5000 / 5000 [100%]  (Sampling)
+## Chain 4: 
+## Chain 4:  Elapsed Time: 0.030109 seconds (Warm-up)
+## Chain 4:                0.018828 seconds (Sampling)
+## Chain 4:                0.048937 seconds (Total)
+## Chain 4:
+```
+
+```r
+print(fit, probs = c(0.1, 0.9))
+```
+
+```
+## Inference for Stan model: 4584de91ce47196187979d2da8a67926.
+## 4 chains, each with iter=5000; warmup=2500; thin=1; 
+## post-warmup draws per chain=2500, total post-warmup draws=10000.
+## 
+##         mean se_mean   sd    10%    90% n_eff Rhat
+## theta   0.31    0.00 0.06   0.23   0.39  3763    1
+## lp__  -32.59    0.01 0.70 -33.43 -32.10  4316    1
+## 
+## Samples were drawn using NUTS(diag_e) at Wed May 13 11:53:09 2020.
+## For each parameter, n_eff is a crude measure of effective sample size,
+## and Rhat is the potential scale reduction factor on split chains (at 
+## convergence, Rhat=1).
+```
+
+```r
+theta_draws <- extract(fit)$theta
+
+mean(theta_draws)
+```
+
+```
+## [1] 0.3062755
+```
+
+```r
+quantile(theta_draws, probs = c(0.1, 0.9))
+```
+
+```
+##       10%       90% 
+## 0.2278129 0.3897041
+```
+
+
+
+```r
+shinystan::launch_shinystan(fit)
+```
+
+
+\BeginKnitrBlock{exercise}<div class="exercise"><span class="exercise" id="exr:unnamed-chunk-167"><strong>(\#exr:unnamed-chunk-167) </strong></span>
+Replique los resultados anteriores pero para el caso de 2 monedas y comente los resultados. 
+</div>\EndKnitrBlock{exercise}
+
+
+
+
+
 
 ## Ejercicios 
 

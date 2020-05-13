@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Notas Curso de Estadística</title>
-  <meta name="description" content="Notas Curso de Estadística" />
+  <title>Capítulo 5 Uso de JAGS | Notas Curso de Estadística</title>
+  <meta name="description" content="Capítulo 5 Uso de JAGS | Notas Curso de Estadística" />
   <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Notas Curso de Estadística" />
+  <meta property="og:title" content="Capítulo 5 Uso de JAGS | Notas Curso de Estadística" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Notas Curso de Estadística" />
+  <meta name="twitter:title" content="Capítulo 5 Uso de JAGS | Notas Curso de Estadística" />
   
   
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
+<link rel="prev" href="estimación-de-densidades-con-bayes.html"/>
 
-<link rel="next" href="estimación-de-densidades.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -194,9 +194,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.5" data-path="estimación-de-densidades-con-bayes.html"><a href="estimación-de-densidades-con-bayes.html#dos-monedas"><i class="fa fa-check"></i><b>4.5</b> Dos monedas</a><ul>
 <li class="chapter" data-level="4.5.1" data-path="estimación-de-densidades-con-bayes.html"><a href="estimación-de-densidades-con-bayes.html#muestreo-de-gibbs"><i class="fa fa-check"></i><b>4.5.1</b> Muestreo de Gibbs</a></li>
 </ul></li>
-<li class="chapter" data-level="4.6" data-path="estimación-de-densidades-con-bayes.html"><a href="estimación-de-densidades-con-bayes.html#uso-de-jags"><i class="fa fa-check"></i><b>4.6</b> Uso de JAGS</a></li>
-<li class="chapter" data-level="4.7" data-path="estimación-de-densidades-con-bayes.html"><a href="estimación-de-densidades-con-bayes.html#uso-de-stan"><i class="fa fa-check"></i><b>4.7</b> Uso de STAN</a></li>
-<li class="chapter" data-level="4.8" data-path="estimación-de-densidades-con-bayes.html"><a href="estimación-de-densidades-con-bayes.html#ejercicios-2"><i class="fa fa-check"></i><b>4.8</b> Ejercicios</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="uso-de-jags.html"><a href="uso-de-jags.html"><i class="fa fa-check"></i><b>5</b> Uso de JAGS</a><ul>
+<li class="chapter" data-level="5.1" data-path="uso-de-jags.html"><a href="uso-de-jags.html#ejercicios-2"><i class="fa fa-check"></i><b>5.1</b> Ejercicios</a></li>
 </ul></li>
 </ul>
 
@@ -215,21 +215,102 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">Notas Curso de Estadística</h1>
-<p class="author"><em>Maikol Solís</em></p>
-</div>
-<div id="introducción" class="section level1">
-<h1><span class="header-section-number">Capítulo 1</span> Introducción</h1>
+<div id="uso-de-jags" class="section level1">
+<h1><span class="header-section-number">Capítulo 5</span> Uso de JAGS</h1>
+<p>El paquete que usaremos en esta sección es <code>R2jags</code> y <code>coda</code>. Los cargamos con las instrucciones</p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb66-1" title="1"><span class="kw">library</span>(R2jags)</a>
+<a class="sourceLine" id="cb66-2" title="2"><span class="kw">library</span>(coda)</a></code></pre></div>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb67-1" title="1">bernoulli &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="dt">file =</span> <span class="st">&quot;data/bernoulli.csv&quot;</span>, </a>
+<a class="sourceLine" id="cb67-2" title="2">    <span class="dt">sep =</span> <span class="st">&quot;&quot;</span>)</a>
+<a class="sourceLine" id="cb67-3" title="3">tibble<span class="op">::</span><span class="kw">glimpse</span>(bernoulli)</a></code></pre></div>
+<pre><code>## Rows: 50
+## Columns: 1
+## $ y &lt;int&gt; 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0…</code></pre>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb69-1" title="1"><span class="kw">mean</span>(bernoulli<span class="op">$</span>y)</a></code></pre></div>
+<pre><code>## [1] 0.3</code></pre>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb71-1" title="1"><span class="kw">sd</span>(bernoulli<span class="op">$</span>y)</a></code></pre></div>
+<pre><code>## [1] 0.46291</code></pre>
+<p>En el lenguaje usual de JAGS, el modelo debe escribirse de la forma:</p>
+<pre><code>model
+{
+    for (i in 1:N) {
+        y[i] ~ dbern(theta)
+    }
+    theta ~ dbeta(1, 1)
+}
+</code></pre>
+<p>donde <code>dbern</code> y <code>dbeta</code> son las densidades de una bernoulli y beta respectivamente. En este lenguage no existen versiones vectorizadas de las funciones por lo que todo debe llenarse usando <code>for</code>’s. Una revisión completa de este lenguage la pueden econtrar en su manual de uso<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
+<p>El paquete <code>R2jags</code> tiene la capacidad que en lugar de usar este tipo de sintaxis, se pueda usar el lenguaje natural para escribir el modelo. Note el uso de <code>function</code> en este caso.</p>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb74-1" title="1">bern_model &lt;-<span class="st"> </span><span class="cf">function</span>() {</a>
+<a class="sourceLine" id="cb74-2" title="2">    <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>N) {</a>
+<a class="sourceLine" id="cb74-3" title="3">        y[i] <span class="op">~</span><span class="st"> </span><span class="kw">dbern</span>(theta)</a>
+<a class="sourceLine" id="cb74-4" title="4">    }</a>
+<a class="sourceLine" id="cb74-5" title="5">    theta <span class="op">~</span><span class="st"> </span><span class="kw">dbeta</span>(<span class="dv">1</span>, <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb74-6" title="6">}</a></code></pre></div>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb75-1" title="1">bern_jags &lt;-<span class="st"> </span><span class="kw">jags</span>(<span class="dt">data =</span> <span class="kw">list</span>(<span class="dt">y =</span> bernoulli<span class="op">$</span>y, <span class="dt">N =</span> <span class="kw">nrow</span>(bernoulli)), </a>
+<a class="sourceLine" id="cb75-2" title="2">    <span class="dt">model.file =</span> bern_model, <span class="dt">parameters.to.save =</span> <span class="kw">c</span>(<span class="st">&quot;theta&quot;</span>))</a></code></pre></div>
+<pre><code>## Compiling model graph
+##    Resolving undeclared variables
+##    Allocating nodes
+## Graph information:
+##    Observed stochastic nodes: 50
+##    Unobserved stochastic nodes: 1
+##    Total graph size: 53
+## 
+## Initializing model</code></pre>
+<div id="ejercicios-2" class="section level2">
+<h2><span class="header-section-number">5.1</span> Ejercicios</h2>
+<ol style="list-style-type: decimal">
+<li>Del libro <span class="citation">(Albert et al. <a href="#ref-Albert2009">2009</a>)</span>
+<ul>
+<li><strong>Sección 3:</strong> 3, 7.</li>
+<li><strong>Sección 6:</strong> 1, 3.</li>
+</ul></li>
+<li>Del libro <span class="citation">(Kruschke <a href="#ref-Kruschke2014">2014</a>)</span>
+<ul>
+<li><strong>Sección 6:</strong> 2.</li>
+<li><strong>Sección 7:</strong> 2.</li>
+</ul></li>
+</ol>
 
+<div id="refs" class="references">
+<div>
+<p>Albert, Jim, Robert Gentleman, Giovanni Parmigiani, and Kurt Hornik. 2009. <em>Bayesian computation with R</em>. New York, NY: Springer New York. <a href="https://doi.org/10.1007/978-0-387-92298-0">https://doi.org/10.1007/978-0-387-92298-0</a>.</p>
+</div>
+<div>
+<p>Kruschke, John K. 2014. “Doing Bayesian data analysis: A tutorial with R, JAGS, and Stan, second edition.” In <em>Doing Bayesian Data Analysis: A Tutorial with R, Jags, and Stan, Second Edition</em>, 1–759.</p>
+</div>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-Albert2009">
+<p>Albert, Jim, Robert Gentleman, Giovanni Parmigiani, and Kurt Hornik. 2009. <em>Bayesian computation with R</em>. New York, NY: Springer New York. <a href="https://doi.org/10.1007/978-0-387-92298-0">https://doi.org/10.1007/978-0-387-92298-0</a>.</p>
+</div>
+<div id="ref-Kruschke2014">
+<p>Kruschke, John K. 2014. “Doing Bayesian data analysis: A tutorial with R, JAGS, and Stan, second edition.” In <em>Doing Bayesian Data Analysis: A Tutorial with R, Jags, and Stan, Second Edition</em>, 1–759.</p>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="1">
+<li id="fn1"><p>(<a href="http://web.sgh.waw.pl/~atoroj/ekonometria_bayesowska/jags_user_manual.pdf" class="uri">http://web.sgh.waw.pl/~atoroj/ekonometria_bayesowska/jags_user_manual.pdf</a>)<a href="uso-de-jags.html#fnref1" class="footnote-back">↩</a></p></li>
+</ol>
 </div>
             </section>
 
           </div>
         </div>
       </div>
+<a href="estimación-de-densidades-con-bayes.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
-<a href="estimación-de-densidades.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -260,7 +341,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/maikol-solis/notas-curso-estadistica/edit/master/index.Rmd",
+"link": "https://github.com/maikol-solis/notas-curso-estadistica/edit/master/03-estimacion-densidades-bayes.Rmd",
 "text": "Edit"
 },
 "history": {
@@ -268,7 +349,7 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/maikol-solis/notas-curso-estadistica/blob/master/index.Rmd",
+"link": "https://github.com/maikol-solis/notas-curso-estadistica/blob/master/03-estimacion-densidades-bayes.Rmd",
 "text": null
 },
 "download": ["Notas-Curso-Estadistica.pdf"],

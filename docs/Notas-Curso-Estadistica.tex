@@ -3043,7 +3043,7 @@ f(\boldsymbol{\theta})^\top T =   f(\boldsymbol{\theta})
 
 Cual indica que no importa donde empecemos siempre llegaremos a la densidad estacionaria \(f\).
 
-\href{https://www.ece.iastate.edu/~namrata/EE527_Spring08/l4c.pdf\#page=32}{Para más detalles}
+\url{https://www.ece.iastate.edu/~namrata/EE527_Spring08/l4c.pdf\#page=32}
 
 \hypertarget{extensiuxf3n-al-caso-del-viajero}{%
 \subsection{Extensión al caso del viajero}\label{extensiuxf3n-al-caso-del-viajero}}
@@ -3463,7 +3463,7 @@ Esto completa un ciclo del muestreo. Cada ciclo genera nuevos \(\boldsymbol{\the
 \end{align*}
 \EndKnitrBlock{remark}
 
-El tratamiento teórico puede ser consultado \href{https://www.ece.iastate.edu/~namrata/EE527_Spring08/l4c.pdf\#page=16}{aquí}
+El tratamiento teórico puede ser consultado \url{https://www.ece.iastate.edu/~namrata/EE527_Spring08/l4c.pdf\#page=16}
 
 \begin{align*}
 f\left(\theta_{1} | \theta_{2}, D\right) 
@@ -3607,6 +3607,530 @@ Ciclos completos
 \KeywordTok{animate}\NormalTok{(Gibbsplot2, }\DataTypeTok{fps =} \DecValTok{1}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
+
+\hypertarget{uso-de-jags}{%
+\section{Uso de JAGS}\label{uso-de-jags}}
+
+El paquete que usaremos en esta sección es \texttt{R2jags} y \texttt{coda}. Los cargamos con las instrucciones
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{remotes}\OperatorTok{::}\KeywordTok{install_github}\NormalTok{(}\StringTok{"rpruim/CalvinBayes"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(R2jags)}
+\KeywordTok{library}\NormalTok{(coda)}
+\KeywordTok{library}\NormalTok{(CalvinBayes)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{bernoulli <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\DataTypeTok{file =} \StringTok{"data/bernoulli.csv"}\NormalTok{, }
+    \DataTypeTok{sep =} \StringTok{""}\NormalTok{)}
+\NormalTok{tibble}\OperatorTok{::}\KeywordTok{glimpse}\NormalTok{(bernoulli)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Rows: 50
+## Columns: 1
+## $ y <int> 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0,...
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{mean}\NormalTok{(bernoulli}\OperatorTok{$}\NormalTok{y)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.3
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{sd}\NormalTok{(bernoulli}\OperatorTok{$}\NormalTok{y)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.46291
+\end{verbatim}
+
+En el lenguaje usual de JAGS, el modelo debe escribirse de la forma:
+
+\begin{verbatim}
+model
+{
+    for (i in 1:N) {
+        y[i] ~ dbern(theta)
+    }
+    theta ~ dbeta(1, 1)
+}
+\end{verbatim}
+
+donde \texttt{dbern} y \texttt{dbeta} son las densidades de una bernoulli y beta respectivamente. En este lenguage no existen versiones vectorizadas de las funciones por lo que todo debe llenarse usando \texttt{for}'s. Una revisión completa de este lenguage la pueden econtrar en su manual de uso \footnote{\url{http://web.sgh.waw.pl/~atoroj/ekonometria_bayesowska/jags_user_manual.pdf}}
+
+El paquete \texttt{R2jags} tiene la capacidad que en lugar de usar este tipo de sintaxis, se pueda usar el lenguaje natural para escribir el modelo. Note el uso de \texttt{function} en este caso.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{bern_model <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{() \{}
+    \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{N) \{}
+\NormalTok{        y[i] }\OperatorTok{~}\StringTok{ }\KeywordTok{dbern}\NormalTok{(theta)}
+\NormalTok{    \}}
+\NormalTok{    theta }\OperatorTok{~}\StringTok{ }\KeywordTok{dbeta}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{bern_jags <-}\StringTok{ }\KeywordTok{jags}\NormalTok{(}\DataTypeTok{data =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ bernoulli}\OperatorTok{$}\NormalTok{y, }\DataTypeTok{N =} \KeywordTok{nrow}\NormalTok{(bernoulli)), }
+    \DataTypeTok{model.file =}\NormalTok{ bern_model, }\DataTypeTok{parameters.to.save =} \KeywordTok{c}\NormalTok{(}\StringTok{"theta"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Compiling model graph
+##    Resolving undeclared variables
+##    Allocating nodes
+## Graph information:
+##    Observed stochastic nodes: 50
+##    Unobserved stochastic nodes: 1
+##    Total graph size: 53
+## 
+## Initializing model
+\end{verbatim}
+
+Veamos el resultado
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{bern_jags}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Inference for Bugs model at "/tmp/Rtmp1ygvHJ/model24b219a8212.txt", fit using jags,
+##  3 chains, each with 2000 iterations (first 1000 discarded)
+##  n.sims = 3000 iterations saved
+##          mu.vect sd.vect   2.5%    25%    50%    75%  97.5%  Rhat n.eff
+## theta      0.307   0.064  0.189  0.264  0.305  0.349  0.438 1.001  3000
+## deviance  62.069   1.368 61.087 61.189 61.530 62.403 65.725 1.001  3000
+## 
+## For each parameter, n.eff is a crude measure of effective sample size,
+## and Rhat is the potential scale reduction factor (at convergence, Rhat=1).
+## 
+## DIC info (using the rule, pD = var(deviance)/2)
+## pD = 0.9 and DIC = 63.0
+## DIC is an estimate of expected predictive error (lower deviance is better).
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{head}\NormalTok{(}\KeywordTok{posterior}\NormalTok{(bern_jags))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Error in verosimilitud(theta, data): argument "data" is missing, with no default
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{gf_dhistogram}\NormalTok{(}\OperatorTok{~}\NormalTok{theta, }\DataTypeTok{data =} \KeywordTok{posterior}\NormalTok{(bern_jags), }
+    \DataTypeTok{bins =} \DecValTok{50}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{gf_dens}\NormalTok{(}\OperatorTok{~}\NormalTok{theta, }\DataTypeTok{size =} \FloatTok{1.5}\NormalTok{, }\DataTypeTok{alpha =} \FloatTok{0.8}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{    }\KeywordTok{gf_dist}\NormalTok{(}\StringTok{"beta"}\NormalTok{, }\DataTypeTok{shape1 =} \DecValTok{16}\NormalTok{, }\DataTypeTok{shape2 =} \DecValTok{36}\NormalTok{, }\DataTypeTok{color =} \StringTok{"red"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Error in verosimilitud(theta, data): argument "data" is missing, with no default
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{bern_mcmc <-}\StringTok{ }\KeywordTok{as.mcmc}\NormalTok{(bern_jags)}
+\KeywordTok{plot}\NormalTok{(bern_mcmc)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-154-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(bayesplot)}
+\KeywordTok{mcmc_areas}\NormalTok{(bern_mcmc, }\DataTypeTok{pars =} \KeywordTok{c}\NormalTok{(}\StringTok{"theta"}\NormalTok{), }\DataTypeTok{prob =} \FloatTok{0.9}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-155-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{mcmc_trace}\NormalTok{(bern_mcmc, }\DataTypeTok{pars =} \StringTok{"theta"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-156-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{mcmc_trace}\NormalTok{(bern_mcmc, }\DataTypeTok{pars =} \StringTok{"theta"}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{gf_facet_grid}\NormalTok{(Chain }\OperatorTok{~}\StringTok{ }
+\StringTok{    }\NormalTok{.) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{gf_refine}\NormalTok{(}\KeywordTok{scale_color_viridis_d}\NormalTok{())}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Error: At least one layer must contain all faceting variables: `Chain`.
+## * Plot is missing `Chain`
+## * Layer 1 is missing `Chain`
+\end{verbatim}
+
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-157-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot_post}\NormalTok{(bern_mcmc[, }\StringTok{"theta"}\NormalTok{], }\DataTypeTok{main =} \StringTok{"theta"}\NormalTok{, }\DataTypeTok{xlab =} \KeywordTok{expression}\NormalTok{(theta), }
+    \DataTypeTok{cenTend =} \StringTok{"median"}\NormalTok{, }\DataTypeTok{compVal =} \FloatTok{0.5}\NormalTok{, }\DataTypeTok{ROPE =} \KeywordTok{c}\NormalTok{(}\FloatTok{0.45}\NormalTok{, }
+        \FloatTok{0.55}\NormalTok{), }\DataTypeTok{credMass =} \FloatTok{0.9}\NormalTok{, }\DataTypeTok{quietly =} \OtherTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-158-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{twobernoulli <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"data/2bernoulli.csv"}\NormalTok{)}
+
+\NormalTok{knitr}\OperatorTok{::}\KeywordTok{kable}\NormalTok{(twobernoulli)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{tabular}{r|l}
+\hline
+y & s\\
+\hline
+1 & Reginald\\
+\hline
+0 & Reginald\\
+\hline
+1 & Reginald\\
+\hline
+1 & Reginald\\
+\hline
+1 & Reginald\\
+\hline
+1 & Reginald\\
+\hline
+1 & Reginald\\
+\hline
+0 & Reginald\\
+\hline
+0 & Tony\\
+\hline
+0 & Tony\\
+\hline
+1 & Tony\\
+\hline
+0 & Tony\\
+\hline
+0 & Tony\\
+\hline
+1 & Tony\\
+\hline
+0 & Tony\\
+\hline
+\end{tabular}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Target <-}\StringTok{ }\NormalTok{twobernoulli }\OperatorTok{%>%}\StringTok{ }\KeywordTok{rename}\NormalTok{(}\DataTypeTok{hit =}\NormalTok{ y, }\DataTypeTok{subject =}\NormalTok{ s)}
+
+\NormalTok{Target }\OperatorTok{%>%}\StringTok{ }\KeywordTok{group_by}\NormalTok{(subject) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{summarise}\NormalTok{(}\DataTypeTok{prop_0 =} \KeywordTok{sum}\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }
+\StringTok{    }\NormalTok{hit)}\OperatorTok{/}\KeywordTok{n}\NormalTok{(), }\DataTypeTok{prop_1 =} \KeywordTok{sum}\NormalTok{(hit)}\OperatorTok{/}\KeywordTok{n}\NormalTok{(), }\DataTypeTok{attemps =} \KeywordTok{n}\NormalTok{())}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 2 x 4
+##   subject  prop_0 prop_1 attemps
+##   <chr>     <dbl>  <dbl>   <int>
+## 1 Reginald  0.25   0.75        8
+## 2 Tony      0.714  0.286       7
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{bern2_model <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{() \{}
+    \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{Nobs) \{}
+        \CommentTok{# each response is Bernoulli with the appropriate}
+        \CommentTok{# theta}
+\NormalTok{        hit[i] }\OperatorTok{~}\StringTok{ }\KeywordTok{dbern}\NormalTok{(theta[subject[i]])}
+\NormalTok{    \}}
+    \ControlFlowTok{for}\NormalTok{ (s }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{Nsub) \{}
+\NormalTok{        theta[s] }\OperatorTok{~}\StringTok{ }\KeywordTok{dbeta}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{)  }\CommentTok{# prior for each theta}
+\NormalTok{    \}}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{TargetList <-}\StringTok{ }\KeywordTok{list}\NormalTok{(}\DataTypeTok{Nobs =} \KeywordTok{nrow}\NormalTok{(Target), }\DataTypeTok{Nsub =} \DecValTok{2}\NormalTok{, }\DataTypeTok{hit =}\NormalTok{ Target}\OperatorTok{$}\NormalTok{hit, }
+    \DataTypeTok{subject =} \KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{as.factor}\NormalTok{(Target}\OperatorTok{$}\NormalTok{subject)))}
+\NormalTok{TargetList}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $Nobs
+## [1] 15
+## 
+## $Nsub
+## [1] 2
+## 
+## $hit
+##  [1] 1 0 1 1 1 1 1 0 0 0 1 0 0 1 0
+## 
+## $subject
+##  [1] 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{bern2_jags <-}\StringTok{ }\KeywordTok{jags}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ TargetList, }\DataTypeTok{model =}\NormalTok{ bern2_model, }
+    \DataTypeTok{parameters.to.save =} \StringTok{"theta"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Compiling model graph
+##    Resolving undeclared variables
+##    Allocating nodes
+## Graph information:
+##    Observed stochastic nodes: 15
+##    Unobserved stochastic nodes: 2
+##    Total graph size: 35
+## 
+## Initializing model
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{bern2_mcmc <-}\StringTok{ }\KeywordTok{as.mcmc}\NormalTok{(bern2_jags)}
+
+\KeywordTok{mcmc_acf}\NormalTok{(bern2_mcmc)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-163-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{mcmc_combo}\NormalTok{(bern2_mcmc, }\DataTypeTok{combo =} \KeywordTok{c}\NormalTok{(}\StringTok{"dens"}\NormalTok{, }\StringTok{"dens_overlay"}\NormalTok{, }
+    \StringTok{"trace"}\NormalTok{, }\StringTok{"scatter"}\NormalTok{), }\DataTypeTok{pars =} \KeywordTok{c}\NormalTok{(}\StringTok{"theta[1]"}\NormalTok{, }\StringTok{"theta[2]"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Notas-Curso-Estadistica_files/figure-latex/unnamed-chunk-163-2.pdf}
+
+\hypertarget{uso-de-stan}{%
+\section{Uso de STAN}\label{uso-de-stan}}
+
+STAN\footnote{\url{https://mc-stan.org/}} es otro tipo de lenguaje para definir modelos bayesiano. El lenguaje es un poco más sencillo, pero es particularmente útil para modelos bastante complejos.
+
+STAN no usa el muestreo de Gibbs, sino en el método de Monte-Carlo Hamiltoniano. En el artículo \autocite{Hoffman2014} se propone el método NUTS para mejorar el muestreo de Gibbs.
+
+En este curso no nos referiremos a este procedimiento, pero si veremos un poco de la sintaxis del lenguaje STAN.
+
+\begin{verbatim}
+data {
+  int<lower=0> N;               // number of trials
+  int<lower=0, upper=1> y[N];   // success on trial n
+}
+
+parameters {
+  real<lower=0, upper=1> theta; // chance of success
+}
+
+model {
+  theta ~ uniform(0, 1);        // prior
+  y ~ bernoulli(theta);         // likelihood
+}
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(rstan)}
+
+\NormalTok{fit <-}\StringTok{ }\KeywordTok{stan}\NormalTok{(}\DataTypeTok{model_code =}\NormalTok{ bern_stan}\OperatorTok{@}\NormalTok{model_code, }\DataTypeTok{data =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ bernoulli}\OperatorTok{$}\NormalTok{y, }
+    \DataTypeTok{N =} \KeywordTok{nrow}\NormalTok{(bernoulli)), }\DataTypeTok{iter =} \DecValTok{5000}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## SAMPLING FOR MODEL '4584de91ce47196187979d2da8a67926' NOW (CHAIN 1).
+## Chain 1: 
+## Chain 1: Gradient evaluation took 1.4e-05 seconds
+## Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.14 seconds.
+## Chain 1: Adjust your expectations accordingly!
+## Chain 1: 
+## Chain 1: 
+## Chain 1: Iteration:    1 / 5000 [  0%]  (Warmup)
+## Chain 1: Iteration:  500 / 5000 [ 10%]  (Warmup)
+## Chain 1: Iteration: 1000 / 5000 [ 20%]  (Warmup)
+## Chain 1: Iteration: 1500 / 5000 [ 30%]  (Warmup)
+## Chain 1: Iteration: 2000 / 5000 [ 40%]  (Warmup)
+## Chain 1: Iteration: 2500 / 5000 [ 50%]  (Warmup)
+## Chain 1: Iteration: 2501 / 5000 [ 50%]  (Sampling)
+## Chain 1: Iteration: 3000 / 5000 [ 60%]  (Sampling)
+## Chain 1: Iteration: 3500 / 5000 [ 70%]  (Sampling)
+## Chain 1: Iteration: 4000 / 5000 [ 80%]  (Sampling)
+## Chain 1: Iteration: 4500 / 5000 [ 90%]  (Sampling)
+## Chain 1: Iteration: 5000 / 5000 [100%]  (Sampling)
+## Chain 1: 
+## Chain 1:  Elapsed Time: 0.032881 seconds (Warm-up)
+## Chain 1:                0.035488 seconds (Sampling)
+## Chain 1:                0.068369 seconds (Total)
+## Chain 1: 
+## 
+## SAMPLING FOR MODEL '4584de91ce47196187979d2da8a67926' NOW (CHAIN 2).
+## Chain 2: 
+## Chain 2: Gradient evaluation took 7e-06 seconds
+## Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.07 seconds.
+## Chain 2: Adjust your expectations accordingly!
+## Chain 2: 
+## Chain 2: 
+## Chain 2: Iteration:    1 / 5000 [  0%]  (Warmup)
+## Chain 2: Iteration:  500 / 5000 [ 10%]  (Warmup)
+## Chain 2: Iteration: 1000 / 5000 [ 20%]  (Warmup)
+## Chain 2: Iteration: 1500 / 5000 [ 30%]  (Warmup)
+## Chain 2: Iteration: 2000 / 5000 [ 40%]  (Warmup)
+## Chain 2: Iteration: 2500 / 5000 [ 50%]  (Warmup)
+## Chain 2: Iteration: 2501 / 5000 [ 50%]  (Sampling)
+## Chain 2: Iteration: 3000 / 5000 [ 60%]  (Sampling)
+## Chain 2: Iteration: 3500 / 5000 [ 70%]  (Sampling)
+## Chain 2: Iteration: 4000 / 5000 [ 80%]  (Sampling)
+## Chain 2: Iteration: 4500 / 5000 [ 90%]  (Sampling)
+## Chain 2: Iteration: 5000 / 5000 [100%]  (Sampling)
+## Chain 2: 
+## Chain 2:  Elapsed Time: 0.033237 seconds (Warm-up)
+## Chain 2:                0.034277 seconds (Sampling)
+## Chain 2:                0.067514 seconds (Total)
+## Chain 2: 
+## 
+## SAMPLING FOR MODEL '4584de91ce47196187979d2da8a67926' NOW (CHAIN 3).
+## Chain 3: 
+## Chain 3: Gradient evaluation took 7e-06 seconds
+## Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.07 seconds.
+## Chain 3: Adjust your expectations accordingly!
+## Chain 3: 
+## Chain 3: 
+## Chain 3: Iteration:    1 / 5000 [  0%]  (Warmup)
+## Chain 3: Iteration:  500 / 5000 [ 10%]  (Warmup)
+## Chain 3: Iteration: 1000 / 5000 [ 20%]  (Warmup)
+## Chain 3: Iteration: 1500 / 5000 [ 30%]  (Warmup)
+## Chain 3: Iteration: 2000 / 5000 [ 40%]  (Warmup)
+## Chain 3: Iteration: 2500 / 5000 [ 50%]  (Warmup)
+## Chain 3: Iteration: 2501 / 5000 [ 50%]  (Sampling)
+## Chain 3: Iteration: 3000 / 5000 [ 60%]  (Sampling)
+## Chain 3: Iteration: 3500 / 5000 [ 70%]  (Sampling)
+## Chain 3: Iteration: 4000 / 5000 [ 80%]  (Sampling)
+## Chain 3: Iteration: 4500 / 5000 [ 90%]  (Sampling)
+## Chain 3: Iteration: 5000 / 5000 [100%]  (Sampling)
+## Chain 3: 
+## Chain 3:  Elapsed Time: 0.03141 seconds (Warm-up)
+## Chain 3:                0.032364 seconds (Sampling)
+## Chain 3:                0.063774 seconds (Total)
+## Chain 3: 
+## 
+## SAMPLING FOR MODEL '4584de91ce47196187979d2da8a67926' NOW (CHAIN 4).
+## Chain 4: 
+## Chain 4: Gradient evaluation took 8e-06 seconds
+## Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.08 seconds.
+## Chain 4: Adjust your expectations accordingly!
+## Chain 4: 
+## Chain 4: 
+## Chain 4: Iteration:    1 / 5000 [  0%]  (Warmup)
+## Chain 4: Iteration:  500 / 5000 [ 10%]  (Warmup)
+## Chain 4: Iteration: 1000 / 5000 [ 20%]  (Warmup)
+## Chain 4: Iteration: 1500 / 5000 [ 30%]  (Warmup)
+## Chain 4: Iteration: 2000 / 5000 [ 40%]  (Warmup)
+## Chain 4: Iteration: 2500 / 5000 [ 50%]  (Warmup)
+## Chain 4: Iteration: 2501 / 5000 [ 50%]  (Sampling)
+## Chain 4: Iteration: 3000 / 5000 [ 60%]  (Sampling)
+## Chain 4: Iteration: 3500 / 5000 [ 70%]  (Sampling)
+## Chain 4: Iteration: 4000 / 5000 [ 80%]  (Sampling)
+## Chain 4: Iteration: 4500 / 5000 [ 90%]  (Sampling)
+## Chain 4: Iteration: 5000 / 5000 [100%]  (Sampling)
+## Chain 4: 
+## Chain 4:  Elapsed Time: 0.030109 seconds (Warm-up)
+## Chain 4:                0.018828 seconds (Sampling)
+## Chain 4:                0.048937 seconds (Total)
+## Chain 4:
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(fit, }\DataTypeTok{probs =} \KeywordTok{c}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\FloatTok{0.9}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Inference for Stan model: 4584de91ce47196187979d2da8a67926.
+## 4 chains, each with iter=5000; warmup=2500; thin=1; 
+## post-warmup draws per chain=2500, total post-warmup draws=10000.
+## 
+##         mean se_mean   sd    10%    90% n_eff Rhat
+## theta   0.31    0.00 0.06   0.23   0.39  3763    1
+## lp__  -32.59    0.01 0.70 -33.43 -32.10  4316    1
+## 
+## Samples were drawn using NUTS(diag_e) at Wed May 13 11:53:09 2020.
+## For each parameter, n_eff is a crude measure of effective sample size,
+## and Rhat is the potential scale reduction factor on split chains (at 
+## convergence, Rhat=1).
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{theta_draws <-}\StringTok{ }\KeywordTok{extract}\NormalTok{(fit)}\OperatorTok{$}\NormalTok{theta}
+
+\KeywordTok{mean}\NormalTok{(theta_draws)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.3062755
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{quantile}\NormalTok{(theta_draws, }\DataTypeTok{probs =} \KeywordTok{c}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\FloatTok{0.9}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       10%       90% 
+## 0.2278129 0.3897041
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{shinystan}\OperatorTok{::}\KeywordTok{launch_shinystan}\NormalTok{(fit)}
+\end{Highlighting}
+\end{Shaded}
+
+\BeginKnitrBlock{exercise}
+\protect\hypertarget{exr:unnamed-chunk-167}{}{\label{exr:unnamed-chunk-167} }
+Replique los resultados anteriores pero para el caso de 2 monedas y comente los resultados.
+\EndKnitrBlock{exercise}
 
 \hypertarget{ejercicios-2}{%
 \section{Ejercicios}\label{ejercicios-2}}

@@ -501,7 +501,7 @@ f(\boldsymbol{\theta})^\top T =   f(\boldsymbol{\theta})
 
 Cual indica que no importa donde empecemos siempre llegaremos a la densidad estacionaria \(f\). 
 
-[Para más detalles](https://www.ece.iastate.edu/~namrata/EE527_Spring08/l4c.pdf#page=32)
+[https://www.ece.iastate.edu/~namrata/EE527_Spring08/l4c.pdf#page=32](https://www.ece.iastate.edu/~namrata/EE527_Spring08/l4c.pdf#page=32)
 
 ### Extensión al caso del viajero
 
@@ -915,7 +915,7 @@ En realidad el muestreo de Gibbs se basa en el algoritmo de M-H, con la diferenc
 
 ```
 
-El tratamiento teórico puede ser consultado [aquí](https://www.ece.iastate.edu/~namrata/EE527_Spring08/l4c.pdf#page=16)
+El tratamiento teórico puede ser consultado [https://www.ece.iastate.edu/~namrata/EE527_Spring08/l4c.pdf#page=16](https://www.ece.iastate.edu/~namrata/EE527_Spring08/l4c.pdf#page=16)
 
 \begin{align*}
 f\left(\theta_{1} | \theta_{2}, D\right) 
@@ -1055,6 +1055,233 @@ Gibbsplot2 <- Gibbs %>% filter(step < 500, step %% 2 == 0) %>%
 
 animate(Gibbsplot2, fps = 1)
 ```
+
+## Uso de JAGS 
+
+
+El paquete que usaremos en esta sección es `R2jags` y `coda`. Los cargamos con las instrucciones
+
+
+```{r, eval=FALSE}
+remotes::install_github("rpruim/CalvinBayes")
+
+```
+
+```{r}
+library(R2jags)
+library(coda)
+library(CalvinBayes)
+```
+
+
+
+
+```{r}
+bernoulli <- read.csv(file = "data/bernoulli.csv", sep="")
+tibble::glimpse(bernoulli)
+mean(bernoulli$y)
+sd(bernoulli$y)
+```
+En el lenguaje usual de JAGS, el modelo debe escribirse de la forma: 
+
+```
+model
+{
+    for (i in 1:N) {
+        y[i] ~ dbern(theta)
+    }
+    theta ~ dbeta(1, 1)
+}
+
+```
+
+donde `dbern` y `dbeta` son las densidades de una bernoulli y beta respectivamente. En este lenguage no existen versiones vectorizadas de las funciones por lo que todo debe llenarse usando `for`'s.  Una revisión completa de este lenguage la pueden econtrar en su manual de uso ^[[http://web.sgh.waw.pl/~atoroj/ekonometria_bayesowska/jags_user_manual.pdf](http://web.sgh.waw.pl/~atoroj/ekonometria_bayesowska/jags_user_manual.pdf)]
+
+El paquete `R2jags` tiene la capacidad que en lugar de usar este tipo de sintaxis, se pueda usar el lenguaje natural para escribir el modelo. Note el uso de `function` en este caso. 
+
+
+```{r}
+bern_model <- function() {
+  for (i in 1:N) {
+    y[i] ~ dbern(theta)  
+  }
+  theta ~ dbeta(1, 1)    
+}
+```
+
+
+
+```{r}
+
+
+bern_jags <- 
+  jags(
+    data = list(y = bernoulli$y, N = nrow(bernoulli)),
+    model.file = bern_model,
+    parameters.to.save = c("theta")
+  )
+```
+
+Veamos el resultado 
+
+```{r}
+bern_jags
+```
+
+```{r}
+head(posterior(bern_jags))
+```
+
+```{r}
+gf_dhistogram(~theta, data = posterior(bern_jags), bins = 50) %>% 
+  gf_dens(~theta, size = 1.5, alpha = 0.8) %>%
+  gf_dist("beta", shape1 = 16, shape2 = 36, color = "red")
+```
+
+```{r}
+bern_mcmc <- as.mcmc(bern_jags)
+plot(bern_mcmc)
+```
+
+```{r}
+library(bayesplot)
+mcmc_areas(bern_mcmc,
+           pars = c("theta"),
+           prob = 0.90)           
+```
+
+```{r}
+mcmc_trace(bern_mcmc, pars = "theta") 
+```
+
+```{r}
+mcmc_trace(bern_mcmc, pars = "theta") %>%
+  gf_facet_grid(Chain ~ .) %>%
+  gf_refine(scale_color_viridis_d())
+```
+
+```{r}
+plot_post(bern_mcmc[, "theta"], main = "theta", xlab = expression(theta),
+         cenTend = "median", compVal = 0.5, ROPE = c(0.45, 0.55), 
+         credMass = 0.90, quietly = TRUE)
+```
+
+```{r}
+twobernoulli <- read.csv("data/2bernoulli.csv")
+
+knitr::kable(twobernoulli)
+
+Target <- twobernoulli %>%
+  rename(hit = y, subject = s) 
+
+Target %>%
+  group_by(subject) %>%
+  summarise(prop_0 = sum(1-hit)/n(), prop_1 = sum(hit)/n(), attemps = n())
+
+```
+
+```{r}
+bern2_model <- function() {
+  for (i in 1:Nobs) {
+    # each response is Bernoulli with the appropriate theta
+    hit[i] ~ dbern(theta[subject[i]])  
+  }
+  for (s in 1:Nsub) {
+    theta[s] ~ dbeta(2, 2)    # prior for each theta
+  }
+}
+```
+
+```{r}
+TargetList <-
+  list(
+    Nobs = nrow(Target),
+    Nsub = 2,
+    hit = Target$hit,
+    subject = as.numeric(as.factor(Target$subject))
+)
+TargetList
+```
+
+```{r}
+bern2_jags <- 
+  jags(
+    data = TargetList,
+    model = bern2_model,
+    parameters.to.save = "theta")
+```
+
+
+```{r}
+bern2_mcmc <- as.mcmc(bern2_jags)
+
+mcmc_acf(bern2_mcmc)
+
+mcmc_combo(
+  bern2_mcmc,
+  combo = c("dens", "dens_overlay", "trace", "scatter"),
+  pars = c("theta[1]", "theta[2]")
+)
+```
+
+## Uso de STAN
+
+STAN^[[https://mc-stan.org/](https://mc-stan.org/)] es otro tipo de lenguaje para definir modelos bayesiano. El lenguaje es un poco más sencillo, pero es particularmente útil para modelos bastante complejos. 
+
+STAN no usa el muestreo de Gibbs, sino en el método de Monte-Carlo Hamiltoniano. En el artículo [@Hoffman2014]  se propone el método NUTS para mejorar el muestreo de Gibbs. 
+
+En este curso no nos referiremos a este procedimiento, pero si veremos un poco de la sintaxis del lenguaje STAN.
+
+```{stan output.var="bern_stan"}
+data {
+  int<lower=0> N;               // number of trials
+  int<lower=0, upper=1> y[N];   // success on trial n
+}
+
+parameters {
+  real<lower=0, upper=1> theta; // chance of success
+}
+
+model {
+  theta ~ uniform(0, 1);        // prior
+  y ~ bernoulli(theta);         // likelihood
+}
+```
+
+
+
+
+```{r}
+library(rstan)
+
+fit <- stan(
+  model_code = bern_stan@model_code,
+  data = list(y = bernoulli$y, N = nrow(bernoulli)),
+  iter = 5000
+)
+
+print(fit, probs=c(0.1, 0.9))
+
+theta_draws <-  extract(fit)$theta
+
+mean(theta_draws)
+
+quantile(theta_draws, probs=c(0.10, 0.90))
+```
+
+
+```{r, eval=FALSE}
+shinystan::launch_shinystan(fit)
+```
+
+
+```{exercise}
+
+Replique los resultados anteriores pero para el caso de 2 monedas y comente los resultados. 
+
+```
+
+
 
 ## Ejercicios 
 
