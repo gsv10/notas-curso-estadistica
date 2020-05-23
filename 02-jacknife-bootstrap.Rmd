@@ -22,18 +22,18 @@ donde \(z_{1-\frac{\alpha}{2}}\) es el cuantil \(1-\frac{\alpha}{2}\)
 de una normal estándar.
 
 La expresión anterior es posible ya que el supuesto es que la
-distribución de \(\hat{\theta}\) es normal.
+distribución de \(\hat{\mu}\) es normal.
 
 ```{remark}
 ¿Qué pasaría si este supuesto es falso o al menos no conocemos la
-distribución de \(\hat{\theta}\)?
+distribución de \(\hat{\mu}\)?
   
 ¿Cómo podemos encontrar ese intervalo de confianza?
 ```
 
 ```{remark}
 Para una muestra fija, el estimador anterior  \(\hat{\mu}\)
-solamente un valor.  No se conoce la distribución de \(\hat{\mu}\). Lo
+toma un solo valor.  No se conoce la distribución de \(\hat{\mu}\). Lo
 único que se puede estimar son valores puntuales como la media,
 varianza, mediana, etc, pero no sabemos nada de su distribución.
 ```
@@ -154,7 +154,7 @@ knitr::kable(jackdf[1:10, 1:10])
 
 
 Cada columna contiene toda la muestra excepto el \(i\)-ésimo
-elemento. Solo basta estimar la media de cada columna:
+elemento. Solo basta estimar la varianza de cada columna:
 
 ```{r, jack-T-i}
 T_i <- apply(jackdf, 2, var, na.rm=TRUE)
